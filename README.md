@@ -1,2 +1,3 @@
-# LeetCode
-Problem Records
+# LeetCode Problem Records
+
+梦(ゆめ)ならばどれほどよかったでしょう
