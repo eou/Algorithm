@@ -297,7 +297,6 @@ class Solution {
 PS. 注意到增加重复元素后，Find Minimum in Rotated Sorted Array II最坏复杂度为$O(n)$，因此一般for循环即可。
 
 ```java
-// someone's solution
 class Solution {
     public int findMinimumInRotatedSortedArrayII (int[] nums) {
         int start = 0, end = nums.length - 1;
