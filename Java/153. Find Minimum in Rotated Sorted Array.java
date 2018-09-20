@@ -1,0 +1,66 @@
+// 153. Find Minimum in Rotated Sorted Array
+class Solution {
+    // Solution 1: 比较 nums[0]
+    public int findMin1(int[] nums) {
+        int start = 0, end = nums.length - 1;
+        // 这个处理很微妙，不是用于简化算法！
+        // 去掉它会导致极端情形也就是sorted array运行结果错误
+        if (nums[start] < nums[end]) {
+            return nums[start];
+        }
+
+        // 以下部分只适用于[O,O,O,O,...,O,X,X,X,...,X]，必须有O,X转折点存在
+        while (start < end) {
+            int mid = (start + end) / 2;
+            // 此时 mid 在整个数组的后半部分(也就是这里无法适用于sorted array)
+            // 注意这是跟 nums[0]比较，判断 mid 在整个数组的前半还是后半部分
+            if (nums[mid] < nums[0]) {
+                // 相当于找rotated sorted array后半部分的首元素
+                end = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+
+        return nums[start];
+    }
+
+    // Solution 2：比较 nums[start]
+    public int findMin2(int[] nums) {
+        int start = 0, end = nums.length - 1;
+
+        while (start < end) {
+            // 由于后面是跟 nums[start] 比较，当处于“子数组”的后半部分时候不能start = mid + 1了，而是直接取递增数组的首元素
+            if (nums[start] < nums[end]) {
+                return nums[start];
+            }
+            int mid = (start + end) / 2;
+
+            if (nums[mid] < nums[start]) {
+                end = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+
+        return nums[start];
+    }
+
+    // Solution 3：比较 nums[nums.length - 1]
+    public int findMin3(int[] nums) {
+        int start = 0, end = nums.length - 1;
+
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] <= nums[nums.length - 1]) {
+                end = mid;
+            }
+            // 大于的情况肯定不是最小值，可以 +1
+            else {
+                start = mid + 1;
+            }
+        }
+
+        return nums[start];
+    }
+}
