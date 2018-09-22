@@ -1,4 +1,5 @@
 // 114. Flatten Binary Tree to Linked List
+// 其实是一个用树节点伪装的链表
 class Solution {
     // 其实不需要这个辅助类，因为first不需要通过类返回
     private class auxiliary {
@@ -122,17 +123,21 @@ class Solution {
         if (root.left == null && root.right == null) {
             return;
         }
-        
+
         while (root != null) {
             if (root.left == null) {
                 root = root.right;
                 continue;
             }
+
+            // 找左子树的最右节点
             TreeNode left = root.left;
             while (left.right != null) {
                 left = left.right;
             }
+            // 找到左子树的最右节点连接到右子树上，也就是左子树拉平之后的最后节点
             left.right = root.right;
+            // 然后根节点连上左子树
             root.right = root.left;
             root.left = null;
             root = root.right;
