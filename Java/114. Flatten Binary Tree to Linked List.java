@@ -25,12 +25,12 @@ class Solution {
             if (left.first != null && right.first != null) {
                 left.last.right = right.first;
                 node.right = left.first;
-                node.left = null; // 注意要加这段代码
+                node.left = null; // 注意要断开左子树
                 return new auxiliary(node, right.last);
             } 
             else if (left.first != null) {
                 node.right = left.first;
-                node.left = null; // 注意要加这段代码
+                node.left = null; // 注意要断开左子树
                 return new auxiliary(node, left.last);
             } 
             else if (right.first != null) {
