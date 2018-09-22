@@ -1,5 +1,5 @@
 // 110. Balanced Binary Tree
-// 一般有 bottom up 和 top down 两种思路，前者就是下面代码，复杂度比后者低
+// 一般有 bottom up 和 top down 两种思路，前者分治法就是以下代码，时间复杂度比后者低
 class Solution {
     // 关键，辅助包装类，用于递归过程中返回不止一个参数
     private class auxiliary {

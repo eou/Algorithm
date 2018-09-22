@@ -1,5 +1,5 @@
 // 704. Binary Search
-// Binary Search Template
+// Binary Search Template，熟读并背诵全文😈
 class Solution {
     public int search(int[] nums, int target) {
         if (nums == null || nums.length == 0) {

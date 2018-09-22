@@ -1,6 +1,6 @@
 // 34. Find First and Last Position of Element in Sorted Array
 class Solution {
-    // O(k+logn)
+    // 二分与遍历，O(k+logn)
     public int[] searchRange1(int[] nums, int target) {
         int[] results = { -1, -1 };
         if (nums == null || nums.length == 0) {
@@ -34,8 +34,10 @@ class Solution {
 
         return results;
     }
+}
 
-    // O(logn)
+class Solution {
+    // 两次二分，O(logn)
     private int binarySearch(int[] nums, int target, boolean index) {
         if (nums == null || nums.length == 0) {
             return -1;
@@ -65,8 +67,7 @@ class Solution {
             if (nums[end] == target) {
                 return end;
             }
-        } 
-        else {
+        } else {
             if (nums[end] == target) {
                 return end;
             }

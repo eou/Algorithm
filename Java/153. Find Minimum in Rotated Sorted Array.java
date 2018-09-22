@@ -1,7 +1,7 @@
 // 153. Find Minimum in Rotated Sorted Array
 class Solution {
     // Solution 1: 比较 nums[0]
-    public int findMin1(int[] nums) {
+    public int findMin(int[] nums) {
         int start = 0, end = nums.length - 1;
         // 这个处理很微妙，不是用于简化算法！
         // 去掉它会导致极端情形也就是sorted array运行结果错误
@@ -24,9 +24,11 @@ class Solution {
 
         return nums[start];
     }
+}
 
+class Solution {
     // Solution 2：比较 nums[start]
-    public int findMin2(int[] nums) {
+    public int findMin(int[] nums) {
         int start = 0, end = nums.length - 1;
 
         while (start < end) {
@@ -45,9 +47,11 @@ class Solution {
 
         return nums[start];
     }
-
+}
+    
+class Solution {
     // Solution 3：比较 nums[nums.length - 1]
-    public int findMin3(int[] nums) {
+    public int findMin(int[] nums) {
         int start = 0, end = nums.length - 1;
 
         while (start < end) {
