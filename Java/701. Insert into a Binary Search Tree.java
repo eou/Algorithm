@@ -13,7 +13,7 @@ class Solution {
             if (node.val < val) {
                 if (node.right == null) {
                     node.right = newNode;
-                    return root;
+                    return root; // 可以改成 break;
                 }
                 // 如果没空节点位置，就继续往下走
                 node = node.right;
@@ -21,16 +21,17 @@ class Solution {
             else if (node.val > val) {
                 if (node.left == null) {
                     node.left = newNode;
-                    return root;
+                    return root; // 可以改成 break;
                 }
                 // 如果没空节点位置，就继续往下走
                 node = node.left;
             } 
             else {
                 // 如已经有了节点，就不用插入直接返回
-                return root;
+                return root; // 可以改成 break;
             }
         }
+        // 其实这个return没用，但是为了编译通过要加上，解决这个尴尬的问题就是让前面的 return root; 全改为 break; 这样最后的 return root; 就有用了
         return root;
     }
 }
