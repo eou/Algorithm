@@ -32,26 +32,27 @@ class Solution {
 }
 
 class Solution {
-    // 层次遍历也可以用DFS
+    // 改一下层次遍历的DFS版本
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
         List<List<Integer>> results = new ArrayList<List<Integer>>();
-        levelMaker(results, root, 0);
+        helper(results, root, 0);
         return results;
     }
 
-    public void levelMaker(List<List<Integer>> list, TreeNode root, int level) {
+    public void helper(List<List<Integer>> list, TreeNode root, int level) {
         if (root == null) {
             return;
         }
         // 如果当前的层次与二维数组大小一致，说明需要添加一个数组进去作为下一层
         if (level == list.size()) {
+            // 从头部添加
             list.add(0, new ArrayList<Integer>());
         }
 
-        levelMaker(list, root.left, level + 1);
-        levelMaker(list, root.right, level + 1);
+        helper(list, root.left, level + 1);
+        helper(list, root.right, level + 1);
 
-        // 取当前属于层次的数组添加元素
+        // 取当前属于层次的数组添加元素，注意顺序是倒的
         list.get(list.size() - level - 1).add(root.val);
     }
 }
