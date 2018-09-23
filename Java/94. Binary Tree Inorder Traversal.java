@@ -36,7 +36,9 @@ class Solution {
 class Solution {
     // 非递归版本，熟读并背诵全文😈
     public List<Integer> inorderTraversal(TreeNode root) {
-        Stack<TreeNode> stack = new Stack<>();
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        // 推荐ArrayDeque类用作栈或队列
+        // Stack<TreeNode> stack = new Stack<>();
         ArrayList<Integer> list = new ArrayList<>();
         
         TreeNode node = root;
@@ -99,7 +101,7 @@ class Solution {
 class Solution {
     // 非递归版本，morris traversal, 空间复杂度O(1)，不需要栈，其实是利用线索二叉树thread binary tree的特性
     // 虽然有两个while循环，但是时间复杂度仍然是O(n)
-    // morris preorder 和 inorder 只有一行代码不同
+    // morris preorder 和 morris inorder 只有一行代码不同
     public List<Integer> inorderTraversal(TreeNode root) {
         ArrayList<Integer> list = new ArrayList<>();
         // 需要两个节点指针

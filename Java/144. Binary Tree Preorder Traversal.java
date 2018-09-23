@@ -93,7 +93,7 @@ class Solution {
 class Solution {
     // 非递归版本，morris traversal, 空间复杂度O(1)，不需要栈，其实是利用线索二叉树thread binary tree的特性
     // 虽然有两个while循环，但是时间复杂度仍然是O(n)
-    // morris preorder 和 inorder 只有一行代码不同
+    // morris preorder 和 morris inorder 只有一行代码不同
     public List<Integer> preorderTraversal(TreeNode root) {
         List<Integer> list = new ArrayList<>();
         TreeNode cur = root;
