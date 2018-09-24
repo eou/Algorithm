@@ -49,6 +49,10 @@ class Solution {
             list.add(0, new ArrayList<Integer>());
         }
 
+        // 放在分治两个helper前面进行操作也行
+        // 取当前属于层次的数组添加元素，注意顺序是倒的
+        // list.get(list.size() - level - 1).add(root.val);
+
         helper(list, root.left, level + 1);
         helper(list, root.right, level + 1);
 

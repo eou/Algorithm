@@ -1,16 +1,19 @@
 // 103. Binary Tree Zigzag Level Order Traversal
+// 此题与102和107把层次遍历的各种顺序全考察了
 class Solution {
-    // 用栈解决，一开始以为一个栈就可以，后面就误入歧途，其实用队列更简洁
+    // 用栈解决，一开始以为一个栈就可以，后面就误入歧途，其实还是用队列更简洁
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> results = new ArrayList<>();
         if (root == null) {
             return results;
         }
 
+        // 弹出和压入元素不能在一个栈中同时操作
         Deque<TreeNode> stack1 = new ArrayDeque<>();
         Deque<TreeNode> stack2 = new ArrayDeque<>();
         stack1.push(root);
         boolean dir = true;
+
         while (!stack1.isEmpty() || !stack2.isEmpty()) {
             List<Integer> level = new ArrayList<>();
             if (dir) {
@@ -62,6 +65,7 @@ class Solution {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 TreeNode node = queue.poll();
+                // 每一层数组正序添加和反序添加轮流即可
                 if (zigzag) {
                     level.add(0, node.val);
                 } 
@@ -99,6 +103,12 @@ class Solution {
         if (results.size() == level) {
             results.add(new LinkedList<>());
         }
+
+        // if (level % 2 == 0) {
+        //     results.get(level).add(root.val);
+        // } else {
+        //     results.get(level).add(0, root.val);
+        // }
 
         helper(root.left, results, level + 1);
         helper(root.right, results, level + 1);
