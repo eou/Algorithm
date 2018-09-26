@@ -27,7 +27,7 @@ public class LogSystem {
         long start = helper(s, gra, false);
         long end = helper(e, gra, true);
 
-        // tailMap是从TreeMap尾部开始遍历，因为TreeMap内部是红黑树，按key自然排序的，这样可以减少搜索时间
+        // tailMap是从TreeMap尾部开始搜索找不小于start的数据，然后开始遍历，因为TreeMap内部是红黑树，按key自然排序的，这样可以减少遍历时间
         for (long key: map.tailMap(start).keySet()) {
             if (key >= start && key < end)
                 res.add(map.get(key));
