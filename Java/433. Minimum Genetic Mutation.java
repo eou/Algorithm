@@ -5,7 +5,7 @@ class Solution {
     // AAACC CAACC GAACC TAACC
     // AAACC ACACC... CAACC CCACC... GAACC GCACC... TAACC TCACC...
     // AAACC...
-    // 不过感觉用 DFS 和 回溯backtracking 也能做，但比较复杂
+    // 用 DFS 和 回溯backtracking 也能做，但比较复杂
     public static char[] genes = { 'A', 'C', 'G', 'T' };
 
     public int minMutation(String start, String end, String[] bank) {
@@ -63,5 +63,42 @@ class Solution {
         }
 
         return -1;
+    }
+}
+
+class Solution {
+    // DFS的一个较简洁版本，思路刚好反过来，从bank数组中出发，找一个只需要当前字符串改变一个字符的匹配字符串
+    int count = Integer.MAX_VALUE;
+
+    public int minMutation(String start, String end, String[] bank) {
+        Set<String> visited = new HashSet<>();
+        helper(start, end, bank, 0, visited);
+        return count == Integer.MAX_VALUE ? -1 : count;
+    }
+
+    private void helper(String start, String end, String[] bank, int path, Set<String> visited) {
+        // intern() decrease the memory use
+        // the same as if (start.equals(end))
+        if (start.intern() == end.intern()) {
+            count = Math.min(count, path);
+        }
+
+        for (String s : bank) {
+            int diff = 0;
+            for (int i = 0; i < s.length(); i++) {
+                if (start.charAt(i) != s.charAt(i)) {
+                    diff++;
+                    if (diff > 1) {
+                        break;
+                    } 
+                }
+            }
+            if (diff == 1 && !visited.contains(s)) {
+                // add and then remove 基本就是 DFS 解排列组合题的必需套路
+                visited.add(s);
+                helper(s, end, bank, path + 1, visited); // 注意传参数同时加减的时候，不能path++ 或者 path--
+                visited.remove(s);
+            }
+        }
     }
 }
