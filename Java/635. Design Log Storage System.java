@@ -14,7 +14,7 @@ public class LogSystem {
     
     // 时间数组转换成秒数
     public long convert(int[] time) {
-        // 注意此处：年份范围为[2000,2017]，年份和月份如果非0要减去1
+        // 注意此处：年份范围为[2000,2017]，年份和月份如果非0要减去1，因为处在当前年份或者月份，本年份或者月份是不用额外算的，如1月，就不需加一整个月的秒数
         time[1] = time[1] - (time[1] == 0 ? 0 : 1);
         time[2] = time[2] - (time[2] == 0 ? 0 : 1);
         
@@ -53,7 +53,8 @@ public class LogSystem {
         }
         
         int[] t = Arrays.stream(res).mapToInt(Integer::parseInt).toArray();
-    
+        
+        // 如果是结尾，需要在当前粒度上加一；如果不处理此处，在上面判断 key <= end 的话，会漏解，因为不加1，算出的秒数是当前粒度的最小秒数，比如2017年0月0日0分0秒，无法包括2017年第0秒以后的时间
         if (end) {
             t[h.get(gra)]++;
         }
