@@ -4,6 +4,7 @@ class Solution {
     // 其实不需要这个辅助类，因为first不需要通过类返回
     private class auxiliary {
         TreeNode first, last;
+
         public auxiliary(TreeNode first, TreeNode last) {
             this.first = first;
             this.last = last;
@@ -17,8 +18,7 @@ class Solution {
     public auxiliary helper(TreeNode root) {
         if (root == null) {
             return new auxiliary(null, null);
-        } 
-        else {
+        } else {
             auxiliary left = helper(root.left);
             auxiliary right = helper(root.right);
             TreeNode node = root;
@@ -27,18 +27,15 @@ class Solution {
                 node.right = left.first;
                 node.left = null; // 注意要断开左子树
                 return new auxiliary(node, right.last);
-            } 
-            else if (left.first != null) {
+            } else if (left.first != null) {
                 node.right = left.first;
                 node.left = null; // 注意要断开左子树
                 return new auxiliary(node, left.last);
-            } 
-            else if (right.first != null) {
+            } else if (right.first != null) {
                 node.right = right.first;
                 // 此处node肯定无left子树
                 return new auxiliary(node, right.last);
-            } 
-            else {
+            } else {
                 return new auxiliary(node, node);
             }
         }
@@ -54,8 +51,7 @@ class Solution {
     public TreeNode helper(TreeNode root) {
         if (root == null) {
             return null;
-        } 
-        else {
+        } else {
             TreeNode leftLast = helper(root.left);
             TreeNode rightLast = helper(root.right);
 

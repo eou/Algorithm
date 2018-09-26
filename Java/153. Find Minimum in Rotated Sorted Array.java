@@ -48,7 +48,7 @@ class Solution {
         return nums[start];
     }
 }
-    
+
 class Solution {
     // Solution 3：比较 nums[nums.length - 1]
     public int findMin(int[] nums) {

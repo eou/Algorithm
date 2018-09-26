@@ -107,8 +107,7 @@ class Solution {
             if (cur.left == null) {
                 list.add(cur.val);
                 cur = cur.right;
-            } 
-            else {
+            } else {
                 pre = cur.left;
                 while (pre.right != null && pre.right != cur) {
                     pre = pre.right;
@@ -117,8 +116,7 @@ class Solution {
                     list.add(cur.val);
                     pre.right = cur;
                     cur = cur.left;
-                } 
-                else {
+                } else {
                     pre.right = null;
                     cur = cur.right;
                 }

@@ -22,13 +22,15 @@ class Solution {
         if (nums[start] == target) {
             results[0] = start;
             int i = start;
-            for (; i < nums.length && nums[i] == target; ++i);
+            for (; i < nums.length && nums[i] == target; ++i)
+                ;
             results[1] = i - 1;
-        } 
+        }
         if (nums[end] == target) {
             results[0] = end;
             int i = end;
-            for (; i < nums.length && nums[i] == target; ++i);
+            for (; i < nums.length && nums[i] == target; ++i)
+                ;
             results[1] = i - 1;
         }
 

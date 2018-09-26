@@ -13,11 +13,9 @@ class Solution {
             int x = mid / matrix[0].length, y = mid % matrix[0].length;
             if (matrix[x][y] == target) {
                 return true;
-            } 
-            else if (matrix[x][y] < target) {
+            } else if (matrix[x][y] < target) {
                 start = mid + 1;
-            } 
-            else {
+            } else {
                 end = mid - 1;
             }
         }

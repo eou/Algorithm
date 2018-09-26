@@ -26,12 +26,10 @@ class Solution {
 
         if (node == null) {
             return root;
-        } 
-        else {
+        } else {
             if (pre.left == node) {
                 _left = true;
-            } 
-            else {
+            } else {
                 _left = false;
             }
 
@@ -39,47 +37,40 @@ class Solution {
             if (node.left == null && node.right == null) {
                 if (node == root) {
                     return null;
-                } 
-                else {
+                } else {
                     if (_left == true) {
                         System.out.println("1");
                         pre.left = null;
-                    } 
-                    else {
+                    } else {
                         System.out.println("2");
                         pre.right = null;
                     }
                 }
-            } 
-            else if (node.left == null) {
+            } else if (node.left == null) {
                 if (_left == true) {
                     pre.left = node.right;
                     if (node == root) {
                         return pre.left;
                     }
-                } 
-                else {
+                } else {
                     pre.right = node.right;
                     if (node == root) {
                         return pre.right;
                     }
                 }
-            } 
-            else if (node.right == null) {
+            } else if (node.right == null) {
                 if (_left == true) {
                     pre.left = node.left;
                     if (node == root) {
                         return pre.left;
                     }
-                } 
-                else {
+                } else {
                     pre.right = node.left;
                     if (node == root) {
                         return pre.right;
                     }
                 }
-            } 
-            else {
+            } else {
                 // 如果被删节点的左右子树均存在，用后继节点替换被删节点，然后删除后继节点，后继节点肯定是右子树或者左子树叶子
                 TreeNode succ = node.right;
                 TreeNode _succ = node;
@@ -90,8 +81,7 @@ class Solution {
                 node.val = succ.val;
                 if (_succ != node) {
                     _succ.left = succ.right;
-                } 
-                else {
+                } else {
                     node.right = succ.right;
                 }
             }
@@ -134,8 +124,7 @@ class Solution {
             pre = cur;
             if (key < cur.val) {
                 cur = cur.left;
-            } 
-            else if (key > cur.val) {
+            } else if (key > cur.val) {
                 cur = cur.right;
             }
         }
@@ -146,8 +135,7 @@ class Solution {
         }
         if (pre.left == cur) {
             pre.left = deleteRootNode(cur);
-        } 
-        else {
+        } else {
             pre.right = deleteRootNode(cur);
         }
         return root;
@@ -162,16 +150,14 @@ class Solution {
         }
         if (key < root.val) {
             root.left = deleteNode(root.left, key);
-        }
-        else if (key > root.val) {
+        } else if (key > root.val) {
             root.right = deleteNode(root.right, key);
         }
         // 找到被删节点
         else {
             if (root.left == null) {
                 return root.right;
-            } 
-            else if (root.right == null) {
+            } else if (root.right == null) {
                 return root.left;
             }
             TreeNode minNode = root.right;

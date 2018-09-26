@@ -68,8 +68,7 @@ class Solution {
                 // 每一层数组正序添加和反序添加轮流即可
                 if (zigzag) {
                     level.add(0, node.val);
-                } 
-                else {
+                } else {
                     level.add(node.val);
                 }
                 if (node.left != null) {
@@ -105,9 +104,9 @@ class Solution {
         }
 
         // if (level % 2 == 0) {
-        //     results.get(level).add(root.val);
+        // results.get(level).add(root.val);
         // } else {
-        //     results.get(level).add(0, root.val);
+        // results.get(level).add(0, root.val);
         // }
 
         helper(root.left, results, level + 1);

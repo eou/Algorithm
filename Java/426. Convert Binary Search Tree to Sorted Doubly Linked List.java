@@ -3,41 +3,42 @@ class Solution {
     // 分治法
     private class auxiliary {
         Node head, tail;
+
         public auxiliary(Node head, Node tail) {
             this.head = head;
             this.tail = tail;
         }
     }
-    
+
     public Node treeToDoublyList(Node root) {
         return helper(root).head;
     }
-    
+
     private auxiliary helper(Node root) {
         // 判空
         if (root == null) {
             return new auxiliary(root, root);
         }
-        
+
         auxiliary leftList = helper(root.left);
         auxiliary rightList = helper(root.right);
-        
+
         // 先断开子树的双向链表首尾指针，然后连接根节点与其头部
         if (leftList.head != null) {
             leftList.head.left = null;
             leftList.tail.right = null;
-            
+
             root.left = leftList.tail;
             leftList.tail.right = root;
         }
         if (rightList.head != null) {
             rightList.head.left = null;
             rightList.tail.right = null;
-            
+
             root.right = rightList.head;
             rightList.head.left = root;
         }
-        
+
         // 首尾闭合，注意前后方向很容易混淆！
         if (leftList.head != null && rightList.head != null) {
             leftList.head.left = rightList.tail;
@@ -63,6 +64,7 @@ class Solution {
 class Solution {
     // 遍历法
     Node pre = null;
+
     public Node treeToDoublyList(Node root) {
         if (root == null) {
             return null;
@@ -124,7 +126,7 @@ class Solution {
                 node.left = pre;
             }
             pre = node;
-            
+
             node = node.right;
         }
 

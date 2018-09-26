@@ -21,22 +21,19 @@ class Solution {
         if (root == null) {
             auxiliary aux = new auxiliary(0, true);
             return aux;
-        } 
-        else {
+        } else {
             auxiliary left = helper(root.left);
             auxiliary right = helper(root.right);
             auxiliary aux = new auxiliary(0, true);
             if (left.isBalanced == false || right.isBalanced == false) {
                 aux.isBalanced = false;
                 return aux;
-            } 
-            else {
+            } else {
                 aux.maxHeight = Math.max(left.maxHeight, right.maxHeight) + 1;
                 if (Math.abs(left.maxHeight - right.maxHeight) > 1) {
                     aux.isBalanced = false;
                     return aux;
-                }
-                else {
+                } else {
                     return aux;
                 }
             }

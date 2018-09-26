@@ -12,14 +12,11 @@ class Solution {
         // 思路就是反过来想，哪一个root里面同时包含p和q两个节点，然后一层层递归往上面传递
         if (left != null && right != null) {
             return root;
-        } 
-        else if (left != null) {
+        } else if (left != null) {
             return left;
-        } 
-        else if (right != null) {
+        } else if (right != null) {
             return right;
-        } 
-        else {
+        } else {
             return null;
         }
     }
@@ -30,6 +27,7 @@ class Solution {
     private class auxiliary {
         public boolean a_exist, b_exist;
         public TreeNode lca;
+
         public auxiliary(boolean a_exist, boolean b_exist, TreeNode lca) {
             this.a_exist = a_exist;
             this.b_exist = b_exist;
@@ -41,8 +39,7 @@ class Solution {
         auxiliary aux = helper(root, p, q);
         if (aux.a_exist && aux.b_exist) {
             return aux.lca;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -77,12 +74,12 @@ class Solution {
             aux.lca = left.lca;
             return aux;
         }
-            
+
         if (right.lca != null) {
             aux.lca = right.lca;
             return aux;
         }
-        
+
         return aux;
     }
 }

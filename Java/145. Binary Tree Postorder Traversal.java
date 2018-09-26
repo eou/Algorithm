@@ -82,17 +82,14 @@ class Solution {
             if (prev == null || prev.left == curr || prev.right == curr) {
                 if (curr.left != null) {
                     stack.push(curr.left);
-                } 
-                else if (curr.right != null) {
+                } else if (curr.right != null) {
                     stack.push(curr.right);
                 }
-            }
-            else if (curr.left == prev) {
+            } else if (curr.left == prev) {
                 if (curr.right != null) {
                     stack.push(curr.right);
                 }
-            }
-            else {
+            } else {
                 list.add(curr.val);
                 stack.pop();
             }
@@ -112,7 +109,7 @@ class Solution {
         if (root == null) {
             return list;
         }
-        
+
         // 需要一个新节点
         TreeNode dummy = new TreeNode(0);
         dummy.left = root;
@@ -121,8 +118,7 @@ class Solution {
         while (node != null) {
             if (node.left == null) {
                 node = node.right;
-            } 
-            else {
+            } else {
                 TreeNode p = node.left;
                 while (p.right != null && p.right != node) {
                     p = p.right;
@@ -130,8 +126,7 @@ class Solution {
                 if (p.right == null) {
                     p.right = node;
                     node = node.left;
-                } 
-                else {
+                } else {
                     addReverse(node.left, p, list);
                     p.right = null;
                     node = node.right;

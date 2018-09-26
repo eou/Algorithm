@@ -40,7 +40,7 @@ class Solution {
         // 推荐ArrayDeque类用作栈或队列
         // Stack<TreeNode> stack = new Stack<>();
         ArrayList<Integer> list = new ArrayList<>();
-        
+
         TreeNode node = root;
         // 思路大意：把二叉树分为左上斜，右下斜两个方向：沿着左下斜找到最左的一个节点需要一次循环，由于需要倒着遍历，使用栈；然后沿着右下方向找到下一个左下方向的循环，这需要另一个循环
         while (node != null || !stack.isEmpty()) {
@@ -84,8 +84,7 @@ class Solution {
                 while (!stack.isEmpty() && stack.peek().right == node) {
                     node = stack.pop();
                 }
-            } 
-            else {
+            } else {
                 node = node.right;
                 while (node != null) {
                     stack.push(node);
@@ -112,8 +111,7 @@ class Solution {
             if (cur.left == null) {
                 list.add(cur.val);
                 cur = cur.right;
-            }
-            else {
+            } else {
                 // pre先进入cur左子树，然后向右一直遍历到底，也就是寻找根节点cur的前继节点
                 pre = cur.left;
                 while (pre.right != null && pre.right != cur) {

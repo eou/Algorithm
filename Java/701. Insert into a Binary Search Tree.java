@@ -17,21 +17,20 @@ class Solution {
                 }
                 // 如果没空节点位置，就继续往下走
                 node = node.right;
-            } 
-            else if (node.val > val) {
+            } else if (node.val > val) {
                 if (node.left == null) {
                     node.left = newNode;
                     return root; // 可以改成 break;
                 }
                 // 如果没空节点位置，就继续往下走
                 node = node.left;
-            } 
-            else {
+            } else {
                 // 如已经有了节点，就不用插入直接返回
                 return root; // 可以改成 break;
             }
         }
-        // 其实这个return没用，但是为了编译通过要加上，解决这个尴尬的问题就是让前面的 return root; 全改为 break; 这样最后的 return root; 就有用了
+        // 其实这个return没用，但是为了编译通过要加上，解决这个尴尬的问题就是让前面的 return root; 全改为 break; 这样最后的 return
+        // root; 就有用了
         return root;
     }
 }
@@ -47,8 +46,7 @@ class Solution {
         }
         if (root.val > node.val) {
             root.left = insertIntoBST(root.left, val);
-        } 
-        else {
+        } else {
             root.right = insertIntoBST(root.right, val);
         }
 

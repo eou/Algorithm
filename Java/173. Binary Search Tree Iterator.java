@@ -52,8 +52,7 @@ public class BSTIterator {
                 res = cur.val;
                 cur = cur.right;
                 return res;
-            } 
-            else {
+            } else {
                 // pre先进入cur左子树，然后向右一直遍历到底，也就是寻找根节点cur的前继节点
                 pre = cur.left;
                 while (pre.right != null && pre.right != cur) {
@@ -107,8 +106,7 @@ public class BSTIterator {
             while (!stack.isEmpty() && stack.peek().right == node) {
                 node = stack.pop();
             }
-        }
-        else {
+        } else {
             node = node.right;
             while (node != null) {
                 stack.push(node);

@@ -32,8 +32,7 @@ public class Codec {
         for (int i = 1; i < queue.size(); i++) {
             if (queue.get(i) == null) {
                 sb.append(",null");
-            } 
-            else {
+            } else {
                 sb.append(",");
                 sb.append(queue.get(i).val);
             }
@@ -57,8 +56,7 @@ public class Codec {
                 TreeNode node = new TreeNode(Integer.parseInt(vals[i]));
                 if (isLeftChild) {
                     queue.get(index).left = node;
-                } 
-                else {
+                } else {
                     queue.get(index).right = node;
                 }
                 queue.add(node);
@@ -79,8 +77,7 @@ public class Codec {
     public String rserialize(TreeNode root, String str) {
         if (root == null) {
             str += "null,";
-        } 
-        else {
+        } else {
             str += str.valueOf(root.val) + ",";
             str = rserialize(root.left, str);
             str = rserialize(root.right, str);

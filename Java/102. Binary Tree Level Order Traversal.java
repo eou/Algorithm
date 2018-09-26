@@ -6,7 +6,7 @@ class Solution {
         if (root == null) {
             return results;
         }
-        
+
         Queue<TreeNode> queue = new ArrayDeque<>();
         queue.offer(root);
         while (!queue.isEmpty()) {

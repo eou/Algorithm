@@ -39,8 +39,7 @@ class Solution {
         while (node != null) {
             if (node.val <= p.val) {
                 node = node.right;
-            } 
-            else {
+            } else {
                 res = node;
                 node = node.left;
             }

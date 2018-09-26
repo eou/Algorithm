@@ -12,11 +12,9 @@ class Solution {
         while (x >= 0 && y < matrix[0].length) {
             if (matrix[x][y] < target) {
                 y++;
-            } 
-            else if (matrix[x][y] > target) {
+            } else if (matrix[x][y] > target) {
                 x--;
-            } 
-            else {
+            } else {
                 return true;
             }
         }
