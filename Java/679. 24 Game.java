@@ -1,5 +1,6 @@
 // 679. 24 Game
 class Solution {
+    // 4个数字所有的计算方法共9216种，所以理论上要遍历所有组合来检查是否合法，必然是DFS
     public boolean judgePoint24(int[] nums) {
         List<Double> list = new ArrayList<>();
         for (int n : nums) {
@@ -10,7 +11,7 @@ class Solution {
     
     private boolean helper(List<Double> nums) {
         if (nums.size() == 1) {
-            return Math.abs(nums.get(0) - 24) < 1e-6;
+            return Math.abs(nums.get(0) - 24) < 1e-6; //精确度不一定
         }
         
         for (int i = 0; i < nums.size(); ++i) {
@@ -40,6 +41,7 @@ class Solution {
                         n = nums.get(j) / nums.get(i);
                     }
                     tmp.add(n);
+                    // 如果这种组合可以，就返回true
                     if (helper(tmp)) {
                         return true;
                     }
