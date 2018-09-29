@@ -2,7 +2,7 @@
 // input无重复，无序
 // DFS, BFS都能解
 class Solution {
-    // DFS，组合类问题，一层层决策
+    // DFS，组合类问题模板，一层层决策
     // [] -> 选:[1],[2],[3];不选:[];全递归
     // [1] -> 选[1,2],[1,3];不选[1];全递归
     // ...
@@ -16,6 +16,7 @@ class Solution {
     // 1. 递归的定义
     private void dfs(int[] nums, int index, List<Integer> subset, List<List<Integer>> results) {
         // 3. 递归的出口
+        // 每次DFS到头了再添加进results
         if (index == nums.length) {
             results.add(new ArrayList<Integer>(subset));
             return;
@@ -36,8 +37,8 @@ class Solution {
 
 class Solution {
     // DFS，回溯
-    // [] -> 添加[];递归[1],[2],[3]
-    // [1] -> 添加[1];递归[1,2],[1,3]
+    // [] -> 添加 [];递归[1],[2],[3]
+    // [1] -> 添加 [1];递归[1,2],[1,3]
     // ...
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> results = new ArrayList<>();
@@ -60,7 +61,7 @@ class Solution {
     private void helper(ArrayList<Integer> subset, int[] nums, int startIndex, List<List<Integer>> results) {
         // 2. 递归的拆解
         // deep copy
-        // results.add(subset);
+        // 每次进入递归就添加入results
         results.add(new ArrayList<Integer>(subset));
 
         for (int i = startIndex; i < nums.length; i++) {
@@ -83,7 +84,7 @@ class Solution {
         List<List<Integer>> results = new LinkedList<>();
 
         if (nums == null) {
-            return results; // 空列表
+            return results;
         }
 
         Arrays.sort(nums);
