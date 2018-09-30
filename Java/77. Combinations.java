@@ -49,8 +49,7 @@ class Solution {
             return result;
         }
 
-        // f(n, k) = g(n - 1, k - 1) + f(n - 1, k)
-        // n - 1 取 k - 1 个数，然后放n
+        // C(n, k) = C(n-1, k-1) + C(n-1, k)
         result = combine(n - 1, k - 1);
         for (List<Integer> list : result) {
             list.add(n);
