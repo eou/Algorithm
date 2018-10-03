@@ -16,7 +16,6 @@ class Solution {
                 break;
             }
         }
-
         if (pos == null) {
             return head;
         }
@@ -54,6 +53,7 @@ class Solution {
     public ListNode partition(ListNode head, int x) {
         ListNode smallerHead = new ListNode(0), biggerHead = new ListNode(0);
         ListNode smaller = smallerHead, bigger = biggerHead, pos = head;
+
         while (pos != null) {
             if (pos.val < x) {
                 smaller.next = pos;
@@ -64,6 +64,7 @@ class Solution {
             }
             pos = pos.next;
         }
+
         // no need for extra check because of fake heads
         smaller.next = biggerHead.next;
         bigger.next = null;
