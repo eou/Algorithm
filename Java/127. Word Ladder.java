@@ -175,8 +175,8 @@ class Solution {
         return 0;
     }
 
-    private ArrayList<String> nextWord(String cur, Set<String> dict) {
-        ArrayList<String> res = new ArrayList<>();
+    private List<String> nextWord(String cur, Set<String> dict) {
+        List<String> res = new ArrayList<>();
         StringBuilder strBuilder = new StringBuilder(cur);
 
         for (int i = 0; i < cur.length(); ++i) {
