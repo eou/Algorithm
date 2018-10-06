@@ -12,7 +12,9 @@ class Solution {
         //     return l1;
         // }
         
+        // 用 dummy 结点穿针引线
         ListNode dummy = new ListNode(0);
+        // 用 head 保留原位，因为 dummy 会不断向前移动
         ListNode head = dummy;
         while(l1 != null && l2 != null) {
             if(l1.val < l2.val) {
@@ -22,6 +24,7 @@ class Solution {
                 dummy.next = l2;
                 l2 = l2.next;
             }
+            // 注意别忘了前进一步
             dummy = dummy.next;
         }
         if(l1 != null) {
