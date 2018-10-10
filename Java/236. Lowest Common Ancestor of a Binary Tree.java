@@ -2,6 +2,7 @@
 class Solution {
     // 此解法虽然满足题意，但不严格，如果一个节点在树中，另一个不在，也会返回其中一个节点而不是null
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        // 当到达叶子节点返回 null 表明找不到这两个节点任何一个
         if (root == null || root == p || root == q) {
             return root;
         }
