@@ -25,7 +25,13 @@ class Solution {
 }
 ```
 
-从[339. Nested List Weight Sum](https://leetcode.com/problems/nested-list-weight-sum/description/)而来。仅仅改变了求和过程中深度的变化条件，本为第1层到第n层，现在为第n层到第1层。如想从339代码直接修改，便是先DFS出深度，然后DFS求和即可。
+从[339. Nested List Weight Sum](https://leetcode.com/problems/nested-list-weight-sum/description/)变形而来。仅仅改变了求和过程中深度的变化条件，本为第1层到第n层，现在为第n层到第1层。如想从339代码直接修改，便是先DFS出深度，然后DFS或者BFS求和即可。
 
-但是第1层元素×n，第2层元素×(n-1)……这样的规律暗示每当到第k层，第i层（i<k）就应该计算了k - i + 1次，如此到第n层，第i层就总共可以计算n - i + 1次。即（第1层）+（第1层 + 第2层）+（第1层 + 第2层 + 第3层）+ …… +（第1层 + 第2层 + …… + 第n层）.
+不过无需提前求出深度。
+
+第1层元素×n，第2层元素×(n-1)……这样的规律暗示每当到第k层，第i层（i<k）就应该可以重复计算k - i + 1次，如此到第n层，第i层就总共可以计算n - i + 1次：即（第1层）+（第1层 + 第2层）+（第1层 + 第2层 + 第3层）+ …… +（第1层 + 第2层 + …… + 第n层）. 
+
+---
+
+
 
