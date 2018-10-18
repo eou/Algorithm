@@ -67,7 +67,7 @@ class Solution {
 }
 
 class Solution {
-    // sliding window的普适版本
+    // sliding window的普适版本，不过一般用HashMap更加普适
     public List<Integer> findAnagrams(String s, String p) {
         List<Integer> results = new ArrayList<>();
         if (s == null || s.length() < p.length()) {
@@ -82,7 +82,6 @@ class Solution {
         // 在移动window的时候不断更新diff，当diff为0说明找到anagram
         int left = 0, right = 0, diff = p.length();
         while (right < s.length()) {
-            // 说明这个字母在p中
             if (chars[s.charAt(right) - 'a'] > 0) {
                 diff--;
             }
@@ -99,6 +98,54 @@ class Solution {
                     diff++;
                 }
                 chars[s.charAt(left) - 'a']++;
+                left++;
+            }
+        }
+
+        return results;
+    }
+}
+
+class Solution {
+    // sliding window的典型HashMap版本
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> results = new ArrayList<>();
+        if (s == null || s.length() < p.length()) {
+            return results;
+        }
+
+        // map <char in p, frequency>
+        Map<Character, Integer> map = new HashMap<>();
+        for (Character c : p.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+
+        // 这里用的cnt跟之前diff不一样，cnt是已经去重之后的字母个数
+        // 所以更新cnt的时候需要看此字符在map中频率是否为0或者大于0
+        int left = 0, right = 0, cnt = map.size();
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            if(map.containsKey(c)) {
+                map.put(c, map.get(c) - 1);
+                if(map.get(c) == 0) {
+                    cnt--;
+                }
+            }
+            right++;
+
+            while(cnt == 0) {
+                // 这里条件因题而变
+                if (right - left == p.length()) {
+                    results.add(left);
+                }
+
+                char t = s.charAt(left);
+                if(map.containsKey(t)) {
+                    map.put(t, map.get(t) + 1);
+                    if (map.get(t) > 0) {
+                        cnt++;
+                    }
+                }
                 left++;
             }
         }
