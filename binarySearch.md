@@ -41,11 +41,21 @@ class Solution {
 
 注意`start = mid`和`start = mid + 1`，`end = mid`和`end = mid - 1`的区别，如使用两个前者一不小心容易造成死循环。
 
-一种可能：当`start`与`end`相邻之时，此时`start == mid`可能导致指针不再移动，可以使用`start = mid + 1`避免，或者循环条件改为`start + 1 < end`.
+一种可能：当`start`与`end`相邻之时，由于向下取整（rounding down），此时`start == mid`可能导致指针不再移动，可以使用`start = mid + 1`避免，或者循环条件改为`start + 1 < end`.
 
 因此，使用`start <= end`或者`start < end`当做循环条件，指针移动必须至少含有一个`start = mid + 1`或者`end = mid - 1`以避免死循环。
 
 保险方法是使用`start + 1 < end`与`start = mid`和`end = mid`，最后跳出循环处理一下剩余两个相邻元素。
+
+## 最后指向的元素
+
+题目的需求不一，有些能保证查找的元素肯定在数组中，有些可能需要返回越界的指针下标，而不是查找失败就返回-1.
+
+比如在正整数有序数组中找负数，如果一开始`start = 0`, 则end很可能在`start = end`的时候由于`end = mid - 1`而跑到-1；
+
+比如在负整数有序数组中找正数，同理，如果一开始`end = nums.length - 1 `，则start很可能在`start = end`的时候由于`start = mid + 1`而跑到nums.length；
+
+不过循环条件会有影响，如果`start < end`的话，start和end只会在初始化的范围内移动；如果是`start <= end`的话，会可能出现越界。不过如果使用`start < end`，初始化范围可以是`[-1, nums.length]`达到此效果，或者最后处理一下`start = end` 的情况。
 
 ## 递归形式
 
@@ -164,12 +174,12 @@ class Solution {
 这种返回一个元素的题一般用`start < end`比较简便，但是注意指针移动，避免死循环。
 
 ```java
+// Solution 1: 比较 nums[0]
 class Solution {
-    // Solution 1: 比较 nums[0]
     public int findMinimumInRotatedSortedArray(int[] nums) {
         int start = 0, end = nums.length - 1;
         // 这个处理很微妙，不是用于简化算法！
-        // 去掉它会导致极端情形也就是sorted array运行结果错误
+        // 去掉它会导致极端情形也就是sorted array的时候运行结果错误
         if (nums[start] < nums[end]) {
             return nums[start];
         }
@@ -190,9 +200,11 @@ class Solution {
         
         return nums[start];
     }
-    
-    // Solution 2：比较 nums[start]
-    public int findMinimumInRotatedSortedArray(int[] nums) {
+}
+
+// Solution 2：比较 nums[start]
+class Solution {
+     public int findMinimumInRotatedSortedArray(int[] nums) {
         int start = 0, end = nums.length - 1;
         
         while (start < end) {
@@ -212,8 +224,10 @@ class Solution {
         
         return nums[start];
     }
-    
-    // Solution 3：比较 nums[nums.length - 1]
+}
+
+// Solution 3：比较 nums[nums.length - 1]
+class Solution {
     public int findMinimumInRotatedSortedArray(int[] nums) {
         int start = 0, end = nums.length - 1;
         

@@ -49,7 +49,7 @@ class Solution {
         return min == Integer.MAX_VALUE ? 0 : min;
     }
 
-    // 注意二分查找写法，最后要返回不小于target的位置
+    // 注意二分查找写法，最后要返回不小于target的位置，包括越界下标
     private int binarySearch(int left, int right, int target, int[] nums) {
         while (left <= right) {
             int mid = left + (right - left) / 2;
@@ -64,20 +64,31 @@ class Solution {
         return left;
     }
     
-    // 这种写法可能返回小于target的最大位置，最后还要处理
+    // 这种 left < right 的写法可能返回小于target的最大位置，最后处理相等时候的情况
     private int binarySearch(int left, int right, int target, int[] nums) {
         while (left < right) {
             int mid = left + (right - left) / 2;
-            if (nums[mid] == target) {
-                return mid;
-            } else if (nums[mid] > target) {
-                right = mid - 1;
+            if (nums[mid] >= target) {
+                right = mid;
             } else {
                 left = mid + 1;
             }
         }
-        if (left < nums.length && nums[left] < target) {
-            return left + 1;
+        if (left == right) {
+            return nums[left] >= target ? left : nums.length;
+        }
+        return left;
+    }
+
+    // 或者这样写，但前面调用的right写成nums.length而不是nums.length-1
+    private int binarySearch(int left, int right, int target, int[] nums) {
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] >= target) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
         }
         return left;
     }
