@@ -22,7 +22,7 @@ class Solution {
 }
 
 class Solution {
-    // DP版本，时间复杂度O(S*P)
+    // Top-down DP版本，时间复杂度O(S*P)
     // 二维DP数组有3个状态，1是匹配，0是未检测，-1是不匹配
     int[][] dp;
     public boolean isMatch(String s, String p) {
@@ -35,7 +35,7 @@ class Solution {
             return dp[i][j] == 1;
         }
 
-        // 思路跟递归版本基本一致，仅仅是最后把结果保存在DP数组中作为中间结果，减少重复验证次数
+        // 思路跟从前往后遍历的递归版本基本一致，仅仅是最后把结果保存在DP数组中作为中间结果，减少重复验证次数
         boolean result;
         if (j == p.length()) {
             result = i == s.length();
@@ -55,6 +55,8 @@ class Solution {
 }
 
 class Solution {
+    // Bottom-up DP版本，从尾部到头部匹配字符串
+    // 此二维DP数组有2个状态，因为不会提前经过未检测的字符
     public boolean isMatch(String s, String p) {
         boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
         dp[s.length()][p.length()] = true;
