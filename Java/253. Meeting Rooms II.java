@@ -34,6 +34,11 @@ class Solution {
 
 class Solution {
     // 数组版本，因为要排序，时间复杂度还是O(nlogn)
+    // line sweep 扫描线思想（类似图形学中的Scanline rendering）
+    // 将所有时间区间在x轴上画出来，并用一条垂直于x轴的线作为扫描线从左至右扫描，在不同位置有不同数量的区间交点，其最大值即为所求
+    // 1. 对所有点进行标记，区分起始点和终止点 
+    // 2. 对所有点进行排序 
+    // 3. 依次遍历每个点，遇到起始点+1，遇到终止点-1，并更新记录最大值
     public int minMeetingRooms(Interval[] intervals) {
         int[] starts = new int[intervals.length];
         int[] ends = new int[intervals.length];
@@ -47,14 +52,29 @@ class Solution {
         Arrays.sort(ends);
 
         int rooms = 0;
-        int endsItr = 0;
-        for (int i = 0; i < starts.length; i++) {
-            if (starts[i] < ends[endsItr]) {
-                rooms++;
+        int i = 0, j = 0;
+        int currentMeetings = 0;
+        while (i < intervals.length) {
+            // 在第j个会议结束之前，第i个会议无法使用其房间，只能新开一个房间
+            if (starts[i] < ends[j]) {
+                currentMeetings++;
+                i++;
+            // 第j个会议在第i个会议开始之前就结束了，所以可以使用其房间，少开一个房间
             } else {
-                endsItr++;
+                currentMeetings--;
+                j++;
             }
+            rooms = Math.max(rooms, currentMeetings);
         }
+
+        // currentMeetings 这个变量可以去掉，因为需要过程中的最大值，只需记录所有增加操作：
+        // for (int i = 0; i < starts.length; i++) {
+        //     if (starts[i] < ends[j]) {
+        //         rooms++;
+        //     } else {
+        //         j++;
+        //     }
+        // }
 
         return rooms;
     }
@@ -67,8 +87,10 @@ class Solution {
             return 0;
         }
 
+        // 如果用HashMap，无内部排序所以不行
         Map<Integer, Integer> map = new TreeMap<>();
         for (Interval i : intervals) {
+            // 在Map中就根据起止点，完成相应加减操作
             map.put(i.start, map.getOrDefault(i.start, 0) + 1);
             map.put(i.end, map.getOrDefault(i.end, 0) - 1);
         }

@@ -20,7 +20,7 @@ public class Solution extends Reader4 {
                 buf[total++] = tmp[i];
             }
 
-            // 如果此次读入已经不足4个字符，说明已经读完，要么达到最大读取上限，要么文件无剩余字符
+            // 如果此次读入已经不足4个字符，说明 read4() 已经读完
             if(count < 4) {
                 break;
             }
