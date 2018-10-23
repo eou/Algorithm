@@ -39,10 +39,8 @@ class Solution {
                     return null;
                 } else {
                     if (_left == true) {
-                        System.out.println("1");
                         pre.left = null;
                     } else {
-                        System.out.println("2");
                         pre.right = null;
                     }
                 }
