@@ -78,6 +78,44 @@ class Solution {
 
 ---
 
+# [300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/description/)
+
+```java
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        if(nums.length == 0) {
+            return 0;
+        }
+        
+        List<Integer> list = new ArrayList<>();
+        for(int n : nums) {
+            int left = 0, right = list.size();
+            while(left < right) {
+                int mid = left + (right - left) / 2;
+                if(list.get(mid) < n) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+            if(left >= list.size()) {
+                list.add(n);
+            } else {
+                list.set(left, n);
+            }
+        }
+        
+        return list.size();
+    }
+}
+```
+
+此题为典型动态规划问题，DP解法复杂度为$O(n^2)$.
+
+然而可以遍历一次原数组，直接找出LIS：维护一个新的递增数组保存LIS，确定原数组中每个数字在新数组中的位置，此处查找位置就可以用二分查找，时间复杂度降为$O(nlogn)$.
+
+---
+
 # [364. Nested List Weight Sum II](https://leetcode.com/problems/nested-list-weight-sum-ii/description/)
 
 ```java
