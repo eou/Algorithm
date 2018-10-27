@@ -1,7 +1,7 @@
 // 200. Number of Islands
 // BFS, DFS, Union Find，时间复杂度都是O(m*n)，其中BFS的空间复杂度较低，为O(min(m, n))
 class Solution {
-    // BFS
+    // BFS版本
     // 可以不用Pair类，直接保存 row * len + col，也就是二维数组摊成一维数组后的下标
     class Pair {
         int x;
@@ -61,7 +61,7 @@ class Solution {
 }
 
 class Solution {
-    // DFS
+    // DFS版本
     public int numIslands(char[][] grid) {
         if (grid == null || grid.length == 0) {
             return 0;
@@ -99,12 +99,15 @@ class Solution {
 }
 
 class Solution {
+    // Union Find版本
+    // union操作 时间复杂度为O(α(n))，近似O(1)，总时间复杂度为O(m*n), 空间复杂度为O(n)
     class UnionFind {
-        int count; // # of connected components
+        // # of connected components
+        int count;
         int[] parent;
         int[] rank;
 
-        public UnionFind(char[][] grid) { // for problem 200
+        public UnionFind(char[][] grid) {
             count = 0;
             int m = grid.length;
             int n = grid[0].length;
@@ -121,13 +124,10 @@ class Solution {
             }
         }
 
-        public int find(int i) { // path compression
-            if (parent[i] != i)
-                parent[i] = find(parent[i]);
-            return parent[i];
-        }
-
-        public void union(int x, int y) { // union with rank
+        // 两个优化：
+        // union with rank
+        // 按秩合并，即总是将更小的树连接至更大的树上。因为影响运行时间的是树的深度，更小的树添加到更深的树的根上将不会增加秩除非它们的秩相同
+        public void union(int x, int y) {
             int rootx = find(x);
             int rooty = find(y);
             if (rootx != rooty) {
@@ -135,12 +135,21 @@ class Solution {
                     parent[rooty] = rootx;
                 } else if (rank[rootx] < rank[rooty]) {
                     parent[rootx] = rooty;
+                // 注意 rank 只有相同的时候合并才会增加
                 } else {
                     parent[rooty] = rootx;
                     rank[rootx] += 1;
                 }
                 --count;
             }
+        }
+
+        // path compression
+        // 路径压缩
+        public int find(int i) {
+            if(parent[i] != i)
+                parent[i] = find(parent[i]);
+            return parent[i];
         }
 
         public int getCount() {
@@ -156,6 +165,7 @@ class Solution {
         int nr = grid.length;
         int nc = grid[0].length;
         int num_islands = 0;
+
         UnionFind uf = new UnionFind(grid);
         for (int r = 0; r < nr; ++r) {
             for (int c = 0; c < nc; ++c) {
