@@ -62,7 +62,7 @@ class Solution {
 class Solution {
     // Trie Tree 版本，将单词倒着存储在Trie中，时间复杂度 O(n * k^2)
     // 大意为 s1 + s2 形成回文串的时候，由于倒序存储，正序遍历 s1 的时候其实进入的是 s2 存储的树枝，这样形成了头尾对称遍历
-    // 当到达 s1 或 s2 其中一个单词的结尾的时候，
+    // 当到达 s1 或 s2 其中一个单词的结尾的时候，要么从结点中保存的回文串信息判断，要么单独判断一次回文串
     class TrieNode {
         TrieNode[] next;
         int isWord;
@@ -111,8 +111,9 @@ class Solution {
 
     private void search(String[] words, int i, TrieNode root, List<List<Integer>> res) {
         // 正序匹配
+        // 如是 "cbdd" 匹配 "ddbca" 形成 "ddbcacbdd"：由于倒序存储，则正序遍历 "ddbca" 会进入 "cbdd" 的树枝，当遍历到 "a" 的时候，这里 isWord 标志着 "cbdd" 一个单词的结束，此时判断剩余部分是不是回文串即可
         for (int j = 0; j < words[i].length(); j++) {
-            // 如是 "cbdd" 匹配 "ddbca" 形成 "ddbcacbdd"：由于倒序存储，则正序遍历 "ddbca" 会进入 "cbdd" 的树枝，当遍历到 "a" 的时候，这里 isWord 标志着 "cbdd" 一个单词的结束，此时判断剩余部分是不是回文串即可
+            // 每次从根节点开始判断，也就是空字符串 ""
             if (root.isWord >= 0 && root.isWord != i && isPalindrome(words[i], j, words[i].length() - 1)) {
                 res.add(Arrays.asList(i, root.isWord));
             }
