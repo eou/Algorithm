@@ -2,10 +2,61 @@
 >君看古彝器，巧拙两无施。汉最近先秦，固已殊淳漓。
 >胡部何为者，豪竹杂哀丝。后夔不复作，千载谁与期？
 
+# [73. Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes/description/)
+
+```java
+class Solution {
+    public void setZeroes(int[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return;
+        }
+        
+        int rows = matrix.length, cols = matrix[0].length;
+        boolean col0 = false; 
+        for (int i = 0; i < rows; ++i) {
+            // the feature of first column will be stored in col0
+            if (matrix[i][0] == 0) {
+                col0 = true;
+            }
+			
+            // matrix[0][0] is only used for storing the feature of first row
+            for (int j = 1; j < cols; ++j) {
+                if (matrix[i][j] == 0) {
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                }
+            }
+        }
+        for (int i = rows - 1; i >= 0; --i) {
+            for (int j = cols - 1; j >= 1; --j) {
+                if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+            if (col0) {
+                matrix[i][0] = 0;
+            }
+        }
+    }
+}
+```
+
+思路不难，难点在于空间复杂度$O(1)$ in-place 转换二维数组。
+
+因为数组大小一直变化，我们要达到常数级别的空间复杂度，要么利用原有的空间，要么记录一些固定的特征。我们无法找到数量不变的特征，记录行与列的特征必然要$O(n)$的空间。
+
+所以最优解就是利用原有空间，把数组中第一行和第一列的元素作为记录点，如果某行有一个元素为0，则此行首元素设为0；如果某列有一个元素为0，则此列首元素设为0.
+
+但是有一个特殊细节很重要：`matrix[0][0]`. 这是第一行和第一列的交叉点，如果第一列有一个元素为0导致第一列需要设为0，这个交叉点原本不为0而记录下0，可能会导致第一行的元素不需要变为0而错误变为0. 
+
+其余行列不存在这种情况，因为行首元素就只记录了此行是否需要变为0的信息，列首元素就只记录了此列需要变为0的信息。交叉点无法同时承担了两个功能，所以需要另一个辅助变量来记录第一列的情况，`matrix[0][0]`只用来记录第一行的情况。当然也能用辅助变量记录第一行的情况。
+
+---
+
 # [142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/description/) 
 
 ```java
-public class Solution {
+class Solution {
     public ListNode detectCycle(ListNode head) {
         if(head == null || head.next == null) {
             return null;
