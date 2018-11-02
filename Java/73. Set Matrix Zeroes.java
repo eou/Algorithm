@@ -95,8 +95,7 @@ class Solution {
         
         // 将每行每列的第一个元素作为哨兵值
         int rows = matrix.length, cols = matrix[0].length;
-        // 注意第一行第一列为特殊情况，因为作为记录列，此行的元素不能根据交叉点 matrix[0][0] 的值来判断
-        // 否则因为第一列需要设为0，这个交叉点记录为0，导致第一行元素可能不需要变为0也变为0
+        // 注意第一行第一列为特殊情况，交叉点 matrix[0][0] 的值不能同时用作判断第一行和第一列是否变为0，需要辅助变量col0来分担一个功能
         boolean col0 = false; 
         for (int i = 0; i < rows; ++i) {
             if (matrix[i][0] == 0) {
