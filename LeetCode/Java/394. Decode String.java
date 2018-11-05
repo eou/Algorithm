@@ -1,7 +1,7 @@
 // 394. Decode String
 // 此题类似计算数学表达式，不用栈，用一个栈，用两个栈都能做，时间复杂度都是 O(n)
-// 不用栈的思路就是脱括号然后递归计算括号内部字符串
-// 用栈的思路是轮流保存数字和字母，遇到 ']' 就弹出一个数字和一个字符串进行叠加
+// 不用栈的思路就是脱括号然后递归计算括号内部字符串，DFS
+// 用栈的思路是轮流保存数字和字母，遇到 ']' 就弹出一个数字和一个字符串进行叠加，很像表达式计算
 class Solution {
     // 不用栈版本，本质是一层一层脱括号然后递归计算，只需考虑第一个字符是数字或者是字母，括号不管
     public String decodeString(String s) {
@@ -110,19 +110,22 @@ class Solution {
         StringBuilder result = new StringBuilder();
         Deque<StringBuilder> stack = new ArrayDeque<>();
         int i = 0;
-        while (i < s.length()) {
-            if (Character.isDigit(s.charAt(i))) {
+        while(i < s.length()) {
+            char c = s.charAt(i);
+            // 由于只用一个栈，可能会混淆数字和字母，因此当遇到一个数字就必须将之前的字符串放入栈，然后找出整个数字字符串放入栈
+            if(Character.isDigit(c)) {
                 stack.push(result);
+
                 int start = i;
-                while (Character.isDigit(s.charAt(i))) {
+                while(Character.isDigit(s.charAt(i))) {
                     i++;
                 }
                 // store the number as string in the stack
                 stack.push(new StringBuilder(s.substring(start, i)));
-            } else if (s.charAt(i) == '[') {
+            } else if(c == '[') {
                 result = new StringBuilder();
                 i++;
-            } else if (s.charAt(i) == ']') {
+            } else if(c == ']') {
                 int rep = Integer.parseInt((stack.pop()).toString());
                 StringBuilder tmp = stack.pop();
                 for (int j = 0; j < rep; j++) {
@@ -131,7 +134,7 @@ class Solution {
                 result = tmp;
                 i++;
             } else {
-                result.append(s.charAt(i));
+                result.append(c);
                 i++;
             }
         }
@@ -148,28 +151,79 @@ class Solution {
 
         Deque<Integer> intStack = new ArrayDeque<>();
         Deque<StringBuilder> strStack = new ArrayDeque<>();
-        StringBuilder cur = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         int k = 0;
 
-        for (char c : s.toCharArray()) {
+        int i = 0;
+        while( i < s.length()) {
+            char c = s.charAt(i);
             if (Character.isDigit(c)) {
+                // 由于数字和字母独立存储，可以一位一位计算
                 k = k * 10 + (c - '0');
-            } else if (c == '[') {
+            } else if(c == '[') {
                 intStack.push(k);
-                strStack.push(cur);
-                cur = new StringBuilder();
+                strStack.push(result);
+                result = new StringBuilder();
                 k = 0;
-            } else if (c == ']') {
-                StringBuilder tmp = cur;
-                cur = strStack.pop();
+                i++;
+            } else if(c == ']') {
+                StringBuilder tmp = result;
+                result = strStack.pop();
                 for (k = intStack.pop(); k > 0; k--) {
-                    cur.append(tmp);
+                    result.append(tmp);
                 }
+                i++;
             } else {
-                cur.append(c);
+                result.append(c);
+                i++;
             }
         }
 
-        return cur.toString();
+        return result.toString();
+    }
+}
+
+class Solution {
+    // 两个栈的版本模仿一个栈的版本略做改动
+    public String decodeString(String s) {
+        if(s == null || s.length() == 0) {
+            return "";
+        }
+
+        Deque<Integer> intStack = new ArrayDeque<>();
+        Deque<StringBuilder> strStack = new ArrayDeque<>();
+        StringBuilder result = new StringBuilder();
+        int k = 0;
+
+        int i = 0;
+        while(i < s.length()) {
+            char c = s.charAt(i);
+            if(Character.isDigit(c)) {
+                strStack.push(result);
+
+                // 直接算出整个数字
+                while(Character.isDigit(s.charAt(i))) {
+                    k = k * 10 + (s.charAt(i) - '0');
+                    i++;
+                }
+                intStack.push(k);
+            } else if(c == '[') {
+                result = new StringBuilder();
+                k = 0;
+                i++;
+            } else if(c == ']') {
+                StringBuilder tmp = result;
+                result = strStack.pop();
+                for (k = intStack.pop(); k > 0; k--) {
+                    result.append(tmp);
+                }
+                i++;
+            } else {
+                result.append(c);
+                i++;
+            }
+        }
+
+        return result.toString();
     }
 }
