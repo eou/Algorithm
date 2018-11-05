@@ -19,7 +19,7 @@
 
 // 暴力解法时间复杂度为 O(n^3)，排序后任取两个数字作为起始，扫描后面的数字有多少在数列中
 // 可以用 HashMap 把时间复杂度降为 O(n^2)，用 map 保存数组，去重后任取两个数字作为起始，用 map 判断是否有后续数字在数列中，然后单独找出去重前相同数字的最大重复次数进行比较
-// 用 dp 也可以达到时间复杂度 O(n^2)，
+// 用 dp 也可以达到时间复杂度 O(n^2)
 
 import java.util.*;
 
@@ -31,6 +31,7 @@ public class Solution {
     }
 
     public int longestArithmeticProgression(int num[]) {
+        // HashMap 版本
         int llap = 0;
         Map<Integer, Integer> map = new HashMap<>();
         Set<Integer> set = new HashSet<>();
@@ -65,6 +66,7 @@ public class Solution {
     }
 
     public int longestArithmeticProgression(int num[]) {
+        // dp 版本
         int n = num.length;
         if(n <= 2) {
             return n;
