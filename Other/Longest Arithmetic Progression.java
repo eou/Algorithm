@@ -21,35 +21,29 @@
 // 可以用 HashMap 把时间复杂度降为 O(n^2)，用 map 保存数组，去重后任取两个数字作为起始，用 map 判断是否有后续数字在数列中，然后单独找出去重前相同数字的最大重复次数进行比较
 // 用 dp 也可以达到时间复杂度 O(n^2)，
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Arrays;
+import java.util.*;
 
 public class Solution {
     public static void main(String args[]) {
         Solution s = new Solution();
         int num[] = { 1, 7, 15, 29, 27, 10 };
-        System.out.println(s.longestArithmeticSeq(num));
+        System.out.println(s.longestArithmeticProgression(num));
     }
 
-    public int longestArithmeticSeq(int num[]) {
-        int longest = 0;
+    public int longestArithmeticProgression(int num[]) {
+        int llap = 0;
         Map<Integer, Integer> map = new HashMap<>();
         Set<Integer> set = new HashSet<>();
         for (int i = 0; i < num.length; i++) {
             set.add(num[i]);
             map.put(num[i], map.getOrDefault(num[i], 0) + 1);
-            longest = Math.max(longest, map.get(num[i]));
+            llap = Math.max(llap, map.get(num[i]));
         }
 
         Integer[] nums = set.toArray(new Integer[set.size()]);
         Arrays.sort(nums);
 
-        for (int i = 0; i < nums.length - longest + 1; i++) {
+        for (int i = 0; i < nums.length - llap + 1; i++) {
             for (int j = i + 1; j < nums.length; j++) {
                 int gap = nums[j] - nums[i];
                 if (gap != 0) {
@@ -57,47 +51,68 @@ public class Solution {
                     while (map.containsKey(cur + gap)) {
                         cur += gap;
                     }
-                    longest = Math.max(longest, (cur - nums[i]) / gap + 1);
+                    llap = Math.max(llap, (cur - nums[i]) / gap + 1);
                 }
             }
 
-            if (longest > nums.length / 2) {
+            // optimization
+            if (llap > nums.length / 2) {
                 break;
             }
         }
 
-        return longest;
+        return llap;
     }
 
-    public int longestArithmeticSeq(int num[]) {
-        int longest = 0;
-        // the length of arithmetic sequence by setting num[i] and num[j] as first two elements
-        int dp[][] = new int[num.length][num.length];
-        Arrays.sort(num);
-
-        // base case
-        for (int i = 0; i < num.length - 1; i++) {
-            for (int j = i; j < num.length; j++) {
-                dp[i][j] = 2;
-            }
+    public int longestArithmeticProgression(int num[]) {
+        int n = num.length;
+        if(n <= 2) {
+            return n;
         }
-        
-        for (int j = num.length; j >= 0; j--) {
+
+        // The value ofL[i][j] stores LLAP with set[i] and set[j] as first two elements of AP
+        // Only valid entries are the entries where j > i
+        int dp[][] = new int[n][n];
+
+        int llap = 2;
+
+        // Fill entries in last column as 2 because the last element is the second element of AP
+        for(int i = 0; i < n; i++) {
+            dp[i][n - 1] = 2;
+        }
+
+        // Consider every element as second element of AP
+        for(int j = n - 2; j >= 1; j--) {
             int i = j - 1, k = j + 1;
-            while (i >= 0 && k < num.length) {
+
+            while(i >= 0 && k <= n - 1) {
                 if (num[i] + num[k] < 2 * num[j]) {
                     k++;
                 } else if (num[i] + num[k] > 2 * num[j]) {
+                    // Before changing i, set L[i][j] as 2
+                    dp[i][j] = 2;
                     i--;
                 } else {
+                    // Found i and k for j, LLAP with i and j as first two elements is equal to LLAP with j and k
+                    // L[j][k] must have been filled before as we run the loop from right side
                     dp[i][j] = dp[j][k] + 1;
-                    longest = Math.max(longest, dp[i][j]);
+
+                    // Update overall LLAP, if needed
+                    llap = Math.max(llap, dp[i][j]);
+
+                    // Change i and k to fill more L[i][j] values for current j
                     i--;
                     k++;
                 }
             }
+
+            // If the loop was stopped due to k becoming more than n-1
+            while(i >= 0) {
+                dp[i][j] = 2;
+                i--;
+            }
         }
 
-        return longest;
+        return llap;
     }
 }
