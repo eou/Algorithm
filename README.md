@@ -1,4 +1,4 @@
-# LeetCode Solutions Record
+# Algorithm Problems Solving
 
 > 夢ならばどれほどよかったでしょう
 >
