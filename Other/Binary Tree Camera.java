@@ -1,10 +1,10 @@
 /**
- * Binary Tree Monitor.java 
+ * Binary Tree Camera.java 
  * 在树的结点上装camera，每一个结点上的camera能够监视到父结点，自身和两个子结点。最少安装多少个camera监视到所有结点
  */
 class Solution {
     // 分治法，每次递归返回保存在数组里的两个值：此节点上有camera和此节点上无camera时最小总camera个数
-    public int binaryTreeMonitor(TreeNode root) {
+    public int binaryTreeCamera(TreeNode root) {
         // dp[0] 保存此结点无camera时，以此结点为根的树上总camera个数
         // dp[1] 保存此结点有camera时，以此结点为根的树上总camera个数
         int[] dp = helper(root);
