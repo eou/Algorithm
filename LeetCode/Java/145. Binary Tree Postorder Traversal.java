@@ -46,7 +46,7 @@ class Solution {
 
         stack.push(root);
         while (!stack.isEmpty()) {
-            // 跟前序遍历代码结构一样，但是左右节点相对顺序没反，所以先打入左节点再打入右节点
+            // 跟前序遍历代码结构一样，但是左右节点相对顺序没反，所以先打入左节点再打入右节点，即左 → 右 → 根
             TreeNode node = stack.pop();
             list.addFirst(node.val);
 
@@ -97,6 +97,38 @@ class Solution {
         }
 
         return list;
+    }
+}
+
+class Solution {
+    // 用 set 保存左右结点是否访问过，这也是 balanced binary tree 非递归的写法
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> results = new ArrayList<>();
+        if (root == null) {
+            return results;
+        }
+
+        Set<TreeNode> visited = new HashSet<>();
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            if ((node.left == null || (node.left != null && visited.contains(node.left)))
+                    && (node.right == null || (node.right != null && visited.contains(node.right)))) {
+                results.add(node.val);
+                visited.add(node);
+            } else {
+                stack.push(node);
+                if (node.left != null && !visited.contains(node.left)) {
+                    stack.push(node.left);
+                } else {
+                    stack.push(node.right);
+                }
+            }
+        }
+
+        return results;
     }
 }
 
