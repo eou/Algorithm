@@ -1,5 +1,5 @@
 // 339. Nested List Weight Sum
-// 就是层次遍历 或者 DFS
+// 层次遍历 或者 DFS
 // [[1,1], 2, [1,1]]
 //     *, 2, *
 //    /       \
@@ -12,23 +12,20 @@
 //              6
 class Solution {
     public int depthSum(List<NestedInteger> nestedList) {
-        if (nestedList == null) {
-            return 0;
-        }
-
+        // queue 内元素初始化为 nestedList
         Deque<NestedInteger> queue = new ArrayDeque<>(nestedList);
+
         int level = 1, sum = 0;
-        while (queue.size() > 0) {
+        while (!queue.isEmpty()) {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
-                NestedInteger tmp = queue.poll();
-                if (tmp.isInteger()) {
-                    sum += tmp.getInteger() * level;
+                NestedInteger ni = queue.poll();
+                if (ni.isInteger()) {
+                    sum += level * ni.getInteger();
                 } else {
-                    for (NestedInteger n : tmp.getList()) {
+                    for (NestedInteger n : ni.getList()) {
                         queue.offer(n);
                     }
-                    // queue.addAll(tmp.getList());
                 }
             }
             level++;
