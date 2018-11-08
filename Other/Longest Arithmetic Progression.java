@@ -1,5 +1,5 @@
 /**
- * - Longest Arithmetic Progression
+ * Longest Arithmetic Progression
  * https://www.geeksforgeeks.org/longest-arithmetic-progression-dp-35/
  * 
  * Given an array of sorted numbers having no duplicates , write a program to
