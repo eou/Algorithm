@@ -110,7 +110,7 @@ class Solution {
 }
 
 class Solution {
-    // 非递归版本，后序遍历
+    // 非递归版本，利用后序遍历特性：返回根节点时保证已经遍历完两课子树，所以可以比较子树的高度
     public boolean isBalanced(TreeNode root) {
         if (root == null) {
             return true;

@@ -46,7 +46,7 @@ class Solution {
 
         stack.push(root);
         while (!stack.isEmpty()) {
-            // 跟前序遍历代码结构一样，但是左右节点相对顺序没反，所以先打入左节点再打入右节点，即左 → 右 → 根
+            // 跟前序遍历类似，不过是先在头部加入根，然后左节点和右节点，即左 → 右 → 根 → 头部
             TreeNode node = stack.pop();
             list.addFirst(node.val);
 
@@ -65,16 +65,15 @@ class Solution {
 class Solution {
     // 非递归版本另一个形式，不是在数组头部插入元素或者最后翻转数组，但是需要一个prev节点
     public List<Integer> postorderTraversal(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<>();
-        Stack<TreeNode> stack = new Stack<>();
+        List<Integer> results = new ArrayList<>();
+        if (root == null) {
+            return results;
+        }
 
+        Deque<TreeNode> stack = new ArrayDeque<>();
         // 一个当前访问的节点，一个刚才访问的节点
         TreeNode prev = null;
         TreeNode curr = root;
-
-        if (root == null) {
-            return list;
-        }
 
         stack.push(root);
         while (!stack.empty()) {
@@ -90,18 +89,51 @@ class Solution {
                     stack.push(curr.right);
                 }
             } else {
-                list.add(curr.val);
+                results.add(curr.val);
                 stack.pop();
             }
             prev = curr;
         }
 
-        return list;
+        return results;
     }
 }
 
 class Solution {
-    // 用 set 保存左右结点是否访问过，这也是 balanced binary tree 非递归的写法
+    // pre 节点与栈的另一个版本，跟中序遍历类似，因为遍历每一棵树都要先找到最左边的结点
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> results = new ArrayList<>();
+        if (root == null) {
+            return results;
+        }
+
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode pre = null;
+        TreeNode node = root;
+
+        while (node != null || !stack.isEmpty()) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+            node = stack.peek();
+            if (node.right != null && pre != node.right) {
+                // pre != node.right 说明右子树尚未访问
+                node = node.right;
+            } else {
+                // 右子树已经遍历过或者没有右子树
+                pre = node;
+                results.add(stack.pop().val);
+                node = null;
+            }
+        }
+
+        return results;
+    }
+}
+
+class Solution {
+    // 用 set 保存左右结点是否访问过
     public List<Integer> postorderTraversal(TreeNode root) {
         List<Integer> results = new ArrayList<>();
         if (root == null) {
