@@ -1,5 +1,6 @@
 // 17. Letter Combinations of a Phone Number
 class Solution {
+    // 时间复杂度为 O(3^n ~ 4^n)
     public List<String> letterCombinations(String digits) {
         LinkedList<String> results = new LinkedList<>();
 		if(digits.isEmpty()) {

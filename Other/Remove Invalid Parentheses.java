@@ -2,37 +2,6 @@
  * Remove Invalid Parentheses.java
  * 此题是 301. Remove Invalid Parentheses 的简化版，求出一个 valid parentheses的解即可
  */
-
-class Solution {
-    // one pass 版本，需要 stack 辅助，找出 invalid parentheses 然后删除
-    public String removeInvalidParentheses(String s) {
-        if(s == null || s.length() == 0) {
-            return ""; 
-        }
-        
-        StringBuilder stringBuilder = new StringBuilder(s);
-        Deque<Integer> stack = new ArrayDeque<>();
-        for(int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if(c == '(') {
-                stack.push(i);
-            } else if(c == ')') {
-                if(!stack.isEmpty() && s.charAt(stack.peek()) == '(') {
-                    stack.pop();
-                } else {
-                    stack.push(i);
-                }
-            }
-        }
-        
-        while(!stack.isEmpty()) {
-            stringBuilder.deleteCharAt(stack.pop());
-        }
-        
-        return stringBuilder.toString();
-    }
-}
-
 class Solution {
     // two pass 版本，需要左右方向各遍历一遍，两遍代码其实一样，所以可以简化
     public String removeInvalidParentheses(String s, char c1, char c2) {
@@ -66,6 +35,37 @@ class Solution {
 
     public static void main(String[] args) {
         System.out.println(new Solution().removeInvalidParentheses("(b()))a()", '(', ')'));
+    }
+}
+
+class Solution {
+    // one pass 版本，需要 stack 辅助，保存 invalid parentheses 下标最后删除
+    public String removeInvalidParentheses(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder(s);
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '(') {
+                stack.push(i);
+            } else if (c == ')') {
+                if (!stack.isEmpty() && s.charAt(stack.peek()) == '(') {
+                    stack.pop();
+                } else {
+                    stack.push(i);
+                }
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            // 删除的时间复杂度有 O(n)
+            stringBuilder.deleteCharAt(stack.pop());
+        }
+
+        return stringBuilder.toString();
     }
 }
 

@@ -80,3 +80,32 @@ class Solution {
         }
     }
 }
+
+class Solution {
+    // compare one by one
+    public ListNode mergeKLists(ListNode[] lists) {
+        int minList = 0;
+        ListNode dummy = new ListNode(-1);
+        ListNode cur = dummy;
+
+        while (true) {
+            boolean isEnd = true;
+            int min = Integer.MAX_VALUE;
+            for (int i = 0; i < lists.length; i++) {
+                if (lists[i] != null && lists[i].val < min) {
+                    minList = i;
+                    min = lists[i].val;
+                    isEnd = false;
+                }
+            }
+            if (isEnd) {
+                break;
+            }
+            cur.next = lists[minList];
+            cur = cur.next;
+            lists[minList] = lists[minList].next;
+        }
+
+        return dummy.next;
+    }
+}

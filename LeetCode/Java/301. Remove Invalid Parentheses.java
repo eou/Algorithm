@@ -18,7 +18,7 @@ class Solution {
             }
             if(closeNum > openNum) {
                 for(int j = delete; j <= i; j++) {
-                    // 删除一个多余的左符号，并且要保证此删除操作不会重复，即之前没有同样的左符号
+                    // 删除一个多余的右符号，并且要保证此删除操作不会重复，即之前没有同样的右符号，如"...)))" 只删除第一个)，或者刚好就是第一个字符
                     if(s.charAt(j) == close && (j == delete || s.charAt(j - 1) != close)) {
                         // 下一个从i开始，因为删除了一个字符导致下标前移
                         helper(s.substring(0, j) + s.substring(j + 1, s.length()), i, j, open, close, results);
@@ -125,13 +125,13 @@ class Solution {
         for (int i = start; i < s.length(); i++) {
             if (openCnt > 0 && s.charAt(i) == '(') {
                 if (i == start || s.charAt(i) != s.charAt(i - 1)) {
-                    helper(s.substring(0, i) + s.substring(i + 1), i, openCnt - 1, closeCnt, results);
+                    helper(s.substring(0, i) + s.substring(i + 1), i, openCnt - 1, closeCnt, results); // 不能写openCnt--
                 }
             }
 
             if (closeCnt > 0 && s.charAt(i) == ')') {
                 if (i == start || s.charAt(i) != s.charAt(i - 1)) {
-                    helper(s.substring(0, i) + s.substring(i + 1), i, openCnt, closeCnt - 1, results);
+                    helper(s.substring(0, i) + s.substring(i + 1), i, openCnt, closeCnt - 1, results); // 不能写closeCnt--
                 }
             }
         }

@@ -45,3 +45,76 @@ class Solution {
         return results;
     }
 }
+
+class Solution {
+    // 不用排序的版本，超时
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> results = new ArrayList<>();
+
+        Set<List<Integer>> set = new HashSet<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            // 注意 j 从 0 开始，因为内部还是需要判断升降序来去重，如果从 i + 1 开始可能会漏解
+            for (int j = 0; j < nums.length; j++) {
+                int a = nums[i];
+                int b = nums[j];
+                int c = 0 - a - b;
+                // 去重
+                if (!(a >= b && b >= c)) {
+                    continue;
+                }
+
+                if (map.containsKey(c)) {
+                    map.put(a, map.get(a) - 1);
+                    map.put(b, map.get(b) - 1);
+                    map.put(c, map.get(c) - 1);
+                } else {
+                    continue;
+                }
+
+                if (map.get(a) >= 0 && map.get(b) >= 0 && map.get(c) >= 0) {
+                    // 去重
+                    set.add(Arrays.asList(a, b, c));
+                }
+
+                map.put(a, map.get(a) + 1);
+                map.put(b, map.get(b) + 1);
+                map.put(c, map.get(c) + 1);
+            }
+        }
+
+        results.addAll(set);
+        return results;
+    }
+}
+
+class Solution {
+    // 不用排序的版本，超时，时间复杂度 O(n^3)
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> results = new ArrayList<>();
+        Set<List<Integer>> set = new HashSet<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 0; j < nums.length; j++) {
+                int a = nums[i];
+                int b = nums[j];
+                int c = 0 - a - b;
+                if (!(a >= b && b >= c)) {
+                    continue;
+                }
+                for (int k = 0; k < nums.length; k++) {
+                    if (nums[k] == c && i != j && j != k && i != k) {
+                        set.add(Arrays.asList(a, b, c));
+                    }
+                }
+            }
+        }
+
+        results.addAll(set);
+        return results;
+    }
+}

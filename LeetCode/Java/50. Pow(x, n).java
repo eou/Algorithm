@@ -1,4 +1,6 @@
 // 50. Pow(x, n)
+// Pow(x, n) = Pow(x, n / 2) * Pow(x, n / 2) (if n % 2 = 0)
+// = Pow(x, n / 2) * Pow(x, n / 2) * x (if n % 2 = 1)
 class Solution {
     // brute force 时间复杂度 O(n)，会超时
     public double myPow(double x, int n) {
@@ -23,7 +25,7 @@ class Solution {
         long N = n;
         if(N < 0) {
             x = 1 / x;
-            N = -N;
+            N = -N; // 注意不能写成 N = -n
         }
         
         double result = 1;
@@ -89,5 +91,24 @@ class Solution {
             return result * result;
         }
         return result * result * x;
+    }
+}
+
+class Solution {
+    // Fast Power Algorithm 递归另一版本
+    public double myPow(double x, int n) {
+        if (n == 0) {
+            return 1;
+        }
+
+        double half = myPow(x, n / 2);
+
+        if (n % 2 == 0) {
+            return half * half;
+        } else if (n > 0) {
+            return half * half * x;
+        } else {
+            return half * half / x;
+        }
     }
 }
