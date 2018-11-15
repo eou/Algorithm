@@ -74,6 +74,7 @@ public class Codec {
 
 public class Codec {
     // LeetCode官方给的前序遍历DFS版本，还有详细分析优化
+    // 实际上输入输出的字符串是不带 "[]" 的
     public String rserialize(TreeNode root, String str) {
         if (root == null) {
             str += "null,";

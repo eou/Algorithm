@@ -1,8 +1,7 @@
 // 91. Decode Ways
 // numDecodings(s) = numDecodings(s.substring(1)) + numDecodings(s.substring(2)) => Fibonacci sequence
 class Solution {
-    // 只能用DP做
-    int num = 0;
+    // 典型DP数组版本
     public int numDecodings(String s) {
         if (s == null || s.length() == 0) {
             return 0;
@@ -12,6 +11,7 @@ class Solution {
         // 要预设两个元素值
         dp[0] = 1;
         dp[1] = s.charAt(0) == '0' ? 0 : 1;
+        // 注意是 i <= s.length()
         for(int i = 2; i <= s.length(); i++) {
             int first = Integer.parseInt(s.substring(i - 1, i));
             int second = Integer.parseInt(s.substring(i - 2, i));
@@ -33,11 +33,12 @@ class Solution {
     // .....c2, c1,
     // .........c2,  c1 
     public int numDecodings(String s) {
+        // 注意
         if (s == null || s.length() == 0 || s.charAt(0) == '0') {
             return 0;
         }
 
-        // c2: decode ways of s[i-2] , c1: decode ways of s[i-1]
+        // c2: decode ways of s[i-1] , c1: decode ways of s[i]
         int c1 = 1;
         int c2 = 1;
         for (int i = 1; i < s.length(); i++) {
@@ -45,12 +46,20 @@ class Solution {
                 c1 = 0;
             }
             // possible two-digit letter, so new c1 is sum of both while new c2 is the old c1
-            if (s.charAt(i - 1) == '1' || (s.charAt(i - 1) == '2' && s.charAt(i) <= '6')) {
+            int num = Integer.parseInt(s.substring(i - 1, i + 1));
+            if (num >= 10 && num <= 26) {
                 c1 = c1 + c2;
                 c2 = c1 - c2;
             } else {
                 c2 = c1;
             }
+            
+            // if (s.charAt(i - 1) == '1' || (s.charAt(i - 1) == '2' && s.charAt(i) <= '6')) {
+            //     c1 = c1 + c2;
+            //     c2 = c1 - c2;
+            // } else {
+            //     c2 = c1;
+            // }
         }
 
         return c1;

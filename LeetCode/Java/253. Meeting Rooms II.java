@@ -70,7 +70,7 @@ class Solution {
         // currentMeetings 这个变量可以去掉，因为需要过程中的最大值，只需记录所有增加操作：
         // for (int i = 0; i < starts.length; i++) {
         //     if (starts[i] < ends[j]) {
-        //         rooms++;
+        //         rooms++; // 这里每次都是i++;
         //     } else {
         //         j++;
         //     }
