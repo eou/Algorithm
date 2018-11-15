@@ -1,5 +1,5 @@
 // 76. Minimum Window Substring
-// sliding window 典型题目
+// sliding window 典型题目，时间复杂度为 O(n)，虽然有两个循环嵌套，但是每个字符最多遍历两次
 class Solution {
     public String minWindow(String s, String t) {
         if (s == null || s.length() < t.length()) {

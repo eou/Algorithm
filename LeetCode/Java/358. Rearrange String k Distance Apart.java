@@ -66,6 +66,7 @@ class Solution {
 }
 
 class Solution {
+    // 无需堆的解法，时间复杂度为 O(n^2)
     public String rearrangeString(String s, int k) {
         if (s == null || s.length() == 0) {
             return "";
