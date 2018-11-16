@@ -39,3 +39,41 @@ class Solution {
         return -1;
     }
 }
+
+class Solution {
+    // 递归版本
+    public int search(int[] nums, int target) {
+        int low = 0;
+        int high = nums.length - 1;
+        return search(nums, target, low, high);
+    }
+
+    private int search(int[] nums, int target, int low, int high) {
+        if (low > high) {
+            return -1;
+        }
+
+        int mid = (low + high) / 2;
+
+        if (nums[mid] == target) {
+            return mid;
+        }
+
+        // if left half is sorted
+        if (nums[low] <= nums[mid]) {
+            if (nums[low] <= target && nums[mid] >= target) {
+                return search(nums, target, low, mid - 1);
+            } else {
+                return search(nums, target, mid + 1, high);
+            }
+        }
+        
+        else {
+            if (nums[mid] <= target && nums[high] >= target) {
+                return search(nums, target, mid + 1, high);
+            } else {
+                return search(nums, target, low, mid - 1);
+            }
+        }
+    }
+}

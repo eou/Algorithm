@@ -58,7 +58,7 @@ class Solution {
 class Solution {
     public int lengthOfLIS(int[] nums) {
         int[] tails = new int[nums.length];
-        
+
         int size = 0;
         for (int x : nums) {
             int i = 0, j = size;
@@ -68,13 +68,14 @@ class Solution {
                     i = m + 1;
                 } else {
                     j = m;
-                }  
+                }
             }
             tails[i] = x;
             if (i == size) {
                 ++size;
-            }    
+            }
         }
+
         return size;
     }
 }

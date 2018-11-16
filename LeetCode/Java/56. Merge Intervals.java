@@ -35,3 +35,23 @@ class Solution {
         return results;
     }
 }
+
+class Solution {
+    // in-place merge
+    public List<Interval> merge(List<Interval> intervals) {
+        intervals.sort((i1, i2) -> i1.start - i2.start);
+        
+        int i = 0;
+        while (i < intervals.size() - 1) {
+            Interval curr = intervals.get(i);
+            Interval next = intervals.get(i + 1);
+            if (next.start <= curr.end) {
+                curr.end = Math.max(curr.end, next.end);
+                intervals.remove(i + 1);
+            } else {
+                i++;
+            }
+        }
+        return intervals;
+    }
+}
