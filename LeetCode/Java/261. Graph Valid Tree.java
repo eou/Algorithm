@@ -100,7 +100,7 @@ class Solution {
 }
 
 class Solution {
-    // Union Find 完整版本
+    // Union Find 版本
     class unionFind {
         private int[] id;
         private int[] size;

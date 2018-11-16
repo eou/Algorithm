@@ -1,7 +1,7 @@
 // 200. Number of Islands
 // BFS, DFS, Union Find，时间复杂度都是O(m*n)，其中BFS的空间复杂度较低，为O(min(m, n))
 class Solution {
-    // BFS版本
+    // BFS版本，目的是从一个点延伸到一个岛，但是要改变原来数组的值
     // 可以不用Pair类，直接保存 row * len + col，也就是二维数组摊成一维数组后的下标
     class Pair {
         int x;
@@ -61,17 +61,15 @@ class Solution {
 }
 
 class Solution {
-    // DFS版本
+    // DFS版本，目的是从一个点找到所有到周边的路径，也是要改变原数组的值
     public int numIslands(char[][] grid) {
         if (grid == null || grid.length == 0) {
             return 0;
         }
 
-        int nr = grid.length;
-        int nc = grid[0].length;
         int num_islands = 0;
-        for (int r = 0; r < nr; ++r) {
-            for (int c = 0; c < nc; ++c) {
+        for (int r = 0; r < grid.length; ++r) {
+            for (int c = 0; c < grid[0].length; ++c) {
                 if (grid[r][c] == '1') {
                     ++num_islands;
                     helper(grid, r, c);
@@ -83,10 +81,7 @@ class Solution {
     }
 
     void helper(char[][] grid, int r, int c) {
-        int nr = grid.length;
-        int nc = grid[0].length;
-
-        if (r < 0 || c < 0 || r >= nr || c >= nc || grid[r][c] == '0') {
+        if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length || grid[r][c] == '0') {
             return;
         }
 

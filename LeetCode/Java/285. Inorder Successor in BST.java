@@ -17,7 +17,7 @@ class Solution {
             }
             node = stack.pop();
 
-            if (isfind == true) {
+            if (isfind) {
                 return node;
             }
             if (node == p) {
@@ -35,15 +35,15 @@ class Solution {
     // 利用BST左小右大的特性更简洁
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
         TreeNode node = root;
-        TreeNode res = null;
+        TreeNode pre = null;
         while (node != null) {
             if (node.val <= p.val) {
                 node = node.right;
             } else {
-                res = node;
+                pre = node;
                 node = node.left;
             }
         }
-        return res;
+        return pre;
     }
 }

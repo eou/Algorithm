@@ -1,5 +1,6 @@
 // 282. Expression Add Operators
 class Solution {
+    // 时间复杂度为 O(4^n)
     public List<String> addOperators(String num, int target) {
         List<String> results = new ArrayList<>();
         if (num.length() < 2) {

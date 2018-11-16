@@ -27,7 +27,24 @@ class Solution {
 }
 
 class Solution {
-    // 更简洁版本
+    public int diameterOfBinaryTree(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return Math.max(getHeight(root.left) + getHeight(root.right),
+                Math.max(diameterOfBinaryTree(root.left), diameterOfBinaryTree(root.right)));
+    }
+
+    private int getHeight(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        return Math.max(getHeight(root.left), getHeight(root.right)) + 1;
+    }
+}
+
+class Solution {
     int max = 0;
     public int diameterOfBinaryTree(TreeNode root) {
         maxDepth(root);

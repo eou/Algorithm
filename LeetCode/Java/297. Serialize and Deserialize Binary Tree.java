@@ -6,7 +6,7 @@ public class Codec {
             return "[]";
         }
 
-        ArrayList<TreeNode> queue = new ArrayList<TreeNode>();
+        List<TreeNode> queue = new ArrayList<TreeNode>();
         queue.add(root);
 
         // 这就是层次遍历的while循环，写成了for循环
@@ -46,7 +46,8 @@ public class Codec {
             return null;
         }
         String[] vals = data.substring(1, data.length() - 1).split(",");
-        ArrayList<TreeNode> queue = new ArrayList<TreeNode>();
+        List<TreeNode> queue = new ArrayList<>();
+
         TreeNode root = new TreeNode(Integer.parseInt(vals[0]));
         queue.add(root);
         int index = 0;

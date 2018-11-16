@@ -63,21 +63,20 @@ class Solution {
 
 class Solution {
     // 遍历法
-    Node pre = null;
-
+    Node pre;
     public Node treeToDoublyList(Node root) {
         if (root == null) {
             return null;
         }
         // 新建一个独立节点，是在head之前的辅助节点
-        Node tmp = new Node(0, null, null);
-        // pre用tmp初始化，之后连上第一个节点
-        pre = tmp;
+        Node dummy = new Node(0, null, null);
+        // pre用dummy初始化，之后连上第一个节点
+        pre = dummy;
         helper(root);
-        // 此时pre在最后一个节点上，tmp.right指向head节点，tmp.right也就是head指针
-        pre.right = tmp.right;
-        tmp.right.left = pre;
-        return tmp.right;
+        // 此时pre在最后一个节点上，dummy.right指向head节点，dummy.right也就是head指针
+        pre.right = dummy.right;
+        dummy.right.left = pre;
+        return dummy.right;
     }
 
     private void helper(Node cur) {
