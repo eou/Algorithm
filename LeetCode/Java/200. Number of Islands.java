@@ -95,7 +95,7 @@ class Solution {
 
 class Solution {
     // Union Find版本
-    // union操作 时间复杂度为O(α(n))，近似O(1)，总时间复杂度为O(m*n), 空间复杂度为O(n)
+    // union操作 时间复杂度为O(α(n))，近似O(1)，总时间复杂度为O(m*n), 空间复杂度为O(m*n)
     class UnionFind {
         // # of connected components
         int count;
@@ -133,7 +133,7 @@ class Solution {
                 // 注意 rank 只有相同的时候合并才会增加
                 } else {
                     parent[rooty] = rootx;
-                    rank[rootx] += 1;
+                    rank[rootx]++;
                 }
                 --count;
             }
@@ -166,6 +166,7 @@ class Solution {
             for (int c = 0; c < nc; ++c) {
                 if (grid[r][c] == '1') {
                     grid[r][c] = '0';
+                    // 实际上只需要判断往右和往下两个方向即可
                     if (r - 1 >= 0 && grid[r - 1][c] == '1') {
                         uf.union(r * nc + c, (r - 1) * nc + c);
                     }
