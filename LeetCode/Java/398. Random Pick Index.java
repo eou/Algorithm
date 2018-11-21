@@ -1,5 +1,6 @@
 // 398. Random Pick Index
 // Reservoir Sampling
+// https://zh.wikipedia.org/wiki/%E6%B0%B4%E5%A1%98%E6%8A%BD%E6%A8%A3
 class Solution {
     // 空间复杂度为 O(n), 时间复杂度为 O(n)
     public int[] nums;

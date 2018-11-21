@@ -1,3 +1,4 @@
+
 /**
  * Reservoir Sampling
  * https://www.geeksforgeeks.org/reservoir-sampling/
@@ -9,6 +10,7 @@
  * 可以用数学归纳法证明：对于 i = k + 1, 如果出现替换，第 k + 1 个数字被选中的概率是 k / (k + 1)，其肯定会出现在水库中
  * 而水库中任意数字被替换的概率是 k / (k + 1) * 1 / k = 1 / (k + 1), 则被替换的数字出现在水库中的概率也是 1 - 1 / (k + 1) = k / (k + 1)
  * 对于整个算法，任意数字出现在水库里的概率就是 k / n
+ * 详情见 https://zh.wikipedia.org/wiki/%E6%B0%B4%E5%A1%98%E6%8A%BD%E6%A8%A3
  */
 import java.io.*;
 import java.util.*;

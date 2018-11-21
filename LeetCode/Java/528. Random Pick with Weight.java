@@ -2,6 +2,7 @@
 class Solution {
     int[] weightSums;
     int totalWeight;
+    Random random;
 
     public Solution(int[] w) {
         totalWeight = 0;
@@ -14,7 +15,6 @@ class Solution {
     }
     
     public int pickIndex() {
-        Random rand = new Random();
         // [0, totalWeight)
         int r = random.nextInt(totalWeight);
         
@@ -42,9 +42,11 @@ class Solution {
 class Solution {
     int[] weightSums;
     int totalWeight;
+    Random rand;
 
     public Solution(int[] w) {
         totalWeight = 0;
+        rand = new Random();
         weightSums = new int[w.length + 1];
         for (int i = 0; i < w.length; ++i) {
             totalWeight += w[i];
@@ -53,7 +55,6 @@ class Solution {
     }
 
     public int pickIndex() {
-        Random rand = new Random();
         // [0, totalWeight)
         int r = rand.nextInt(totalWeight);
 
