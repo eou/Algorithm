@@ -1,23 +1,22 @@
 // 300. Longest Increasing Subsequence
 class Solution {
     // DP版本，时间复杂度 O(n^2)
+    // L(i) = 1 + max( L(j) ) where 0 < j < i and arr[j] < arr[i]
+    // L(i) = 1, if no such j exists.
     public int lengthOfLIS(int[] nums) {
         if (nums.length == 0) {
             return 0;
         }
 
         int[] dp = new int[nums.length];
-        dp[0] = 1;
-
-        int max = 1;
-        for (int i = 1; i < dp.length; i++) {
-            int maxPreVal = 0;
+        int max = 0;
+        for (int i = 0; i < dp.length; i++) {
+            dp[i] = 1;
             for (int j = 0; j < i; j++) {
                 if (nums[i] > nums[j]) {
-                    maxPreVal = Math.max(maxPreVal, dp[j]);
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
                 }
             }
-            dp[i] = maxPreVal + 1;
             max = Math.max(max, dp[i]);
         }
 
