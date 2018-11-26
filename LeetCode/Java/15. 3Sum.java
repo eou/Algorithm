@@ -118,3 +118,49 @@ class Solution {
         return results;
     }
 }
+
+// 一个变形，输入改成三个有序数组
+class Solution {
+    public List<List<Integer>> threeArraythreeSum(int[] a, int[] b, int[] c) {
+        List<List<Integer>> result = new ArrayList<>();
+        for (int i = 0; i < a.length; i++) { // a pointer
+            if (i == 0 || a[i] != a[i - 1]) {
+                int left = 0; // b pointer
+                int right = c.length - 1; // c pointer
+                int sum = 0 - a[i];
+                while (left < b.length && right >= 0) {
+                    if (b[left] + c[right] == sum) {
+                        result.add(Arrays.asList(a[i], b[left], c[right]));
+                        while (left < b.length - 1 && b[left] == b[left + 1]) {
+                            left++;
+                        }
+                        while (right > 0 && c[right] == c[right - 1]) {
+                            right--;
+                        }
+                        left++;
+                        right--;
+                    } else if (b[left] + c[right] < sum) {
+                        left++;
+                    } else {
+                        right--;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        int[] a = { -1, -1, -3, 4, 7, 9, 11, 55 };
+        int[] b = { -43, -2, 0, 0, 0, 1, 2 };
+        int[] c = { 0, 0, 5, 5, 10, 11 };
+
+        for (List<Integer> list : new Solution().threeArraythreeSum(a, b, c)) {
+            for (Integer i : list) {
+                System.out.print(i + ", ");
+            }
+            System.out.println();
+        }
+    }
+}
