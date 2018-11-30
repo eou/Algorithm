@@ -50,21 +50,21 @@ public class Codec {
 
         TreeNode root = new TreeNode(Integer.parseInt(vals[0]));
         queue.add(root);
-        int index = 0;
+        int parent = 0;
         boolean isLeftChild = true;
         for (int i = 1; i < vals.length; i++) {
             if (!vals[i].equals("null")) {
                 TreeNode node = new TreeNode(Integer.parseInt(vals[i]));
                 if (isLeftChild) {
-                    queue.get(index).left = node;
+                    queue.get(parent).left = node;
                 } else {
-                    queue.get(index).right = node;
+                    queue.get(parent).right = node;
                 }
                 queue.add(node);
             }
             // 每遍历两个节点，就换一个父节点
             if (!isLeftChild) {
-                index++;
+                parent++;
             }
             // vals中每个节点无论非空都需要在左右节点之间来回切换
             isLeftChild = !isLeftChild;
