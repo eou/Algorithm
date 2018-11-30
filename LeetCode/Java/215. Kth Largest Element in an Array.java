@@ -7,7 +7,6 @@ class Solution {
         PriorityQueue<Integer> pq = new PriorityQueue<Integer>(k);
         for (int i : nums) {
             pq.offer(i);
-            System.out.println(pq.peek());
             if (pq.size() > k) {
                 pq.poll();
             }

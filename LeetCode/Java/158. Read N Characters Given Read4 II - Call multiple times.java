@@ -56,6 +56,7 @@ public class Solution extends Reader4 {
             }
             buf[total++] = tmp[pointer++];
         }
+
         return total;
     }
 }
