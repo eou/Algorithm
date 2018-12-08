@@ -59,3 +59,34 @@ class Solution {
         return result;
     }
 }
+
+class Solution {
+    // 非递归版本，每次改变相邻的两个数字
+    // n = 3, k = 2: 初始状态：[0, 0] 
+    // => [1, 0] => [1, 1] √ => [1, 2] √ => [1, 3] √ => 溢出：[1, 4]
+    // => [2, 4] => [2, 2] √ => [2, 3] √ => [2, 4]
+    // => [3, 4] => [3, 3] √ => [3, 4]
+    // => [4, 4] => i = -1
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> results = new ArrayList<>();
+        List<Integer> cur = new ArrayList<>();
+        for (int i = 0; i < k; i++) {
+            cur.add(0);
+        }
+
+        int i = 0;
+        while (i >= 0) {
+            cur.set(i, cur.get(i) + 1);
+            if (cur.get(i) > n) {
+                i--;
+            } else if (i == k - 1) {
+                results.add(new ArrayList<>(cur));
+            } else {
+                i++;
+                cur.set(i, cur.get(i - 1));
+            }
+        }
+
+        return results;
+    }
+}
