@@ -13,7 +13,7 @@ class Solution {
 }
 
 class Solution {
-    // DFS with memoization，不需要二维
+    // DFS with memoization，不需要二维数组，时间复杂度为 O(n^2)
     int[] memo;
     public boolean wordBreak(String s, List<String> wordDict) {
         memo = new int[s.length() + 1];
@@ -63,12 +63,14 @@ class Solution {
 }
 
 class Solution {
+    // DP，时间复杂度为 O(n^2)
     public boolean wordBreak(String s, List<String> wordDict) {
         boolean[] dp = new boolean[s.length() + 1];
         Set<String> set = new HashSet<>();
         set.addAll(wordDict);
 
         dp[0] = true;
+        // dp[end] = dp[start] && wordDict.contains(s.substring(start, end))
         for (int i = 1; i <= s.length(); i++) {
             for (int j = i - 1; j >= 0; j--) {
                 dp[i] = dp[j] && set.contains(s.substring(j, i));
@@ -110,7 +112,7 @@ class Solution {
 }
 
 class Solution {
-    // BFS
+    // BFS，时间复杂度为 O(n^2)
     public boolean wordBreak(String s, List<String> wordDict) {
         Deque<Integer> queue = new ArrayDeque<>();
         int[] visited = new int[s.length()];
