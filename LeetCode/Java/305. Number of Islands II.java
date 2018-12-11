@@ -1,4 +1,5 @@
 // 305. Number of Islands II
+// 比 200. Number of Islands 多了一个逐步添加岛屿的操作
 // 初始化的时间复杂度为 O(N)，按大小/秩合并之后每次查找操作为 O(logN)，路径压缩之后每次查找操作 amortized O(1)
 class Solution {
     class UnionFind {
@@ -65,7 +66,7 @@ class Solution {
             int y = position[1];
             uf.add(x * n + y);
             for(int i = 0; i < 4; i++) {
-                if(withinRange(x + dx[i], y + dy[i], m, n) && uf.parent[(x + dx[i]) * n + y + dy[i]] != -1) {
+                if(isValidPos(x + dx[i], y + dy[i], m, n) && uf.parent[(x + dx[i]) * n + y + dy[i]] != -1) {
                     uf.unite(x * n + y, (x + dx[i]) * n + y + dy[i]);
                 }
             }
@@ -75,7 +76,7 @@ class Solution {
         return results;
     }
     
-    public boolean withinRange(int i, int j, int m, int n) {
+    public boolean isValidPos(int i, int j, int m, int n) {
         if(i >= 0 && i < m && j >= 0 && j < n) {
             return true;
         } else {
