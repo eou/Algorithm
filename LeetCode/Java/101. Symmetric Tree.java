@@ -23,23 +23,23 @@ class Solution {
 
 class Solution {
     public boolean isSymmetric(TreeNode root) {
-        if(root == null) {
+        if (root == null) {
             return true;
         }
         // do not add root into queue
-        Deque<TreeNode> queue = new ArrayDeque<>();
+        Queue<TreeNode> queue = new LinkedList<>(); // ArrayDeque 不能添加空节点
         queue.offer(root.left);
         queue.offer(root.right);
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             TreeNode node1 = queue.poll();
             TreeNode node2 = queue.poll();
-            if(node1 == null && node2 == null) {
+            if (node1 == null && node2 == null) {
                 continue;
             }
-            if(node1 == null || node2 == null) {
+            if (node1 == null || node2 == null) {
                 return false;
             }
-            if(node1.val != node2.val) {
+            if (node1.val != node2.val) {
                 return false;
             }
             queue.offer(node1.left);
@@ -47,7 +47,7 @@ class Solution {
             queue.offer(node1.right);
             queue.offer(node2.left);
         }
-        
+
         return true;
     }
 }
