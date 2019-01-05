@@ -1,5 +1,5 @@
 // 4. Median of Two Sorted Arrays
-// 不同的代码基本都是二分思路，时间复杂度log(m+n)，不同之处在于找第k个元素的方式
+// 本质是寻找两个数组中第 k 个元素，不同的代码基本都是二分查找思路，时间复杂度log(m+n)，不同之处在于找第 k 个元素的方式
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int len = nums1.length + nums2.length;
@@ -98,6 +98,7 @@ class Solution {
         } else {
             return findKth(nums1, start1, nums2, start2 + k / 2, kNew);
         }
-        // 这里的 keyA == keyB 时不能直接返回key，因为 keyA 和 keyB 比较的时候并不一定已经排除了前 k - 2 个数字
+        // !!! 这里的 keyA == keyB 时不能直接返回key，因为 keyA 和 keyB 比较的时候并不一定已经排除了前 k - 2 个数字
     }
 }
+

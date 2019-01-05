@@ -37,3 +37,21 @@ class Solution {
         return len;
     }
 }
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int start = 0;
+        int len = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            // 遇到重复的字母就更新一次起点
+            if (map.containsKey(s.charAt(i))) {
+                start = Math.max(map.get(s.charAt(i)) + 1, start);
+            }
+            len = Math.max(len, i - start + 1);
+            map.put(s.charAt(i), i);
+        }
+
+        return len;
+    }
+}
