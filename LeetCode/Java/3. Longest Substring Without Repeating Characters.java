@@ -17,7 +17,7 @@ class Solution {
             }
             right++;
 
-            // 一旦出现重复元素，repeat == 1, 就会进入循环中不断丢弃left直到repeat == 0
+            // 一旦出现重复元素，repeat == 1, 就会进入循环中不断丢弃 left 直到 repeat == 0
             while (repeat > 0) {
                 char t = s.charAt(left);
                 // 注意如何判断此字符是重复的
