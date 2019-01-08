@@ -22,13 +22,13 @@ class Solution {
 }
 
 class Solution {
+    // 与 373. Find K Pairs with Smallest Sums 类似
     // 上面算法的改进版本，时间复杂度为 O(klog(m * n))
     public int kthSmallest(int[][] matrix, int k) {
         PriorityQueue<int[]> pq = new PriorityQueue<>(k, (a, b) -> a[2] - b[2]);
         // 把第 1 行的元素放入堆中
         for (int i = 0; i < Math.min(k, matrix[0].length); i++) {
-            // 行数，列数，元素
-            pq.offer(new int[] { 0, i, matrix[0][i] });
+            pq.offer(new int[] { 0, i, matrix[0][i] }); // 行数，列数，元素
         }
 
         // 每次丢弃最小元素，将其下一行同列元素放入堆中
@@ -40,6 +40,27 @@ class Solution {
         }
 
         return pq.poll()[2];
+    }
+}
+
+class Solution {
+    // 时间复杂度为 O(klogn)
+    public int kthSmallest(final int[][] matrix, int k) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> matrix[a[0]][a[1]] - matrix[b[0]][b[1]]);
+        pq.offer(new int[] { 0, 0 });
+        k--;
+        while (k > 0) {
+            int[] cur = pq.poll();
+            k--;
+            if (cur[0] == 0 && cur[1] + 1 < matrix[0].length) {
+                pq.offer(new int[] { 0, cur[1] + 1 });
+            }
+            if (cur[0] + 1 < matrix.length) {
+                pq.offer(new int[] { cur[0] + 1, cur[1] });
+            }
+        }
+
+        return matrix[pq.peek()[0]][pq.peek()[1]];
     }
 }
 
