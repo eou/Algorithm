@@ -70,3 +70,23 @@ class Solution {
         return len;
     }
 }
+
+class Solution {
+    // 另一个版本，只关注最新的两个不同字符
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        int left = 0;
+        int right = -1;
+        int len = 0;
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) == s.charAt(i - 1)) {
+                continue;
+            }
+            if (right > -1 && s.charAt(i) != s.charAt(right)) {
+                len = Math.max(len, i - left);
+                left = right + 1;
+            }
+            right = i - 1;
+        }
+        return len > (s.length() - left) ? len : s.length() - left;
+    }
+}

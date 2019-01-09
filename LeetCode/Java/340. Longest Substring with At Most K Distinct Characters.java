@@ -3,6 +3,37 @@
 // 与159是一样的
 class Solution {
     public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        if (s.length() == 0 || k == 0) {
+            return 0;
+        }
+
+        int left = 0;
+        int right = 0;
+        int len = 1;
+        Map<Character, Integer> map = new HashMap<>();
+        while (right < s.length()) {
+            map.put(s.charAt(right), map.getOrDefault(s.charAt(right), 0) + 1);
+            if (map.size() > k) { // 这个 if-else 可以省略
+                while (map.size() > k) {
+                    map.put(s.charAt(left), map.get(s.charAt(left)) - 1);
+                    if (map.get(s.charAt(left)) == 0) {
+                        map.remove(s.charAt(left));
+                    }
+                    left++;
+
+                }
+            } else {
+                len = Math.max(len, right - left + 1);
+            }
+            right++;
+        }
+
+        return len;
+    }
+}
+
+class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
         if(s == null || s.length() == 0) {
             return 0;
         }

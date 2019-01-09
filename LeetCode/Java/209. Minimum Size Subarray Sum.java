@@ -4,28 +4,32 @@
 // 注意数组中全是正整数，保证了前缀子数组的和是递增的，有序的情况下可以用binary search
 // 其实也可以用分治，复杂度也是O(nlogn)
 class Solution {
+    // sliding window，时间复杂度为 O(n)
     public int minSubArrayLen(int s, int[] nums) {
         if (nums == null || nums.length == 0) {
             return 0;
         }
 
-        int min = Integer.MAX_VALUE, sum = 0;
-        int left = 0, right = 0;
+        int len = nums.length + 1;
+        int sum = 0;
+        int left = 0;
+        int right = 0;
         while (right < nums.length) {
             sum += nums[right];
             while (sum >= s) {
-                min = Math.min(min, right - left + 1);
-                sum -= nums[left++];
+                len = Math.min(len, right - left + 1);
+                sum -= nums[left];
+                left++;
             }
             right++;
         }
 
-        // 注意有可能一直min没有更新，因为子数组和最大也没有达到s
-        return min = min == Integer.MAX_VALUE ? 0 : min;
+        return len == nums.length + 1 ? 0 : len; // 注意有可能一直 len 没有更新，因为子数组和最大也没有达到s
     }
 }
 
 class Solution {
+    // 时间复杂度为 O(nlogn)
     public int minSubArrayLen(int s, int[] nums) {
         if (nums == null || nums.length == 0) {
             return 0;

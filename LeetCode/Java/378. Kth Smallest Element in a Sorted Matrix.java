@@ -1,7 +1,7 @@
 // 378. Kth Smallest Element in a Sorted Matrix
 // 两个条件：每一行是升序；每一列是升序
 class Solution {
-    // 时间复杂度为 O(m * n * logk)
+    // 两个有序的条件都没用的版本，时间复杂度为 O(m * n * logk)
     public int kthSmallest(int[][] matrix, int k) {
         PriorityQueue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>(){
             public int compare(Integer a, Integer b) {
@@ -44,7 +44,29 @@ class Solution {
 }
 
 class Solution {
-    // 时间复杂度为 O(klogn)
+    // 也可以先把第 1 列放入堆中
+    public int kthSmallest(int[][] matrix, int k) {
+        // [row, col, element]
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> (a[2] - b[2]));
+        for (int i = 0; i < matrix.length; i++) {
+            minHeap.add(new int[] { i, 0, matrix[i][0] });
+        }
+        k--;
+        while (k > 0) {
+            int[] cur = minHeap.poll();
+            k--;
+            if (cur[1] == matrix[0].length - 1) {
+                continue;
+            }
+            minHeap.add(new int[] { cur[0], cur[1] + 1, matrix[cur[0]][cur[1] + 1] });
+        }
+
+        return minHeap.poll()[2];
+    }
+}
+
+class Solution {
+    // 另一个利用堆的版本，大同小异，也是将第 1 行的元素放入堆中，时间复杂度为 O(klog(m * n))
     public int kthSmallest(final int[][] matrix, int k) {
         PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> matrix[a[0]][a[1]] - matrix[b[0]][b[1]]);
         pq.offer(new int[] { 0, 0 });
@@ -52,6 +74,7 @@ class Solution {
         while (k > 0) {
             int[] cur = pq.poll();
             k--;
+            // 只有在第 1 行才放入同行不同列的元素
             if (cur[0] == 0 && cur[1] + 1 < matrix[0].length) {
                 pq.offer(new int[] { 0, cur[1] + 1 });
             }
@@ -71,7 +94,7 @@ class Solution {
         int right = matrix[matrix.length - 1][matrix[0].length - 1] + 1;
         while(left < right) {
             int mid = left + (right - left) / 2;
-            // 每一行都查找一次 mid，这是 O（n^2）的复杂度
+            // 每一行都查找一次 mid，这是 O（n^2）的复杂度，可以改进
             int count = 0;
             for(int i = 0; i < matrix.length ; i++) {
                 int j = matrix[0].length - 1;
@@ -94,12 +117,11 @@ class Solution {
     // 由于 max - min 最大不过是 2^31 - 1 - (-2^31) => log(max - min) 最大为32，可以视为常数，所以总体时间复杂度为 O(nlogn)
     public int kthSmallest(int[][] matrix, int k) {
         int left = matrix[0][0];
-        int right = matrix[matrix.length - 1][matrix[0].length - 1] + 1;
+        int right = matrix[matrix.length - 1][matrix[0].length - 1];
         while (left < right) {
             int mid = left + (right - left) / 2;
-            // 每一行都查找一次 mid
-            int count = countLessEqual(matrix, mid);
-            if (count < k) {
+            int cnt = lessEqualMid(matrix, mid);
+            if (cnt < k) {
                 left = mid + 1;
             } else {
                 right = mid;
@@ -108,28 +130,28 @@ class Solution {
 
         return left;
     }
-
+    
     // O(logn)
-    private int countLessEqual(int[][] matrix, int value) {
+    private int lessEqualMid(int[][] matrix, int val) {
         int cnt = 0;
-        for (int[] row : matrix) {
-            // binary search, find the first element that larger than value
-            int start = 0, end = row.length - 1;
-            while (start + 1 < end) {
-                int mid = start + (end - start) / 2;
-                if (row[mid] > value) {
-                    end = mid;
+        // 每行都二分查找一次 val
+        for (int i = 0; i < matrix.length; i++) {
+            int left = 0;
+            int right = matrix[0].length - 1;
+            while (left + 1 < right) { // 这里不适用 left < right
+                int mid = left + (right - left) / 2;
+                if (matrix[i][mid] <= val) {
+                    left = mid;
                 } else {
-                    start = mid;
+                    right = mid;
                 }
             }
-
-            if (row[start] > value) {
-                cnt += start;
-            } else if (row[end] > value) {
-                cnt += end;
+            if (matrix[i][left] > val) {
+                cnt += left;
+            } else if (matrix[i][right] > val) {
+                cnt += right;
             } else {
-                cnt += row.length;
+                cnt += matrix[i].length;
             }
         }
 
@@ -145,8 +167,7 @@ class Solution {
         int right = matrix[matrix.length - 1][matrix[0].length - 1] + 1;
         while (left < right) {
             int mid = left + (right - left) / 2;
-            // 每一行都查找一次 mid
-            int count = countLessEqual(matrix, mid);
+            int count = lessEqualMid(matrix, mid);
             if (count < k) {
                 left = mid + 1;
             } else {
@@ -157,12 +178,12 @@ class Solution {
         return left;
     }
 
-    // 从右上角为起点，平均时间复杂度为 O(1)
-    private int countLessEqual(int[][] matrix, int value) {
+    // 从右上角为起点，一些行可以直接跳过，平均时间复杂度为 O(1)
+    private int lessEqualMid(int[][] matrix, int val) {
         int cnt = 0;
         int i = 0, j = matrix.length - 1;
         while (i < matrix.length && j >= 0) {
-            if (matrix[i][j] <= value) {
+            if (matrix[i][j] <= val) { // 如果端点就已经 <= val 这一行就直接加上不用扫描
                 cnt += j + 1;
                 i++;
             } else {
