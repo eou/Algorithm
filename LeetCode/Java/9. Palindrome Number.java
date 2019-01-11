@@ -1,6 +1,8 @@
 // 9. Palindrome Number
 class Solution {
+    // 时间复杂度为 O(logn)
     public boolean isPalindrome(int x) {
+        // 这个特殊判断挺巧妙
         if(x < 0 || (x % 10 == 0 && x != 0)) {
             return false;
         }
