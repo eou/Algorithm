@@ -62,3 +62,81 @@ public class LogSystem {
         return convert(t);
     }
 }
+
+public class LogSystem {
+    
+    Map<String, List<Integer>> map;
+    
+    public LogSystem() {
+        map = new HashMap<>();
+    }
+    
+    public void put(int id, String timestamp) {
+        List<Integer> list;
+        if (!map.containsKey(timestamp)) {
+            list = new ArrayList<>();
+        } else {
+            list = map.get(timestamp);
+        }
+        list.add(id);
+        map.put(timestamp, list);
+    }
+    
+    public List<Integer> retrieve(String s, String e, String gra) {
+        List<Integer> results = new ArrayList<>();
+        for (String t : map.keySet()) {
+            if (inRange(t, s, e, gra)) {
+                results.addAll(map.get(t));
+            }
+        }
+        
+        return results;
+    }
+    
+    public boolean inRange(String t, String s, String e, String gra) {
+        long t_sec = convertTime(t, gra);
+        long s_sec = convertTime(s, gra);
+        long e_sec = convertTime(e, gra);
+        return t_sec >= s_sec && t_sec <= e_sec;
+    }
+    
+    public long convertTime(String s, String gra) {
+        StringBuilder str = new StringBuilder(s);   // String unmutable
+        
+        int start = 0;
+        switch (gra) {
+            case "Year":
+                start = 5;
+                break;
+            case "Month":
+                start = 8;
+                break;
+            case "Day":
+                start = 11;
+                break;
+            case "Hour":
+                start = 14;
+                break;
+            case "Minute":
+                start = 17;
+                break;
+            case "Second":
+                start = 20;
+                break;
+            default:
+                break;
+        }
+        
+        for (int i = start; i < str.length(); i += 3) {
+            str.setCharAt(i, '0');
+            str.setCharAt(i + 1, '0');
+        }
+        
+        String _s = str.toString();
+        long seconds = 0;
+        int[] time = Arrays.stream(_s.split(":")).mapToInt(Integer::parseInt).toArray();
+        seconds += ((time[0] - 1999L) * (31 * 12) * 24 * 60 * 60 + time[1] * 31 * 24 * 60 * 60 + time[2] * 24 * 60 * 60 + time[3] * 60 * 60 + time[4] * 60 + time[5]);
+        
+        return seconds;
+    }
+}
