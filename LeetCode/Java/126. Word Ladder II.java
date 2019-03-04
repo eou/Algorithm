@@ -28,7 +28,7 @@ class Solution {
         }
 
         for (String s : nextWord(beginWord, dic)) {
-            if (map.get(s) != -1 && map.get(s) < map.get(beginWord)) {
+            if (map.get(s) < map.get(beginWord)) {
                 curStep.add(s);
                 helper(s, endWord, dic, curStep, results, map);
                 curStep.remove(curStep.size() - 1);

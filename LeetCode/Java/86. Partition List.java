@@ -1,6 +1,44 @@
 // 86. Partition List
 class Solution {
     public ListNode partition(ListNode head, int x) {
+        if (head == null) {
+            return head;
+        }
+        //   ? -> 1 -> 4 -> 3 -> 2 -> 5    => ? -> 1 -> 2 -> 4 -> 3 -> 5
+        //      first      pre  cur  nxt
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode first = dummy;
+        while (first.next != null && first.next.val < x) {
+            first = first.next;
+        }
+        
+        ListNode cur = first.next;
+        ListNode pre = first;
+        while (true) {
+            // find a small target node
+            while (cur != null && cur.val >= x) {
+                pre = cur;
+                cur = cur.next;
+            }
+            if (cur == null) {
+                break;
+            } else {
+                ListNode nxt = cur.next;
+                pre.next = nxt;
+                cur.next = first.next;
+                first.next = cur;
+                first = first.next;
+                cur = cur.next;
+            }
+        }
+        
+        return dummy.next;
+    }
+}
+
+class Solution {
+    public ListNode partition(ListNode head, int x) {
         if (head == null || head.next == null) {
             return head;
         }

@@ -1,5 +1,28 @@
 // 377. Combination Sum IV
 // 这个只需返回 results 个数，所以之前一一返回 subset 的算法显然重复计算了很多，会TLE
+// DFS, TLE
+class Solution {
+    int result = 0;
+    public int combinationSum4(int[] nums, int target) {
+        Arrays.sort(nums);
+        dfs(nums, target, 0);
+        return result;
+    }
+    
+    public void dfs(int[] nums, int target, int sum) {
+        if (sum == target) {
+            ++result;
+            return;
+        }
+        
+        for (int i = 0; i < nums.length; ++i) {
+            if (sum + nums[i] <= target) {
+                dfs(nums, target, sum + nums[i]);
+            }
+        }
+    }
+}
+
 class Solution {
     Map<Integer, Integer> map = new HashMap<>(); // sum : frequency
 

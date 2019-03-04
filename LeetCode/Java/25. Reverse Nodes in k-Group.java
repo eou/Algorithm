@@ -53,3 +53,56 @@ class Solution {
         return n1;
     }
 }
+
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode cur = head;
+        int count = 0;
+        while (cur != null && count != k) {
+            cur = cur.next;
+            count++;
+        }
+        if (count == k) {
+            cur = reverseKGroup(cur, k);
+            while (count > 0) {
+                ListNode nxt = head.next;
+                head.next = cur;
+                cur = head;
+                head = nxt;
+                count--;
+            }
+            head = cur;
+        }
+
+        return head;
+    }
+}
+
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        int len = 0;
+        for (ListNode ptr = head; ptr != null; ++len, ptr = ptr.next)
+            ;
+
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        for (ListNode first = dummy, pre = head; len >= k; len -= k) {
+            for (int i = 1; i < k; ++i) {
+                // add the cur node into the head of this part of linkedlist
+                ListNode cur = pre.next;
+                ListNode nxt = cur.next;
+                // last two operations cannot change order
+                //  ? -> 3 -> 2 -> 1 -> 4 -> 5  =>  ? -> 4 -> 3 -> 2 -> 1 -> 5 : related with 5 nodes, 3 links changed
+                // first           pre cur  nxt    first cur            pre nxt
+                pre.next = nxt;
+                cur.next = first.next;
+                first.next = cur;
+            }
+
+            first = pre; // the dummy node before next part
+            pre = pre.next; // the head node of next part
+        }
+
+        return dummy.next;
+    }
+}
