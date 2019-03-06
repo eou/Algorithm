@@ -1,6 +1,117 @@
 // 138. Copy List with Random Pointer
-public class Solution {
-    // 暴力解法就是用 map 存储 点和边的关系
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node next;
+    public Node random;
+
+    public Node() {}
+
+    public Node(int _val,Node _next,Node _random) {
+        val = _val;
+        next = _next;
+        random = _random;
+    }
+};
+*/
+class Solution {
+    // brute force, use map to store the connection between original node and copy node
+    public Node copyRandomList(Node head) {
+        Map<Node, Node> map = new HashMap<>();
+        
+        Node dummy = new Node();
+        Node ptr2 = dummy;          // dummy.next is the head of clone list
+        Node ptr1 = head;           // original list
+        
+        while (ptr1 != null) {
+            // copy next node
+            Node copyNode = null;
+            if (map.containsKey(ptr1)) {
+                copyNode = map.get(ptr1);
+            } else {
+                copyNode = new Node(ptr1.val);
+                map.put(ptr1, copyNode);
+            }
+            
+            ptr2.next = copyNode;
+            
+            // copy rondom linked node
+            if (ptr1.random != null) {
+                if (map.containsKey(ptr1.random)) {
+                    copyNode.random = map.get(ptr1.random);
+                } else {
+                    Node copyRandom = new Node(ptr1.random.val);
+                    copyNode.random = copyRandom;
+                    map.put(ptr1.random, copyRandom);
+                }
+            }
+            
+            ptr1 = ptr1.next;
+            ptr2 = ptr2.next;
+        }
+        
+        return dummy.next;
+        
+    }
+}
+
+class Solution {
+    public Node copyRandomList(Node head) {
+        if (head == null) {
+            return head;
+        }
+        
+        copyNode(head);
+        copyRandom(head);
+        return splitCopyList(head);
+    }
+    
+    // n1 -> c1 -> n2 -> c2 -> n3 -> c3 -> ...
+    public void copyNode(Node head) {
+        Node ptr = head;
+        while (ptr != null) {
+            Node copy = new Node(ptr.val);
+            copy.next = ptr.next;
+            ptr.next = copy;
+            ptr = copy.next;
+        }
+    }
+    
+    public void copyRandom(Node head) {
+        Node ptr = head;
+        while (ptr != null) {
+            Node copy = ptr.next;
+            if (ptr.random != null) {
+                copy.random = ptr.random.next;
+            }
+            ptr = ptr.next.next;
+        }
+    }
+    
+    public Node splitCopyList(Node head) {
+        Node dummy = new Node();
+        dummy.next = head.next;
+        
+        Node ptr = head;
+        // unhitch the links
+        while (ptr != null) {
+            Node copy = ptr.next;
+            Node nxt = copy.next;
+            if (nxt != null) {
+                copy.next = nxt.next;
+            }
+            
+            ptr.next = nxt;
+            ptr = ptr.next;
+        }
+        
+        return dummy.next;
+    }
+}
+
+class Solution {
+    // 题目老版本的写法，暴力解法就是用 map 存储 点和边的关系
     public RandomListNode copyRandomList(RandomListNode head) {
         if(head == null) {
             return head;
@@ -42,8 +153,8 @@ public class Solution {
     }
 }
 
-public class Solution {
-    // 在原链表中添加新结点，连好指针后然后拆分两个链表
+class Solution {
+    // 题目老版本的写法，在原链表中添加新结点，连好指针后然后拆分两个链表
     public RandomListNode copyRandomList(RandomListNode head) {
         if (head == null) {
             return head;

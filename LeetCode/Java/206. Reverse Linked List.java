@@ -17,12 +17,6 @@ class Solution {
 class Solution {
     // 递归版本，也可以写成尾递归，但就跟普通的循环遍历没什么区别了，虽然可能有性能优化
     public ListNode reverseList(ListNode head) {
-        // 两个判断可以写成一个
-        // if (head == null) {
-        //     return null;
-        // } else if (head.next == null) {
-        //     return head;
-        // }
         if (head == null || head.next == null) {
             return head;
         }

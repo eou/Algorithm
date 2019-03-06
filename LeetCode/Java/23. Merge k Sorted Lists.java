@@ -12,17 +12,19 @@ class Solution {
             return null;
         }
 
-        PriorityQueue<ListNode> pq = new PriorityQueue<>(new Comparator<ListNode>() {
-            public int compare(ListNode node1, ListNode node2) {
-                return node1.val - node2.val;
-            }
-        });
+        // PriorityQueue<ListNode> pq = new PriorityQueue<>(new Comparator<ListNode>() {
+        //     public int compare(ListNode node1, ListNode node2) {
+        //         return node1.val - node2.val;
+        //     }
+        // });
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((a, b) -> { return a.val - b.val; });
 
         ListNode dummy = new ListNode(-1);
         ListNode curr = dummy;
 
         // 把 k 个链表头结点放入队列中
         for (ListNode list : lists) {
+            // 判空
             if (list != null) {
                 pq.add(list);
             }
@@ -32,6 +34,7 @@ class Solution {
             curr.next = pq.poll();
             curr = curr.next;
 
+            // 判空
             if (curr.next != null) {
                 pq.add(curr.next);
             }
@@ -107,5 +110,30 @@ class Solution {
         }
 
         return dummy.next;
+    }
+}
+
+class Solution {
+    // compare one by one
+    public ListNode mergeKLists(ListNode[] lists) {
+        ListNode l = null;
+        for (int i = 0; i < lists.length; ++i) {
+            l = mergeTwoLists(l, lists[i]);
+        }
+        return l;
+    }
+
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        } else if (l2 == null) {
+            return l1;
+        } else if (l1.val < l2.val) {
+            l1.next = mergeTwoLists(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists(l2.next, l1);
+            return l2;
+        }
     }
 }

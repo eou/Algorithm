@@ -20,3 +20,29 @@ class Solution {
         return dis;
     }
 }
+
+class Solution {
+    public int hammingDistance(int x, int y) {
+        int distance = 0;
+        
+        while (x > 0 && y > 0) {
+            if (x % 2 != y % 2) {
+                ++distance;
+            }
+            x /= 2;
+            y /= 2;
+        }
+        
+        while (x > 0) {
+            distance += (x % 2 == 0) ? 0 : 1;
+            x /= 2;
+        }
+        
+        while (y > 0) {
+            distance += (y % 2 == 0) ? 0 : 1;
+            y /= 2;
+        }
+        
+        return distance;
+    }
+}

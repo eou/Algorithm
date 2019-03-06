@@ -1,4 +1,74 @@
 // 92. Reverse Linked List II
+// 两种写法，一种是就地反转指针，一种是把后面节点往前移动
+class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+
+        ListNode first = dummy, cur = dummy, pre = dummy;
+        for (int i = 0; i < m; ++i) {
+            pre = cur;
+            cur = cur.next;
+        }
+
+        first = pre;
+        
+        pre = cur;
+        cur = cur.next; // to the next node of the mth node
+        for (int i = 0; i < n - m; ++i) {
+            ListNode nxt = cur.next;
+            pre.next = nxt;
+            cur.next = first.next;
+            first.next = cur;
+            cur = nxt;
+        }
+
+        return dummy.next;
+    }
+}
+
+class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+
+        ListNode cur = dummy, pre = dummy;
+        for (int i = 0; i < m; ++i) {
+            pre = cur;
+            cur = cur.next;
+        }
+
+        //   * -> 5 -> 3 -> NULL
+        // pre   cur
+        // first last
+        //       pre  cur
+        ListNode first = pre;
+        ListNode last = cur;
+
+        pre = cur;
+        cur = cur.next; // to the next node of the mth node
+        for (int i = 0; i < n - m; ++i) {
+            ListNode nxt = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = nxt;
+        }
+
+        first.next = pre;
+        last.next = cur;
+
+        return dummy.next;
+    }
+}
+
 class Solution {
     public ListNode reverseBetween(ListNode head, int m, int n) {
         // 前面几个特殊判断对于AC来说非必要

@@ -29,3 +29,22 @@ class Solution {
         return null;
     }
 }
+
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) {
+            return root;
+        }
+
+        TreeNode bigger = p.val > q.val ? p : q;
+        TreeNode smaller = p.val < q.val ? p : q;
+
+        if (root.val >= smaller.val && root.val <= bigger.val) {
+            return root;
+        } else if (root.val > bigger.val) {
+            return lowestCommonAncestor(root.left, p, q);
+        } else {
+            return lowestCommonAncestor(root.right, p, q);
+        }
+    }
+}
