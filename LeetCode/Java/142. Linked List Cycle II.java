@@ -1,5 +1,43 @@
 // 142. Linked List Cycle II
 public class Solution {
+    // a -> b -> c -> b
+    // slow: a -> b -> c
+    // fast: a -> b -> c -> b -> c
+    // a -> b -> c == c -> b -> c
+    // head: a -> b == slow: c -> b
+    public ListNode detectCycle(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        ListNode slow = head, fast = head;
+        while (fast != null) {
+            slow = slow.next;
+            fast = fast.next;
+            if (fast != null) {
+                fast = fast.next;
+            } else {
+                break;
+            }
+            if (slow == fast) {
+                break;
+            }
+        }
+
+        if (fast == null) {
+            return null;
+        }
+
+        ListNode ptr1 = head, ptr2 = slow;
+        while (ptr1 != ptr2) {
+            ptr1 = ptr1.next;
+            ptr2 = ptr2.next;
+        }
+
+        return ptr1;
+    }
+}
+
+public class Solution {
     public ListNode detectCycle(ListNode head) {
         if (head == null || head.next == null) {
             return null;

@@ -1,6 +1,30 @@
 // 141. Linked List Cycle
 public class Solution {
     public boolean hasCycle(ListNode head) {
+        if (head == null) {
+            return false;
+        }
+
+        ListNode slow = head, fast = head;
+        while (fast != null) {
+            slow = slow.next;
+            fast = fast.next;
+            if (fast != null) {
+                fast = fast.next;
+            } else {
+                return false;
+            }
+            if (fast == slow) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+public class Solution {
+    public boolean hasCycle(ListNode head) {
         if (head == null || head.next == null) {
             return false;
         }

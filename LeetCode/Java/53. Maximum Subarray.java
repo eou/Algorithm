@@ -1,5 +1,35 @@
 // 53. Maximum Subarray 
 class Solution {
+    public int maxSubArray(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        // prefix sum array
+        int[] prefixSum = new int[nums.length + 1];
+        for (int i = 1; i <= nums.length; ++i) {
+            prefixSum[i] = prefixSum[i - 1] + nums[i - 1]; // nums[0] + nums[1] + ... + nums[i] = prefixSum[i + 1]
+        }
+
+        // subarray sum [i...j] = prefixSum[j + 1] - prefixSum[i]
+        // => Best Time to buy and sell stock I
+        int largest = prefixSum[1], min = prefixSum[0];
+        for (int i = 1; i < prefixSum.length; ++i) {
+            largest = Math.max(largest, prefixSum[i] - min);
+            min = Math.min(min, prefixSum[i]);
+        }
+        // Best Time to buy and sell stock I
+        // int largest = 0, min = prices[0];
+        // for (int i = 0; i < prices.length; ++i) {
+        // largest = Math.max(largest, prices[i] - min);
+        // min = Math.min(min, prices[i]);
+        // }
+
+        return largest;
+    }
+}
+
+class Solution {
     // for every loop, preSum stores the sum of numbers which from nums[0] to nums[i]
     public int maxSubArray(int[] nums) {
         int max = Integer.MIN_VALUE, preSum = 0, minPre = 0;

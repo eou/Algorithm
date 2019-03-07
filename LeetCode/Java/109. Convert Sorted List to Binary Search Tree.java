@@ -2,6 +2,44 @@
 class Solution {
     // 重点是将每段链表分为三部分而不是两部分，根节点和左右子树，注意断链
     public TreeNode sortedListToBST(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+
+        if (head.next == null) {
+            return new TreeNode(head.val);
+        }
+
+        ListNode pre = null, slow = head, fast = head.next;
+        while (fast != null) {
+            pre = slow;
+            slow = slow.next;
+            fast = fast.next;
+            if (fast != null) {
+                fast = fast.next;
+            }
+        }
+
+        pre.next = null; // break the end node's link
+        pre = slow;
+        slow = slow.next;
+        pre.next = null; // isolate the mid node
+
+        TreeNode root = new TreeNode(pre.val), left = null, right = null;
+
+        left = sortedListToBST(head);
+        if (slow != null) {
+            right = sortedListToBST(slow);
+        }
+        root.left = left;
+        root.right = right;
+
+        return root;
+    }
+}
+
+class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
         if(head == null) {
             return null;
         }
