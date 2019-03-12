@@ -43,28 +43,32 @@ class Solution {
 }
 
 class Solution {
+    // 可以不用存图，点之间的关系可以直接遍历寻找
+    // 从图的尾节点逆向遍历和从起点遍历是一个效果
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        int[] inDegree = new int[numCourses];
-        Deque<Integer> queue = new ArrayDeque<>();
-
+        int[] indegrees = new int[numCourses];
+        // count the prerequisites of each courses, [0, 1] means 1 => 0
         for (int[] courses : prerequisites) {
-            inDegree[courses[1]]++;
+            ++indegrees[courses[0]];
         }
 
-        for (int i = 0; i < inDegree.length; i++) {
-            if (inDegree[i] == 0) {
-                queue.add(i);
+        // BFS
+        Deque<Integer> queue = new ArrayDeque<>();
+        // if some courses do not need prerequisites, they can be the start nodes of the graph
+        for (int i = 0; i < indegrees.length; ++i) {
+            if (indegrees[i] == 0) {
+                queue.offer(i);
             }
         }
 
         while (!queue.isEmpty()) {
-            numCourses--;
             int course = queue.poll();
+            --numCourses;
             for (int[] courses : prerequisites) {
-                if (courses[0] == course) {
-                    inDegree[courses[1]]--;
-                    if (inDegree[courses[1]] == 0) {
-                        queue.add(courses[1]);
+                if (courses[1] == course) {
+                    --indegrees[courses[0]];
+                    if (indegrees[courses[0]] == 0) {
+                        queue.offer(courses[0]); // next start
                     }
                 }
             }

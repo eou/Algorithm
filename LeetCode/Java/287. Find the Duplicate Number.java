@@ -1,5 +1,7 @@
 // 287. Find the Duplicate Number
+// 题目条件有暗示：Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive)
 class Solution {
+    // 不符合题目要求：You must not modify the array (assume the array is read only)
     public int findDuplicate(int[] nums) {
         Arrays.sort(nums);
         for(int i = 1; i < nums.length; i++) {

@@ -1,5 +1,25 @@
 // 239. Sliding Window Maximum
 class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (nums == null || nums.length == 0 || k == 0) {
+            return new int[0];
+        }
+        
+        int[] results = new int[nums.length - k + 1];
+        
+        for (int i = k - 1; i < nums.length; ++i) {
+            int max = nums[i];
+            for (int j = 1; j < k; ++j) {
+                max = Math.max(nums[i - j], max);  
+            }
+            results[i - k + 1] = max;
+        }
+        
+        return results;
+    }
+}
+
+class Solution {
     // 最通俗易懂的版本：优先队列，复杂度O(nk)，可以用hashheap达到O(nlogk)
     public int[] maxSlidingWindow(int[] nums, int k) {
         int[] results = new int[nums.length - k + 1];
