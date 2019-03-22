@@ -2,13 +2,13 @@
 // 时间复杂度为 O(n)，空间复杂度为 O(n)，递归的栈最差情况是 n 个栈
 class Solution {
     public boolean isSymmetric(TreeNode root) {
-        return isMirror(root, root);
+        return helper(root, root);
     }
 
-    public boolean isMirror(TreeNode t1, TreeNode t2) {
+    public boolean helper(TreeNode t1, TreeNode t2) {
         // root, avoid judge symmetric twice
         if (t1 == t2 && t1 != null) {
-            return isMirror(t1.left, t2.right);
+            return helper(t1.left, t2.right);
         }
         if(t1 == null && t2 == null) {
             return true;
@@ -17,7 +17,7 @@ class Solution {
             return false;
         }
 
-        return (t1.val == t2.val) && isMirror(t1.right, t2.left) && isMirror(t1.left, t2.right);
+        return (t1.val == t2.val) && helper(t1.right, t2.left) && helper(t1.left, t2.right);
     }
 }
 

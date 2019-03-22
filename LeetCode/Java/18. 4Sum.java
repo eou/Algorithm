@@ -126,7 +126,8 @@ class Solution {
 
 class Solution {
     // HashMap版本，把4Sum转化为2个2Sum问题
-    // 时间复杂度略好，O(n^2logn)
+    // 时间复杂度略好，O(n^2) ~ O(n^3)
+    // 当数字都不一样的时候，O(n^2)，当数字全部相同的时候，O(n^3)，因为会重复计算
     public List<List<Integer>> fourSum(int[] nums, int target) {
         List<List<Integer>> results = new ArrayList<>();
 
@@ -147,16 +148,17 @@ class Solution {
                 }
                 
                 int sum = target - (nums[i] + nums[j]);
+                // 每次 containsKey 需要 log(n^2) (最多有 n^2 个元素)
                 if (!map.containsKey(sum)) {
                     continue;
                 }
                 List<List<Integer>> pairs = map.get(sum);
                 int previousNum1 = Integer.MAX_VALUE;
                 int previousNum2 = Integer.MAX_VALUE;
+                // 当数字全部相同的时候，如果走到这一步，为 O(n^2)，而之前二层循环因为重复计算为 O(n)
                 for (List<Integer> pair : pairs) {
                     int thirdIndex = pair.get(0), fourthIndex = pair.get(1);
-                    if (thirdIndex > j && fourthIndex > j && nums[thirdIndex] != previousNum1
-                            && nums[fourthIndex] != previousNum2) {
+                    if (thirdIndex > j && fourthIndex > j && nums[thirdIndex] != previousNum1 && nums[fourthIndex] != previousNum2) {
                         results.add(Arrays.asList(nums[i], nums[j], nums[thirdIndex], nums[fourthIndex]));
                         previousNum1 = nums[thirdIndex];
                         previousNum2 = nums[fourthIndex];
@@ -168,7 +170,7 @@ class Solution {
     }
 
     private Map<Integer, List<List<Integer>>> createTwoSumMap(int[] nums) {
-        Map<Integer, List<List<Integer>>> map = new HashMap<>();
+        Map<Integer, List<List<Integer>>> map = new HashMap<>();    // sum => ((index_i, index_j), ...)
         for (int i = 0; i <= nums.length - 2; ++i) {
             for (int j = i + 1; j <= nums.length - 1; ++j) {
                 int sum = nums[i] + nums[j];

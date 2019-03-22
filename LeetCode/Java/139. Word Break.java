@@ -73,7 +73,8 @@ class Solution {
         // dp[end] = dp[start] && wordDict.contains(s.substring(start, end))
         for (int i = 1; i <= s.length(); i++) {
             for (int j = i - 1; j >= 0; j--) {
-                dp[i] = dp[j] && set.contains(s.substring(j, i));
+                dp[i] = (dp[j] && set.contains(s.substring(j, i)));
+                // 第 i 个字符找到一个解
                 if(dp[i]) {
                     break;
                 }
@@ -115,23 +116,57 @@ class Solution {
     // BFS，时间复杂度为 O(n^2)
     public boolean wordBreak(String s, List<String> wordDict) {
         Deque<Integer> queue = new ArrayDeque<>();
-        int[] visited = new int[s.length()];
+        boolean[] visited = new boolean[s.length()];
 
-        queue.add(0);
+        queue.offer(0);
         while (!queue.isEmpty()) {
-            int start = queue.remove();
-            if (visited[start] == 0) {
+            int start = queue.poll();
+            if (!visited[start]) {
                 for (int i = start + 1; i <= s.length(); i++) {
                     if (wordDict.contains(s.substring(start, i))) {
-                        queue.add(i);
+                        queue.offer(i);
                         if (i == s.length()) {
                             return true;
                         }
                     }
                 }
-                visited[start] = 1;
+                visited[start] = true;
             }
         }
+
         return false;
+    }
+}
+
+// follow up：返回任意一个解，而不是 140. Word Break II 所有解
+class Solution {
+    public String wordBreak(String s, Set<String> dict) {
+        if (s == null || s.isEmpty() || dict == null) {
+            return "";
+        }
+
+        boolean[] dp = new boolean[s.length() + 1]; 
+        String[] words = new String[s.length() + 1]; 
+        dp[0] = true;
+        words[0] = "";
+        
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] && dict.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    if (words[j].isEmpty()) {
+                        words[i] = s.substring(j, i);   // 首个匹配的字符
+                    } else {
+                        words[i] = words[j] + " " + s.substring(j, i);
+                    }
+                }
+            }
+        }
+
+        if (dp[s.length()]) {
+            return words[s.length()];
+        } else {
+            return "";
+        }
     }
 }

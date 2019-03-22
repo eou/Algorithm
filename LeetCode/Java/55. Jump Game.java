@@ -70,11 +70,13 @@ class Solution {
 class Solution {
     // 贪心版本，时间复杂度为 O(n)
     public boolean canJump(int[] nums) {
-        int furthest = nums[0];
-        for(int i = 1; i < nums.length && furthest >= i; i++) {
-            furthest = Math.max(furthest, nums[i] + i);
+        int reachable = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            if (i > reachable) {
+                return false;
+            }
+            reachable = Math.max(reachable, i + nums[i]);
         }
-
-        return furthest >= (nums.length - 1) ? true : false; // 这里注意是不小于
+        return true;
     }
 }

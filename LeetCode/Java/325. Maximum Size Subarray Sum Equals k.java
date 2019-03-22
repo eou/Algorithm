@@ -1,5 +1,26 @@
 // 325. Maximum Size Subarray Sum Equals k
 class Solution {
+    public int maxSubArrayLen(int[] nums, int k) {
+        int[] prefix = new int[nums.length + 1];
+        prefix[0] = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            prefix[i + 1] = prefix[i] + nums[i]; // nums[i] + nums[i + 1] + ... + nums[j] = prefix[j + 1] - prefix[i]
+        }
+
+        int result = 0;
+        for (int i = 0; i < prefix.length; ++i) {
+            for (int j = 0; j < i; ++j) {
+                if (prefix[i] - prefix[j] == k) {
+                    result = Math.max(result, i - j);
+                }
+            }
+        }
+
+        return result;
+    }
+}
+
+class Solution {
     // 这种做法偏慢，因为不需要用list存储那么多下标，当添加了 sum - k 的key之后，就不需要用后面的下标更新了，所以也只需要用Integer保存即可
     public int maxSubArrayLen(int[] nums, int k) {
         Map<Integer, List<Integer>> map = new HashMap<>();

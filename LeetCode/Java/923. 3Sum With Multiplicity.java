@@ -1,6 +1,7 @@
 // 923. 3Sum With Multiplicity
 class Solution {
     // 思路与3Sum一样，但是需要提前去重，否则TLE
+    // [0,2,0] => [0,0,2] 需要将两个 0 作为两个数字判断
     public int threeSumMulti(int[] A, int target) {
         int M = 1_000_000_007;
         

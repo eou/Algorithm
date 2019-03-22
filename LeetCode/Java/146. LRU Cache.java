@@ -22,7 +22,7 @@ class LRUCache {
 class LRUCache {
     // 标准版本，HashMap + DoubleLinkedList
     class DoubleListNode {
-        int key; // not necessary
+        int key;
         int value;
         DoubleListNode pre;
         DoubleListNode next;

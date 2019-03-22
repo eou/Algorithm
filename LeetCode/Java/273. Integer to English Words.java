@@ -7,7 +7,7 @@ class Solution {
     // 2. 何时应该添加 Thousand, Million, Billion 这几个词，是根据高三位的数字判断的，如果高三位数字（4-6,7-9,10-12）全为0，就不添加，否则就添加
     // 3. 单词之间的空格也需要留意
     // 4. 测试用例就用 1234567 和10000, 100001, 1000010等数字即可
-    // 一个常识：32位Integer最大值2147483647, 约为21亿
+    // 一个常识：32位Integer最大值2147483647, 约为21亿，2.1 billion
     private final String[] LESS_THAN_20 = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
     private final String[] TENS = { "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
     private final String[] THOUSANDS = { "", "Thousand", "Million", "Billion" }; // 数组第一个元素必须放一个空字符串以保证最低三位也能以同样规律添加单词

@@ -122,7 +122,6 @@ class Solution {
 class Solution {
     // 遍历法2，O(n)
     // 非递归版本的中序遍历 in-order traverse
-
     public boolean isValidBST(TreeNode root) {
         Stack<TreeNode> stack = new Stack<>();
 

@@ -3,6 +3,31 @@ class Solution {
     public int threeSumClosest(int[] nums, int target) {
         Arrays.sort(nums);
         int diff = Integer.MAX_VALUE;
+        int sum = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            int left = i + 1, right = nums.length - 1;
+            while (left < right) {
+                int current = nums[i] + nums[left] + nums[right];
+                if (Math.abs(current - target) < diff) {
+                    diff = Math.abs(current - target);
+                    sum = current;
+                }
+                if (current < target) {
+                    ++left;
+                } else {
+                    --right;
+                }
+            }
+        }
+        
+        return sum;
+    }
+}
+
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int diff = Integer.MAX_VALUE;
         int closest = Integer.MAX_VALUE;
         for (int i = 0; i < nums.length - 2; i++) {
             if (i == 0 || nums[i] != nums[i - 1]) {

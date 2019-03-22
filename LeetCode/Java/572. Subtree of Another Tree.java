@@ -1,28 +1,23 @@
 // 572. Subtree of Another Tree
 class Solution {
+    // 时间复杂度为 O(m * n)
     public boolean isSubtree(TreeNode s, TreeNode t) {
-        if(s == null) {
-            return false;
-        }
-        if(isSame(s, t)) {
-            return true;
-        }
-        return isSubtree(s.left, t) || isSubtree(s.right, t);
+        return s != null && (isSame(s, t) || isSubtree(s.left, t) || isSubtree(s.right, t));
     }
-    
-    private boolean isSame(TreeNode t1, TreeNode t2) {
-        if(t1 == null && t2 == null) {
+
+    public boolean isSame(TreeNode s, TreeNode t) {
+        if (s == null && t == null) {
             return true;
-        }
-        if(t1 == null || t2 == null) {
+        } else if (s == null || t == null) {
             return false;
+        } else {
+            return s.val == t.val && isSame(s.left, t.left) && isSame(s.right, t.right);
         }
-        return (t1.val == t2.val) && isSame(t1.left, t2.left) && isSame(t1.right, t2.right);
     }
 }
 
 class Solution {
-    // 将树转换成字符串比较，时间复杂度为 O(n^2)，除非用KMP
+    // 将树转换成字符串比较，时间复杂度为 O(m * n + n^2 + m^2)，除非用KMP
     // 注意逗号加在节点值前面，否则[12]转换成12,#,#,与[2]转换成2,#,#,后会误判
     public boolean isSubtree(TreeNode s, TreeNode t) {
         if(s == null) {
@@ -58,16 +53,16 @@ class Solution {
     }
 
     // 前序遍历递归版本
-    // private String preOrder(TreeNode root) {
-    //     StringBuilder strBuilder = new StringBuilder();
-    //     if (root == null) {
-    //         strBuilder.append(",#");
-    //         return strBuilder.toString();
-    //     }
-    //     strBuilder.append(",").append(root.val);
-    //     StringBuilder left = new StringBuilder(preOrder(root.left));
-    //     StringBuilder right = new StringBuilder(preOrder(root.right));
-    //     strBuilder.append(left).append(right);
-    //     return strBuilder.toString();
-    // }
+    private String preOrder(TreeNode root) {
+        StringBuilder strBuilder = new StringBuilder();
+        if (root == null) {
+            strBuilder.append(",#");
+            return strBuilder.toString();
+        }
+        strBuilder.append(",").append(root.val);
+        StringBuilder left = new StringBuilder(preOrder(root.left));
+        StringBuilder right = new StringBuilder(preOrder(root.right));
+        strBuilder.append(left).append(right);
+        return strBuilder.toString();
+    }
 }

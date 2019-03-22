@@ -61,6 +61,44 @@ class Solution {
 }
 
 class Solution {
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+        
+        int result = 0;
+        for (int i = 0; i < grid.length; ++i) {
+            for (int j = 0; j < grid[0].length; ++j) {
+                if (grid[i][j] == '1') {
+                    bfs(i, j, grid);
+                    ++result;
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    int[] dirx = new int[]{0, 0, 1, -1};
+    int[] diry = new int[]{1, -1, 0, 0};
+    public void bfs(int i, int j, char[][] grid) {
+        Deque<int[]> queue = new ArrayDeque<>();
+        queue.offer(new int[]{i, j});
+        while (!queue.isEmpty()) {
+            int[] pos = queue.poll();
+            for (int k = 0; k < 4; ++k) {
+                int x = pos[0] + dirx[k];
+                int y = pos[1] + diry[k];
+                if (x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] == '1') {
+                    queue.offer(new int[]{x, y});
+                    grid[x][y] = '0';
+                }
+            }
+        }
+    }
+}
+
+class Solution {
     // DFS版本，目的是从一个点找到所有到周边的路径，也是要改变原数组的值
     public int numIslands(char[][] grid) {
         if (grid == null || grid.length == 0) {
