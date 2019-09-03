@@ -1,9 +1,9 @@
 # Memoization
 
 ## 1 Two Sum
-Use Set/Map recording the previous numbers' appearances. 
+Use `Set`/`Map` recording the previous numbers' appearances. 
 
-If it needs to return indices, use Map<Integer, Integer> (number => index).
+If it needs to return indices, use `Map<Integer, Integer>` (number => index).
 
 ---
 
@@ -20,7 +20,7 @@ If the input linked lists's order are the same as digits in numbers, just revers
 
 Sliding window. 
 
-Use Map<Character, Integer> (char => frequency). 
+Use `Map<Character, Integer>` (char => frequency). 
 
 There is a trick for this problem that using (char => index) other than (char => frequency).
 
@@ -45,21 +45,23 @@ The most efficient way is **Manacher's algorithm**. Use previous longest palindr
 ---
 
 ## 159 Longest Substring with At Most Two Distinct Characters
+
 - 3
 - 340
 
 Sliding window. 
 
-Use Map<Character, Integer> (char => frequency). Map.size() is the distinct characters number.
+Use `Map<Character, Integer>` (char => frequency). Map.size() is the distinct characters number.
 
 ---
 
 ## 340 Longest Substring with At Most K Distinct Characters
+
 - 3
 - 159
 
 Sliding window. 
 
-Use Map<Character, Integer> (char => frequency). Map.size() is the distinct characters number.
+Use `Map<Character, Integer>` (char => frequency). Map.size() is the distinct characters number.
 
 ---
