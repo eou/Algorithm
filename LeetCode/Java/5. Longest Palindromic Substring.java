@@ -51,7 +51,9 @@ class Solution {
     // Manacher's algorithm，时间复杂度为 O(n)
     // 算法解释见 https://blog.csdn.net/xingyeyongheng/article/details/9310555
     // 算法时间复杂度分析见 https://www.zhihu.com/question/30226229
-    // 简言之，即比较次数的多少是和 center + longest 回文串最右边位置 有关的，也就是说复杂度是和回文串最右边位置 从 0 位置移动到 n-1 的位置次数是线性相关的， max 从 0 移动到 n-1 位置最多为 O(n) 次，因此算法的时间复杂度是 O(n) 
+    // 目的是用之前找出的最长回文串来辅助判断当前位置的最长回文串
+    // 比较次数的多少是和 center + longest 回文串最右边位置 有关的，也就是说复杂度是和回文串最右边位置 从 0 位置移动到 n-1 的位置次数是线性相关的， max 从 0 移动到 n-1 位置最多为 O(n) 次，因此算法的时间复杂度是 O(n) 
+    // 类似的问题 http://acm.hdu.edu.cn/showproblem.php?pid=3294
     public String longestPalindrome(String s) {
         if (s == null || s.length() == 0) {
             return "";
@@ -68,7 +70,7 @@ class Solution {
             // 核心部分
             if (center + longest > i) {
                 int mirrorOfI = center - (i - center);
-                len = Math.min(palindrome[mirrorOfI], center + longest - i);
+                len = Math.min(palindrome[mirrorOfI], center + longest - i);        // auxiliary part
             }
 
             // 普通匹配回文串
@@ -88,7 +90,7 @@ class Solution {
         }
 
         longest = longest - 1; // remove the extra #
-        int start = (center - 1) / 2 - (longest - 1) / 2;
+        int start = (center - 1) / 2 - (longest - 1) / 2;   // int start = (center - longest) / 2;
         return s.substring(start, start + longest);
     }
 
