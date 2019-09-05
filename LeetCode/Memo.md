@@ -1,5 +1,7 @@
 # Memoization
 
+> 天灰灰 會不會 讓我忘了妳是誰
+
 ## 1 Two Sum
 Use `Set`/`Map` recording the previous numbers' appearances. 
 
@@ -55,6 +57,16 @@ Use `Map<Character, Integer>` (char => frequency). Map.size() is the distinct ch
 
 ---
 
+## 315 Count of Smaller Numbers After Self
+
+- 493
+
+- From right to left, binary Search current number's position
+- calculate frequency array prefix sum => Fenwick Tree
+- Binary Search Tree, record left children count but not smaller count
+
+---
+
 ## 340 Longest Substring with At Most K Distinct Characters
 
 - 3
@@ -63,5 +75,13 @@ Use `Map<Character, Integer>` (char => frequency). Map.size() is the distinct ch
 Sliding window. 
 
 Use `Map<Character, Integer>` (char => frequency). Map.size() is the distinct characters number.
+
+---
+
+## 493 Reverse Pairs
+
+- 315
+
+- Fenwick Tree. Find the correct lower bound of frequency array and calculate prefix sum.
 
 ---

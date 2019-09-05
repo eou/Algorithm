@@ -1,6 +1,7 @@
 # Fenwick Tree / Binary Indexed Tree
 
 [Fenwick Tree](https://en.wikipedia.org/wiki/Fenwick_tree)
+[Binary Indexed Trees](https://www.topcoder.com/community/competitive-programming/tutorials/binary-indexed-trees)
 
 Given a table of elements, we can get prefix sum in `O(logn)` and update prefix sum in `O(logn)`.
 
@@ -9,9 +10,9 @@ Given a table of elements, we can get prefix sum in `O(logn)` and update prefix 
 ```java
 class FenwickTree {
     public List<Integer> nums;
-    FenwickTree() {
+    FenwickTree(int n) {
         nums = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < n; i++) {
             nums.add(i);
         }
     }
@@ -24,6 +25,7 @@ class FenwickTree {
             sum += nums.get(i);
             i -= lowbit(i);
         }
+        return sum;
     }
 
     // update one element by increasing delta
@@ -35,6 +37,7 @@ class FenwickTree {
     }
 
     // 5 = 0110, -5 = ~(0110) + 1 = 1010, lowbit(x) = 0110 & 1010 = 0010
+    // !!! i should not be 0, otherwise infinite loop because 0 & -0 = 0
     private static int lowbit(int x) {
         return x & (-x);
     }
