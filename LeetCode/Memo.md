@@ -83,5 +83,6 @@ Use `Map<Character, Integer>` (char => frequency). Map.size() is the distinct ch
 - 315
 
 - Fenwick Tree. Find the correct lower bound of frequency array and calculate prefix sum.
+- https://leetcode.com/problems/reverse-pairs/discuss/97268/general-principles-behind-problems-similar-to-reverse-pairs
 
 ---

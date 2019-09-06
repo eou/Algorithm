@@ -2,7 +2,7 @@
 
 [Segment Tree](https://en.wikipedia.org/wiki/Segment_tree)
 
-> This article is about the data structure used to store segments. For the data structure used to efficiently calculate prefix sums, see Fenwick tree.
+> This tree is about the data structure used to store segments. For the data structure used to efficiently calculate prefix sums, see Fenwick tree.
 
 For other similar data structure, visit [What are the differences between segment trees, interval trees, binary indexed trees and range trees?](https://stackoverflow.com/questions/17466218/what-are-the-differences-between-segment-trees-interval-trees-binary-indexed-t)
 
