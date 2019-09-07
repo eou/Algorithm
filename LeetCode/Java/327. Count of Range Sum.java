@@ -29,7 +29,7 @@ class Solution {
         int res = 0;
         // forward or backward
         for (int i = 0; i < n; i++) {
-            int l = binarySearch(sorted, prefixSum[i] - upper - 1);
+            int l = binarySearch(sorted, prefixSum[i] - upper - 1);     // left side should -1
             int r = binarySearch(sorted, prefixSum[i] - lower);
             res += t.sum(r) - t.sum(l);
             if (prefixSum[i] >= lower && prefixSum[i] <= upper) {
@@ -41,7 +41,7 @@ class Solution {
         //     t.add(map.get(prefixSum[i]), 1);
         //     long sum = prefixSum[i] - nums[i];
         //     int r = binarySearch(sorted, sum + upper);
-        //     int l = binarySearch(sorted, sum + lower - 1);
+        //     int l = binarySearch(sorted, sum + lower - 1);       // left side should -1
         //     res += t.sum(r) - t.sum(l);
         // }
         return res;
