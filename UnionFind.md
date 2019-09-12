@@ -1,4 +1,4 @@
-# 1 并查集
+# Union Find
 
 `union find`：[Union-Find Algorithms](https://www.cs.princeton.edu/~rs/AlgsDS07/01UnionFind.pdf). also named `Disjoint-set`.
 
