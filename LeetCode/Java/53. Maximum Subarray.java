@@ -44,6 +44,7 @@ class Solution {
 }
 
 class Solution {
+    // Kadane's algorithm
     public int maxSubArray(int[] nums) {
         int dp[] = new int[nums.length];
         dp[0] = nums[0];
@@ -91,5 +92,54 @@ class Solution {
             rightMax = Math.max(tmp, rightMax);
         }
         return Math.max(Math.max(leftSum, rightSum), leftMax + rightMax);
+    }
+}
+
+class Solution {
+    public int maxSubArray(int[] nums) {
+        if (nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        int[] left = new int[nums.length / 2];
+        int[] right = new int[nums.length - nums.length / 2];
+        for (int i = 0; i < nums.length / 2; i++) {
+            left[i] = nums[i];
+        }
+        for (int i = nums.length / 2; i < nums.length; i++) {
+            right[i - nums.length / 2] = nums[i];
+        }
+
+        int leftLargest = maxSubArray(left);
+        int rightLargest = maxSubArray(right);
+
+        int[] prefixSum = new int[nums.length];
+        prefixSum[0] = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            prefixSum[i] = prefixSum[i - 1] + nums[i];
+        }
+        int leftmin = 0, rightmax = prefixSum[nums.length / 2];
+        for (int i = 0; i < nums.length / 2; i++) {
+            leftmin = Math.min(leftmin, prefixSum[i]);
+        }
+        for (int i = nums.length / 2; i < nums.length; i++) {
+            rightmax = Math.max(rightmax, prefixSum[i]);
+        }
+        // spread from mid point
+        // int leftMax = nums[nums.length / 2 - 1];
+        // int rightMax = nums[nums.length / 2];
+        // int tmp = 0;
+        // for (int i = nums.length / 2 - 1; i >= 0; i--) {
+        // tmp += nums[i];
+        // leftMax = Math.max(tmp, leftMax);
+        // }
+        // tmp = 0;
+        // for (int i = nums.length / 2; i < nums.length; i++) {
+        // tmp += nums[i];
+        // rightMax = Math.max(tmp, rightMax);
+        // }
+        return Math.max(leftLargest, Math.max(rightLargest, rightmax - leftmin));
     }
 }

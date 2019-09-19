@@ -46,6 +46,61 @@ class Solution {
 }
 
 class Solution {
+    /**
+     * "aa" "a"
+     * 
+     * "mississippi" "mis*is*p*."
+     * 
+     * "aab" "c*a*b"
+     * 
+     * "ab" ".*"
+     * 
+     * "ab" ".*c"
+     * 
+     * "aa" "a*"
+     * 
+     * "a" "ab*"
+     * 
+     * "a" ".*.."
+     * 
+     * "" "c*c*"
+     */
+    public boolean isMatch(String s, String p) {
+        // use first character of p matching s
+        // use first 2 characters of p matching s
+        if (p.isEmpty()) {
+            if (s.isEmpty()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (s.isEmpty()) {
+                if (p.length() >= 2 && p.charAt(1) == '*') {
+                    return isMatch(s, p.substring(2));
+                } else {
+                    return false;
+                }
+            } else if (s.charAt(0) == p.charAt(0) || p.charAt(0) == '.') {
+                if (p.length() > 1 && p.charAt(1) == '*') {
+                    boolean res = false;
+                    if (p.length() > 2) {
+                        res = res || isMatch(s, p.substring(2));
+                    }
+                    return res || isMatch(s.substring(1), p);
+                } else {
+                    return isMatch(s.substring(1), p.substring(1));
+                }
+            } else if (s.charAt(0) != p.charAt(0) && p.length() > 1 && p.charAt(1) == '*') {
+                return isMatch(s, p.substring(2));
+            } else {
+                return false;
+            }
+        }
+    }
+}
+
+class Solution {
     // 递归简化版本，时间复杂度计算比较复杂，为O((S+P)*2^(S+P/2))，可以看做O(n2^n)
     public boolean isMatch(String s, String p) {
         if(p.isEmpty()) {
