@@ -122,6 +122,32 @@ class Solution {
 }
 
 class Solution {
+    // Top-down DP版本，时间复杂度O(S*P)
+    public boolean isMatch(String s, String p) {
+        boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
+        // dp[i][j] means if s.substring(i) and p.substring(j) matches
+        dp[0][0] = true;
+        // 1st => 0, 2nd => 1, ...
+        for (int i = 0; i <= s.length(); ++i) {
+            // j = 0 => false, no pattern string
+            for (int j = 1; j <= p.length(); ++j) {
+                // current is *, we need compare preceding one
+                if (j > 1 && p.charAt(j - 1) == '*') {
+                    boolean notMatch = dp[i][j - 2];
+                    boolean match = i > 0 && (s.charAt(i - 1) == p.charAt(j - 2) || p.charAt(j - 2) == '.')
+                            && dp[i - 1][j];
+                    dp[i][j] = notMatch || match;
+                } else {
+                    dp[i][j] = i > 0 && dp[i - 1][j - 1]
+                            && (s.charAt(i - 1) == p.charAt(j - 1) || p.charAt(j - 1) == '.');
+                }
+            }
+        }
+        return dp[s.length()][p.length()];
+    }
+}
+
+class Solution {
     // Bottom-up DP版本，从尾部到头部匹配字符串
     // 此二维DP数组有2个状态，因为不会提前经过未检测的字符
     public boolean isMatch(String s, String p) {
