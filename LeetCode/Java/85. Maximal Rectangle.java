@@ -1,4 +1,5 @@
 // 85. Maximal Rectangle
+// ***二维矩阵每一层向上都可以看做一个直方图
 class Solution {
     // 与 84. Largest Rectangle in Histogram 递增栈版本的思路完全一样，这里时间复杂度为 O(n^2)
     public int maximalRectangle(char[][] matrix) {
