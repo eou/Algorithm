@@ -15,6 +15,35 @@ class Solution {
 }
 
 class Solution {
+    public int[] memo;
+
+    public int rob(int[] nums) {
+        memo = new int[nums.length];
+        Arrays.fill(memo, -1);
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        // DFS
+        return dfs(nums, 0);
+    }
+
+    public int dfs(int[] nums, int i) {
+        if (i == nums.length - 1) {
+            return nums[i];
+        }
+        if (i == nums.length - 2) {
+            return Math.max(nums[i], nums[i + 1]);
+        }
+        if (memo[i] != -1) {
+            return memo[i];
+        }
+        int res = Math.max(dfs(nums, i + 1), dfs(nums, i + 2) + nums[i]);
+        memo[i] = res;
+        return res;
+    }
+}
+
+class Solution {
     // DFS with memoization
     public int rob(int[] nums) {
         Integer[] memo = new Integer[nums.length + 1];
@@ -56,18 +85,14 @@ class Solution {
 class Solution {
     // 空间复杂度为 O(1)
     public int rob(int[] nums) {
-        if (nums == null || nums.length == 0) {
-            return 0;
+        // prev => curr => next
+        // next = max(prev + num, curr)
+        int prev = 0, curr = 0;
+        for (int num : nums) {
+            int next = Math.max(prev + num, curr);
+            prev = curr;
+            curr = next;
         }
-
-        int prev = 0;
-        int curr = 0;
-        for (int n : nums) {
-            int tmp = curr;
-            curr = Math.max(prev + n, curr);
-            prev = tmp;
-        }
-
         return curr;
     }
 }

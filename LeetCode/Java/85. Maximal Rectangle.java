@@ -48,6 +48,56 @@ class Solution {
 }
 
 class Solution {
+    public int[][] heights;
+
+    public int maximalRectangle(char[][] matrix) {
+        if (matrix.length == 0 || matrix[0].length == 0) {
+            return 0;
+        }
+
+        heights = new int[matrix.length][matrix[0].length];
+        calculateHeights(matrix);
+
+        int largest = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            largest = Math.max(largest, largestRec(matrix, i));
+        }
+
+        return largest;
+    }
+
+    public int largestRec(char[][] matrix, int row) {
+        int largest = 0;
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        stack.push(-1);
+        for (int i = 0; i < matrix[row].length; i++) {
+            if (stack.peek() == -1 || heights[row][i] > heights[row][stack.peek()]) {
+                stack.push(i);
+            } else {
+                largest = Math.max(largest, heights[row][stack.pop()] * (i - stack.peek() - 1));
+                i--; // not move in next loop
+            }
+        }
+        while (stack.peek() != -1) {
+            largest = Math.max(largest, heights[row][stack.pop()] * (matrix[row].length - stack.peek() - 1));
+        }
+        return largest;
+    }
+
+    public void calculateHeights(char[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] == '0') {
+                    heights[i][j] = 0;
+                } else {
+                    heights[i][j] = (i == 0 ? 0 : heights[i - 1][j]) + 1;
+                }
+            }
+        }
+    }
+}
+
+class Solution {
     // 另一种写法
     public int maximalRectangle(char[][] matrix) {
         if (matrix.length == 0 || matrix[0].length == 0) {

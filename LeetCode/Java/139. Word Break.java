@@ -1,5 +1,24 @@
 // 139. Word Break
 class Solution {
+    // dfs
+    public boolean wordBreak(String s, List<String> wordDict) {
+        if (s == null || s.length() == 0) {
+            return true;
+        }
+        for (int i = 0; i <= s.length(); i++) {
+            boolean result = false;
+            if (wordDict.contains(s.substring(0, i))) {
+                result = wordBreak(s.substring(i), wordDict);
+            }
+            if (result) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+class Solution {
     // 直接 DFS 会 TLE
     public boolean wordBreak(String s, List<String> wordDict) {
         for (int i = 0; i <= s.length(); i++) {
@@ -40,6 +59,37 @@ class Solution {
 }
 
 class Solution {
+    // dfs with memo
+    public Boolean[] memo;
+    public boolean wordBreak(String s, List<String> wordDict) {
+        memo = new Boolean[s.length() + 1];
+        memo[s.length()] = true;
+        return dfs(s, 0, wordDict);
+    }
+
+    public boolean dfs(String s, int start, List<String> wordDict) {
+        if (s == null || s.length() == 0) {
+            return true;
+        }
+        if (memo[start] != null) {
+            return memo[start];
+        }
+
+        for (int i = start; i <= s.length(); i++) {
+            if (wordDict.contains(s.substring(start, i))) {
+                if (dfs(s, i, wordDict)) {
+                    memo[start] = true;
+                    return true;
+                }
+            }
+        }
+
+        memo[start] = false;
+        return false;
+    }
+}
+
+class Solution {
     // DFS with memoization
     public boolean wordBreak(String s, List<String> wordDict) {
         return word_Break(s, new HashSet(wordDict), 0, new Boolean[s.length()]);
@@ -71,7 +121,7 @@ class Solution {
 
         dp[0] = true;
         // dp[end] = dp[start] && wordDict.contains(s.substring(start, end))
-        for (int i = 1; i <= s.length(); i++) {
+        for (int i = 1; i <= s.length(); i++) {     // if i start from 0, "" should be added into wordDict
             for (int j = i - 1; j >= 0; j--) {
                 dp[i] = (dp[j] && set.contains(s.substring(j, i)));
                 // 第 i 个字符找到一个解
