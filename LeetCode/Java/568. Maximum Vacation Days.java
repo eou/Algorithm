@@ -56,7 +56,7 @@ class Solution {
 }
 
 class Solution {
-    // DFS with memoization，时间复杂度为 O(n * k * n)
+    // DFS with memoization，时间复杂度为 O(n^2 * k)
     public int maxVacationDays(int[][] flights, int[][] days) {
         // memo[i][j] used to store the max number of vacactions that you will take when
         // you are in city i starting at week j
@@ -112,5 +112,48 @@ class Solution {
         }
 
         return dp[0][0];
+    }
+}
+
+class Solution {
+    public int maxVacationDays(int[][] flights, int[][] days) {
+        int N = flights.length;
+        int K = days[0].length;
+        // dp[i][j] means the maximum vacation days I can get until ith week in city j
+        Integer[][] dp = new Integer[K][N];
+        // week 0
+        for (int i = 0; i < N; i++) {
+            if (flights[0][i] == 1 || i == 0) {
+                dp[0][i] = days[i][0];
+            }
+        }
+        // in week i
+        for (int i = 1; i < K; i++) {
+            // start from city j
+            for (int j = 0; j < N; j++) {
+                // city j is reachable in last week
+                if (dp[i - 1][j] != null) {
+                    // come to city k or still stay city j to spend this week
+                    for (int k = 0; k < N; k++) {
+                        if (flights[j][k] == 1 || j == k) {
+                            if (dp[i][k] != null) {
+                                dp[i][k] = Math.max(dp[i][k], dp[i - 1][j] + days[k][i]);
+                            } else {
+                                dp[i][k] = dp[i - 1][j] + days[k][i];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // get the max vacation days;
+        int max = 0;
+        for (int i = 0; i < N; i++) {
+            if (dp[K - 1][i] != null) {
+                max = Math.max(max, dp[K - 1][i]);
+            }
+        }
+        return max;
     }
 }
