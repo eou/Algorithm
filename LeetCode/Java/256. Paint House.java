@@ -23,6 +23,7 @@ class Solution {
     }
 }
 
+// in place
 class Solution {
     public int minCost(int[][] costs) {
         if (costs == null || costs.length == 0) {
@@ -38,3 +39,5 @@ class Solution {
         return Math.min(Math.min(costs[n][0], costs[n][1]), costs[n][2]);
     }
 }
+
+// O(1), use 3 variables
