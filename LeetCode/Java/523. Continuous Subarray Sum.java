@@ -24,3 +24,32 @@ class Solution {
         return false;
     }
 }
+
+class Solution {
+    public boolean checkSubarraySum(int[] nums, int k) {
+        if (nums == null || nums.length == 0) {
+            return false;
+        }
+        
+        // 0, nums[0], nums[0] + nums[1], ...
+        int[] prefix = new int[nums.length + 1];
+        prefix[0] = 0;
+        for (int i = 1; i <= nums.length; i++) {
+            prefix[i] = nums[i - 1] + prefix[i - 1];
+        }
+        
+        for (int i = 0; i < prefix.length; i++) {
+            for (int j = i + 2; j < prefix.length; j++) {
+                if (k == 0 && (prefix[j] - prefix[i] == 0)) {
+                    System.out.println(j);
+                    System.out.println(i);
+                    return true;
+                } else if (k != 0 && (prefix[j] - prefix[i]) % k == 0) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+}

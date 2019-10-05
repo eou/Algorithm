@@ -63,3 +63,35 @@ class Solution {
         return true;
     }
 }
+
+class Solution {
+    public boolean isMonotonic(int[] A) {
+        if (A == null || A.length <= 1) {
+            return true;
+        }
+        
+        // A.length >= 2
+        // use diff array
+        int[] diff = new int[A.length];
+        for (int i = 0; i < A.length - 1; i++) {
+            diff[i] = A[i + 1] - A[i];
+        }
+        
+        boolean positive = false;
+        boolean negative = false;
+        for (int i = 0; i < diff.length; i++) {
+            if (diff[i] > 0) {
+                positive = true;
+            }
+            if (diff[i] < 0) {
+                negative = true;
+            }
+        }
+        
+        if (positive == true && negative == true) {
+            return false;
+        }
+        
+        return true;
+    }
+}

@@ -84,7 +84,8 @@ class Solution {
                     same = false;
                     break;
                 } else {
-                    s[word.charAt(i) - 'a'] = p[pattern.charAt(i) - 'a'] = i + 1;   // start from 1 because default is 0
+                    // start from 1 because default value in array is 0
+                    s[word.charAt(i) - 'a'] = p[pattern.charAt(i) - 'a'] = i + 1;  // i + 1 not i
                 }
             }
             if (same) {
