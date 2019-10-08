@@ -26,10 +26,10 @@ class Solution {
             }
         }
 
-        return helper(new int[k], target, nums, i);
+        return dfs(new int[k], target, nums, i);
     }
 
-    private boolean helper(int[] subsets, int target, int[] nums, int start) {
+    private boolean dfs(int[] subsets, int target, int[] nums, int start) {
         if(start < 0) {
             return true;
         }
@@ -37,7 +37,7 @@ class Solution {
         for(int i = 0; i < subsets.length; i++) {
             if(subsets[i] + nums[start] <= target) {
                 subsets[i] += nums[start];
-                if(helper(subsets, target, nums, start - 1)) {
+                if(dfs(subsets, target, nums, start - 1)) {
                     return true;
                 }
                 subsets[i] -= nums[start];
