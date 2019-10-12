@@ -21,37 +21,7 @@ class Node {
     }
 };
 */
-class Solution {
-    // 时间复杂度为 O(n^2)
-    public Node construct(int[][] grid) {
-        return helper(grid, 0, 0, grid.length);
-    }
-    
-    private Node helper(int[][] grid, int x, int y, int len) {
-        if(len == 1) {
-            return new Node(grid[x][y] != 0, true, null, null, null, null);
-        }
-        
-        Node root = new Node();
-        Node topLeft = helper(grid, x, y, len / 2);
-        Node topRight = helper(grid, x, y + len / 2, len / 2);
-        Node bottomLeft = helper(grid, x + len / 2, y, len / 2);
-        Node bottomRight = helper(grid, x + len / 2, y + len / 2, len / 2);
-        
-        if (topLeft.isLeaf && topRight.isLeaf && bottomLeft.isLeaf && bottomRight.isLeaf 
-            && topLeft.val == topRight.val && topRight.val == bottomLeft.val && bottomLeft.val == bottomRight.val) {
-            root.isLeaf = true;
-            root.val = topLeft.val;
-        } else {
-            root.topLeft = topLeft;
-            root.topRight = topRight;
-            root.bottomLeft = bottomLeft;
-            root.bottomRight = bottomRight;
-        }
-        return root;
-    }
-}
-
+// DFS
 class Solution {
     public Node construct(int[][] grid) {
         return dfs(grid, 0, 0, grid.length);
@@ -85,5 +55,36 @@ class Solution {
             }
         }
         return grid[row][col];
+    }
+}
+
+// DFS, 时间复杂度为 O(n^2)
+class Solution {
+    public Node construct(int[][] grid) {
+        return helper(grid, 0, 0, grid.length);
+    }
+    
+    private Node helper(int[][] grid, int x, int y, int len) {
+        if(len == 1) {
+            return new Node(grid[x][y] != 0, true, null, null, null, null);
+        }
+        
+        Node root = new Node();
+        Node topLeft = helper(grid, x, y, len / 2);
+        Node topRight = helper(grid, x, y + len / 2, len / 2);
+        Node bottomLeft = helper(grid, x + len / 2, y, len / 2);
+        Node bottomRight = helper(grid, x + len / 2, y + len / 2, len / 2);
+        
+        if (topLeft.isLeaf && topRight.isLeaf && bottomLeft.isLeaf && bottomRight.isLeaf 
+            && topLeft.val == topRight.val && topRight.val == bottomLeft.val && bottomLeft.val == bottomRight.val) {
+            root.isLeaf = true;
+            root.val = topLeft.val;
+        } else {
+            root.topLeft = topLeft;
+            root.topRight = topRight;
+            root.bottomLeft = bottomLeft;
+            root.bottomRight = bottomRight;
+        }
+        return root;
     }
 }

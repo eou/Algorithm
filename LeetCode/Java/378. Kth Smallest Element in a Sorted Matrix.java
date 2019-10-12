@@ -3,16 +3,17 @@
 class Solution {
     // 两个有序的条件都没用的版本，时间复杂度为 O(m * n * logk)
     public int kthSmallest(int[][] matrix, int k) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>(){
-            public int compare(Integer a, Integer b) {
-                return b - a;
-            }
-        });
+        // PriorityQueue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>(){
+        //     public int compare(Integer a, Integer b) {
+        //         return b - a;
+        //     }
+        // });
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> b - a);   // max-heap
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[0].length; j++) {
                 pq.add(matrix[i][j]);
                 if(pq.size() > k) {
-                    pq.poll();
+                    pq.poll();  // drop bigger number, only keep k smaller number
                 }
             }
         }
@@ -164,7 +165,7 @@ class Solution {
     // 由于 max - min 最大不过是 2^31 - 1 - (-2^31) => log(max - min) 最大为32，可以视为常数，所以总体时间复杂度为 O(n)
     public int kthSmallest(int[][] matrix, int k) {
         int left = matrix[0][0];
-        int right = matrix[matrix.length - 1][matrix[0].length - 1] + 1;
+        int right = matrix[matrix.length - 1][matrix[0].length - 1] + 1; // + 1 与否不影响 AC！！！
         while (left < right) {
             int mid = left + (right - left) / 2;
             int count = lessEqualMid(matrix, mid);
@@ -191,6 +192,54 @@ class Solution {
             }
         }
 
+        return cnt;
+    }
+}
+
+// binary search double optimization
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int left = matrix[0][0];
+        int right = matrix[matrix.length - 1][matrix[0].length - 1] + 1;    // + 1 与否不影响 AC！！！
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            int cnt = count(matrix, mid);
+            if (cnt < k) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        
+        return left;
+    }
+    
+    public int count(int[][] matrix, int num) {
+        int cnt = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            // start from end of each row
+            if (matrix[i][matrix[0].length - 1] <= num) {
+                // skip this row, go to next row
+                // note that if == num, should also skip
+                cnt += (matrix[0].length);
+                continue;
+            } if (matrix[i][0] > num) {
+                // no need to check rest rows
+                break;
+            } else {
+                int left = 0;
+                int right = matrix[0].length;
+                while (left < right) {
+                    int mid = left + (right - left) / 2;
+                    if (matrix[i][mid] <= num) {    // reach first num > matrix[i][mid]
+                        left = mid + 1;
+                    } else {
+                        right = mid;
+                    }
+                }
+                cnt += (left);
+            }
+        }
         return cnt;
     }
 }

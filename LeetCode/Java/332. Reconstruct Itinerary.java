@@ -142,7 +142,7 @@ class Solution {
     }
 }
 
-// dfs => iterative
+// dfs => iterative, use stack
 class Solution {
     public List<String> findItinerary(List<List<String>> tickets) {
         List<String> res = new ArrayList<>();
