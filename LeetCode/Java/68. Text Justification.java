@@ -1,4 +1,76 @@
 // 68. Text Justification
+// too many details
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> res = new ArrayList<>();
+        int curWidth = 0;
+        int start = 0;
+        for (int i = 0; i < words.length; i++) {
+            if (curWidth == 0) {
+                curWidth += words[i].length();
+            } else if (curWidth + words[i].length() + 1<= maxWidth) {
+                curWidth += (words[i].length() + 1);  // extra space
+            } else {
+                // last word has already overbound, go back one word
+                res.add(makeOneLineText(words, maxWidth, start, i, false));
+                start = i;
+                i -= 1;     // next loop i++
+                curWidth = 0;
+            }
+        }
+        // last line
+        res.add(makeOneLineText(words, maxWidth, start, words.length, true));
+        return res;
+    }
+    
+    public String makeOneLineText(String[] words, int maxWidth, int start, int end, boolean isLast) {
+        String res = "";
+        if (isLast || end - start == 1) {   // last line or single word one line
+            for (int i = start; i < end; i++) {
+                if (i == start) {
+                    res += words[i];
+                } else {
+                    res += " ";
+                    res += words[i];
+                }
+            }
+            while (res.length() < maxWidth) {
+                res += " ";
+            }
+        } else {
+            int wordsLength = 0;
+            for (int i = start; i < end; i++) {
+                wordsLength += words[i].length();
+            }
+
+            int spaceLength = maxWidth - wordsLength;
+            int slots = spaceLength / (end - start - 1);
+            int restSpace = spaceLength - slots * (end - start - 1);
+            for (int i = start; i < end - 1; i++) {
+                res += words[i];
+                // rest space evenly divide
+                if (restSpace > 0) {
+                    restSpace--;
+                    res += makeSpaces(slots + 1);
+                } else {
+                    res += makeSpaces(slots);
+                }
+            }
+            res += words[end - 1];
+        }
+        
+        return res;
+    }
+    
+    public String makeSpaces(int n) {
+        String res = "";
+        while (n-- > 0) {
+            res += " ";
+        }
+        return res;
+    }
+}
+
 class Solution {
     public List<String> fullJustify(String[] words, int maxWidth) {
         List<String> results = new ArrayList<>();

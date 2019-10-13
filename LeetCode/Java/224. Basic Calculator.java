@@ -1,4 +1,5 @@
 // 224. Basic Calculator
+// 中缀表达式没有统一普适的简便解法
 // 无负数，只有加减和括号，无乘除
 class Solution {
     public int calculate(String s) {

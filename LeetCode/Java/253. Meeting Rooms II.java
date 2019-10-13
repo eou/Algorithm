@@ -92,6 +92,51 @@ class Solution {
 }
 
 class Solution {
+    // Comparable 接口不是必要
+    public class Timestamp implements Comparable<Timestamp> {
+        int time;
+        boolean start;
+        Timestamp(int time, boolean start) {
+            this.time = time;
+            this.start = start;
+        }
+        public int compareTo(Timestamp t) {
+            if (this.time == t.time) {
+                if (this.start) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                return this.time - t.time;
+            }
+        }
+    }
+    public int minMeetingRooms(int[][] intervals) {
+        List<Timestamp> timeline = new ArrayList<>();
+        for (int[] interval : intervals) {
+            Timestamp t1 = new Timestamp(interval[0], true);
+            Timestamp t2 = new Timestamp(interval[1], false);
+            timeline.add(t1);
+            timeline.add(t2);
+        }
+        Collections.sort(timeline, (Timestamp a, Timestamp b) -> a.compareTo(b));
+        // Collections.sort(timeline);  // 实现了 Comparable 接口后可以不用自定义比较器，直接 sort
+        
+        int room = 0, res = 0;
+        for (Timestamp t : timeline) {
+            if (t.start) {
+                room++;
+            } else {
+                room--;
+            }
+            res = Math.max(res, room);
+        }
+        return res;
+    }
+}
+
+class Solution {
     // 分别排序 start time 和 end time
     public int minMeetingRooms(Interval[] intervals) {
         int[] starts = new int[intervals.length];
@@ -124,7 +169,7 @@ class Solution {
         // currentMeetings 这个变量可以去掉，因为需要过程中的最大值，只需记录所有增加操作：
         // 每当要开一个新的会议，判断这个时间点及以前有没有会议结束，有的话 start[i] >= end[j] ，就利用之前的房间，不增加房间，会议结束时间的指针指向下一个即将结束的会议；如果没有就增加房间，准备开下一个会议
         for (int i = 0; i < starts.length; i++) {
-            // 这里每次循环都是i++; 保证了 j 最多与 i 处于同一会议内，可能 j 还在很久之前的会议，i 已经要到头了
+            // 这里每次循环都是 i++; 保证了 j 最多与 i 处于同一会议内，可能 j 还在很久之前的会议，i 已经要到头了
             if (starts[i] < ends[j]) {
                 rooms++;
             } else {
@@ -144,6 +189,7 @@ class Solution {
         }
 
         // 如果用HashMap，无内部排序所以不行
+        // timestamp => +1 / -1
         Map<Integer, Integer> map = new TreeMap<>();
         for (Interval i : intervals) {
             // 在Map中就根据起止点，完成相应加减操作
