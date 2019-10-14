@@ -1,9 +1,5 @@
 // 968. Binary Tree Cameras
 // 树形 DP，注意有三种状态！根源来自于每个节点与其父母、儿子都有联系，共三层的关系
-/**
- * Definition for a binary tree node. public class TreeNode { int val; TreeNode
- * left; TreeNode right; TreeNode(int x) { val = x; } }
- */
 class Solution {
     public Map<TreeNode, int[]> map;
     public int minCameraCover(TreeNode root) {

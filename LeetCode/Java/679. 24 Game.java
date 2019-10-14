@@ -53,3 +53,57 @@ class Solution {
         return false;
     }
 }
+
+class Solution {
+    public boolean judgePoint24(int[] nums) {
+        // test all permutations
+        // 4! * 4^3 * 5 = 7680 ? A(4, 2) * A(3, 2) * A(2, 2) * 4^3 = 9216 ?
+        // use ArrayList to replace array since we need to do more add and remove operations
+        List<Double> list = new ArrayList<>();
+        for (int num : nums) {
+            list.add((double)num);
+        }
+        return dfs(list);
+    }
+    
+    public boolean dfs(List<Double> list) {
+        // only one number, check result
+        if (list.size() == 1) {
+            return Math.abs(list.get(0) - 24.0) <= 1e-7;
+        }
+        
+        // calculate pairs of numbers
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < i; j++) {
+                double num1 = list.get(i);
+                double num2 = list.get(j);
+                List<Double> results = new ArrayList<>();   // cannot use Set since add and remove operation cannot keep the same order
+                // calculate all possibilities
+                results.addAll(Arrays.asList(num1 + num2, num1 - num2, num2 - num1, num1 * num2));
+                if (num1 != 0) {
+                    results.add(num2 / num1);
+                }
+                if (num2 != 0) {
+                    results.add(num1 / num2);
+                }
+                
+                // backtracking
+                list.remove(num1);  // double will not treated as index
+                list.remove(num2);
+                for (double result : results) {
+                    list.add(result);
+                    if (dfs(list)) {
+                        return true;
+                    }
+                    list.remove(result);
+                }
+                
+                // restore the numbers and the order !
+                list.add(j, num2);
+                list.add(i, num1);
+            }
+        }
+        
+        return false;
+    }
+}
