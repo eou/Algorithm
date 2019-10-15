@@ -204,3 +204,42 @@ class TokenBucket {
     }
 
 }
+
+class TokenBucket {
+    private final int capacity;
+    private final int tokensPerSeconds;
+    private int tokens = 0;
+    private long lastTimestamp = System.currentTimeMillis();
+   
+    public TokenBucket(int tokensPerUnit, TimeUnit unit) {
+        capacity = tokensPerSeconds = (int) (tokensPerUnit / unit.toSeconds(1L));
+    }
+   
+    public boolean take() {
+        long now = System.currentTimeMillis();
+        if (now > lastTimestamp) {
+            tokens += (int) ((now - lastTimestamp) * tokensPerSeconds / 1000);
+        }
+        if (tokens > capacity) tokens = capacity;
+        lastTimestamp = now;
+
+        if (tokens < 1) {
+            return false;
+        }
+        tokens--;
+        return true;
+    }
+    
+    public static void main(String[] args) throws InterruptedException {
+        TokenBucket bucket = new TokenBucket(250, TimeUnit.MINUTES);
+        Thread.sleep(1000L);
+        for (int i = 0; i < 5; i++) {
+            System.out.println(bucket.take());
+        }
+        Thread.sleep(1000L);
+        for (int i = 0; i < 5; i++) {
+            System.out.println(bucket.take());
+        }
+    }
+}
+     
