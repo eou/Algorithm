@@ -51,6 +51,7 @@ public class Solution {
 
         int start = 0;
         for (int i = 0; i < str.length; i++) {
+            // start a word
             if (str[i] != ' ') {
                 if (start != 0) {
                     str[start] = ' ';

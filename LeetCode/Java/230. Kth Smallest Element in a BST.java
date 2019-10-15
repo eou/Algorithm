@@ -1,6 +1,7 @@
 // 230. Kth Smallest Element in a BST
 // 可以特化为 find Median in a BST
 // 可以转化为双向链表，然后用前后（快慢）指针找
+// 可以用 max-heap
 class Solution {
     // 时间复杂度为 O(k)
     public int kthSmallest(TreeNode root, int k) {
@@ -26,14 +27,6 @@ class Solution {
 
 class Solution {
     // 时间复杂度为 O(n)
-    public int countNodes(TreeNode root) {
-        if (root == null) {
-            return 0;
-        }
-
-        return 1 + countNodes(root.left) + countNodes(root.right);
-    }
-
     public int kthSmallest(TreeNode root, int k) {
         int leftNodes = countNodes(root.left);
         if (k <= leftNodes) {
@@ -43,6 +36,14 @@ class Solution {
         }
 
         return root.val;
+    }
+    
+    public int countNodes(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        return 1 + countNodes(root.left) + countNodes(root.right);
     }
 }
 
