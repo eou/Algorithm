@@ -25,7 +25,7 @@ class unionFind {
 
         public int root(int i) {
             while (i != id[i]) {
-                id[i] = id[id[i]]; // path compression
+                id[i] = id[id[i]]; // path compression, jump over parent to grandparents
                 i = id[i];
             }
             return i;

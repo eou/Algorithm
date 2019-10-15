@@ -109,6 +109,7 @@ class Solution {
 
         while (cur != null) {
             if (cur.left == null) {
+                // 左子树为空就直接添加根节点，然后进入右子树
                 list.add(cur.val);
                 cur = cur.right;
             } else {

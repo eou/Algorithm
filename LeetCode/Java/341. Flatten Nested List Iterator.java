@@ -1,6 +1,6 @@
 // 341. Flatten Nested List Iterator
 public class NestedIterator implements Iterator<Integer> {
-    // 考察用栈
+    // 考察用双端队列 Double-ended queue
     Deque<NestedInteger> stack;
 
     public NestedIterator(List<NestedInteger> nestedList) {
@@ -23,6 +23,7 @@ public class NestedIterator implements Iterator<Integer> {
                 return true;
             } else {
                 List<NestedInteger> list = stack.pop().getList();
+                // stack
                 for (int i = list.size() - 1; i >= 0; --i) {
                     stack.push(list.get(i));
                 }

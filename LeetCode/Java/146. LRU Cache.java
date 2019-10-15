@@ -1,26 +1,7 @@
 // 146. LRU Cache
+// 标准版本，HashMap + DoubleLinkedList
+// 为什么使用 Doubly linkd list 而不使用 Linked list的原因是：当访问一个节点后，我们需要将他从原来的list中删除，然后将它插入到头节点处，删除过程中需要将其前后节点连接起来，单链表访问目标节点的前后节点会很慢
 class LRUCache {
-    // LinkedHashMap 这种以插入顺序保存的map 很容易实现 LRU
-    private LinkedHashMap<Integer, Integer> map;
-    public LRUCache(int capacity) {
-        map = new LinkedHashMap<Integer, Integer>(capacity, 0.75f, true) {
-            protected boolean removeEldestEntry(Map.Entry eldest) {
-                return size() > capacity;
-            }
-        };
-    }
-    
-    public int get(int key) {
-        return map.getOrDefault(key, -1);
-    }
-    
-    public void put(int key, int value) {
-        map.put(key, value);        
-    }
-}
-
-class LRUCache {
-    // 标准版本，HashMap + DoubleLinkedList
     class DoubleListNode {
         int key;
         int value;
@@ -55,6 +36,7 @@ class LRUCache {
         this.add(node);
     }
 
+    // Map m = Collections.synchronizedMap(map);
     private Map<Integer, DoubleListNode> map = new HashMap<>();
     private int count = 0;
     private int capacity = 0;
@@ -100,3 +82,68 @@ class LRUCache {
         }
     }
 }
+
+class LRUCache {
+    // LinkedHashMap 这种以插入顺序保存的map 很容易实现 LRU
+    private LinkedHashMap<Integer, Integer> map;
+    public LRUCache(int capacity) {
+        map = new LinkedHashMap<Integer, Integer>(capacity, 0.75f, true) {
+            protected boolean removeEldestEntry(Map.Entry eldest) {
+                return size() > capacity;
+            }
+        };
+    }
+    
+    public int get(int key) {
+        return map.getOrDefault(key, -1);
+    }
+    
+    public void put(int key, int value) {
+        map.put(key, value);        
+    }
+} 
+  
+// follow up, thread safe
+// https://aaronice.gitbooks.io/lintcode/data_structure/lru_cache.html
+class LRULinkedHashMap<K, V> extends LinkedHashMap<K, V>  
+{  
+    private final int maxCapacity;  
+    private static final float DEFAULT_LOAD_FACTOR = 0.75f;  
+    private final Lock lock = new ReentrantLock();  
+  
+    public LRULinkedHashMap(int maxCapacity)  
+    {  
+        super(maxCapacity, DEFAULT_LOAD_FACTOR, true);  
+        this.maxCapacity = maxCapacity;  
+    }  
+  
+    @Override  
+    protected boolean removeEldestEntry(java.util.Map.Entry<K, V> eldest)  
+    {  
+        return size() > maxCapacity;  
+    }  
+  
+    @Override  
+    public V get(Object key)  
+    {  
+        try {  
+            lock.lock();  
+            return super.get(key);  
+        }  
+        finally {  
+            lock.unlock();  
+        }  
+    }  
+  
+    @Override  
+    public V put(K key, V value)  
+    {  
+        try {  
+            lock.lock();  
+            return super.put(key, value);  
+        }  
+        finally {  
+            lock.unlock();  
+        }  
+    }  
+}  

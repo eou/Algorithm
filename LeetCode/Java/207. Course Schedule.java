@@ -72,6 +72,7 @@ class Solution {
         while (!queue.isEmpty()) {
             int course = queue.poll();
             --numCourses;
+            // find next course which can take
             for (int[] courses : prerequisites) {
                 if (courses[1] == course) {
                     --indegrees[courses[0]];

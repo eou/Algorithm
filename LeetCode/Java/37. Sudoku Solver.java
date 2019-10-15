@@ -23,7 +23,7 @@ class Solution {
                             }
                         }
                     }
-
+                    // 注意这里 return false 因为对此 board[i][j] 1~9 都不合适
                     return false;
                 }
             }

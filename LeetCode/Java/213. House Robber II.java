@@ -1,7 +1,8 @@
 // 213. House Robber II
+// 分成两个部分，0 ~ n - 2, 1 ~ n - 1
+// 1 -> 2 -> 3 -> 1 becomes 2 -> 3 if 1 is not robbed.
 class Solution {
     public int rob(int[] nums) {
-        // 分成两个部分，0 ~ n - 2, 1 ~ n - 1
         if (nums == null || nums.length < 2) {
             return nums.length == 1 ? nums[0] : 0;
         }
