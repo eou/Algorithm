@@ -1,4 +1,6 @@
 // 33. Search in Rotated Sorted Array
+// 4,5,6,7 first half [start]
+//          0,1,2 [end] second half
 class Solution {
     public int search(int[] nums, int target) {
         // Step1. empty exception

@@ -6,6 +6,7 @@ class Solution {
         Arrays.sort(nums);
         List<List<Integer>> results = new ArrayList<>();
         for(int i = 0; i < nums.length - 2; i++) {
+            // remove duplicate
             if(i == 0 || nums[i] != nums[i - 1]) {
                 int left = i + 1, right = nums.length - 1, sum = 0 - nums[i];
                 while(left < right) {

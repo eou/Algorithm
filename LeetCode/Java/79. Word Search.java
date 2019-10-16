@@ -21,6 +21,7 @@ class Solution {
             return false;
         }
 
+        // avoid reusing characters
         board[i][j] = '#';
         boolean result = exist(board, i - 1, j, word, len + 1) ||
                         exist(board, i, j - 1, word, len + 1) ||
