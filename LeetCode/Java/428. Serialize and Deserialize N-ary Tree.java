@@ -10,6 +10,16 @@ class Codec {
         return String.join(",", list);
     }
 
+    public Node deserialize(String data) {
+        if(data == "") {
+            return null;
+        }
+
+        String[] data_array = data.split(",");
+        List<String> list = new ArrayList<>(Arrays.asList(data_array));
+        return rdeserialize(list);
+    }
+
     private void rserialize(Node root, List<String> list) {
         if(root == null) {
             return;
@@ -21,16 +31,6 @@ class Codec {
         for(Node child : root.children) {
             rserialize(child, list);
         }
-    }
-
-    public Node deserialize(String data) {
-        if(data == "") {
-            return null;
-        }
-
-        String[] data_array = data.split(",");
-        List<String> list = new ArrayList<>(Arrays.asList(data_array));
-        return rdeserialize(list);
     }
 
     public Node rdeserialize(List<String> list) {
