@@ -31,6 +31,7 @@ class Solution {
                 }
                 optStack.pop(); // pop '('
             } else {
+                // operator
                 while (!optStack.isEmpty() && precedence(c, optStack.peek())) {
                     opdStack.push(helper(optStack.pop(), opdStack.pop(), opdStack.pop()));
                 }
