@@ -1,4 +1,5 @@
 // 332. Reconstruct Itinerary
+// This is not topological sort!!! Topo-sort is for DAG, no cycle, but this could contain cycle.
 // Eulerian Path is a path in graph that visits every edge exactly once.
 // Hierholzer's algorithm / Fleury's Algorithm
 // https://www.geeksforgeeks.org/eulerian-path-and-circuit/

@@ -36,6 +36,32 @@ class Solution {
 ```
 
 ```java
+while (l < r) {
+  int mid = (l + r) >> 1;		// logical right shift
+  // find the first one of repeat elements
+  // find smallest elements which >= x
+  if (a[mid] >= x) {
+    r = mid;
+  } else {
+    l = mid + 1;
+  }
+}
+return a[l];
+
+while (l < r) {
+  int mid = (l + r + 1) >> 1;		// l = r, mid == (l + r) >> 1
+  // find the last one of repeat elements
+  // find largest elements which <= x
+  if (a[mid] <= x) {
+    l = mid;
+  } else {
+    r = mid - 1;
+  }
+}
+return a[l];
+```
+
+```java
 class Solution {
     // recursive
     private int binarySearch(int[] nums, int start, int end, int target) {
