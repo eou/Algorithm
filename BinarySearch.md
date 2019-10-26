@@ -36,6 +36,11 @@ class Solution {
 ```
 
 ```java
+// reason why we use right shift but not integer division
+// is that right shift is rounded down white integer division is rounded to zero
+// which means integer division might not work for negative numbers in binary search
+// normally the numbers are non-positive in most situations since we usually use array index
+// -3 / 2; (-1) is not the same as -3 >> 1; (-2)
 while (l < r) {
   int mid = (l + r) >> 1;		// logical right shift
   // find the first one of repeat elements
@@ -49,7 +54,7 @@ while (l < r) {
 return a[l];
 
 while (l < r) {
-  int mid = (l + r + 1) >> 1;		// l = r, mid == (l + r) >> 1
+  int mid = (l + r + 1) >> 1;		// l = r, mid == (l + r) >> 1 maybe infinite loop if always jump into l = mid; branch
   // find the last one of repeat elements
   // find largest elements which <= x
   if (a[mid] <= x) {
@@ -59,6 +64,14 @@ while (l < r) {
   }
 }
 return a[l];
+
+// notice that the priority of >> or << are less than + -
+// thus mid = mid = l + (r - l) >> 1; is wrong, should be mid = (r + l) >> 1; or mid = l + ((r - l) >> 1);
+// If use mid = l + ((r - l) >> 1); to find largest elements which <= x
+// maybe infinite loop, the reason is the same as above
+// we should use mid = l + ((r - l + 1) >> 1);
+// which is the same as mid = (l + r + 1) >> 1;
+// but will avoid overflow
 ```
 
 ```java
