@@ -110,3 +110,4 @@ class Solution {
 - `start <= end`：after breaking the loop, start - 1 = end，no target
 - `start < end`：after breaking the loop, start = end，target only one element
 - `start + 1 < end`：after breaking the loop, start + 1= end，need compare last two elements
+
