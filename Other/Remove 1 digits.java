@@ -27,7 +27,20 @@ class Solution {
         if (a.charAt(0) == b.charAt(0)) {
             // substring might be out of bound
             if (a.length() > 1 && b.length() > 1) {
-                return solution(a.substring(1), b.substring(1));
+                int ways = 0;
+                if (Character.isDigit(a.charAt(0))) {
+                    // remove a's first character
+                    if (a.substring(1).compareTo(b) < 0) {
+                        ways++;
+                    }
+                }
+                if (Character.isDigit(b.charAt(0))) {
+                    // remove b's first character
+                    if (a.compareTo(b.substring(1)) < 0) {
+                        ways++;
+                    }
+                }
+                return ways + solution(a.substring(1), b.substring(1));
             } else if (a.length() == 1) {
                 return solution("", b.substring(1));
             } else {
@@ -46,6 +59,18 @@ class Solution {
             for (Character c : b.toCharArray()) {
                 if (Character.isDigit(c)) {
                     digits++;
+                }
+            }
+            if (Character.isDigit(a.charAt(0))) {
+                // remove a's first character
+                if (a.substring(1).compareTo(b) >= 0) {
+                    digits--;
+                }
+            }
+            if (Character.isDigit(b.charAt(0))) {
+                // remove b's first character
+                if (a.compareTo(b.substring(1)) >= 0) {
+                    digits--;
                 }
             }
             return digits;
@@ -77,16 +102,17 @@ class Solution {
         // System.out.println("b".compareTo("a")); // 1
         // System.out.println("b".compareTo("")); // 1
         // System.out.println("b".compareTo("b")); // 0
-        test("3abc", "bbc", 1);
-        test("123ab", "423cd", 6);
-        test("ab23", "a1xx", 1);
-        test("", "1234", 4);
-        test("a123", "", 0);
-        test("aaaa", "aaaa", 0);
-        test("aaa1", "aaaa", 1);
-        test("a", "a1", 0);
-        test("a1", "a", 0);
-        test("a", "1", 0);
-        test("1", "a", 1);
+        // test("3abc", "bbc", 1);
+        // test("123ab", "423cd", 6);
+        // test("ab23", "a1xx", 1);
+        // test("", "1234", 4);
+        // test("a123", "", 0);
+        // test("aaaa", "aaaa", 0);
+        // test("aaa1", "aaaa", 1);
+        // test("a", "a1", 0);
+        // test("a1", "a", 0);
+        // test("a", "1", 0);
+        // test("1", "a", 1);
+        test("9ab12dd", "9ab24ff", 3);
     }
 }
