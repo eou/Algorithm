@@ -53,7 +53,7 @@ class Solution {
 class Solution {
     public int maxSubArrayLen(int[] nums, int k) {
         int sum = 0, len = 0;
-        HashMap<Integer, Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
             sum += nums[i];
             // 这个判断避免了map的初始化: map.put(0,-1); 
