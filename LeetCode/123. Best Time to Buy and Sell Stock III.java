@@ -32,3 +32,32 @@ class Solution {
         return profit;
     }
 }
+
+class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length < 2) {
+            return 0;
+        }
+
+        int maxTotalProfit = 0;
+        List<Integer> firstBuySellProfits = new ArrayList<>();
+        int minPriceSoFar = Integer.MAX_VALUE;
+
+        // Forward phase. For each day, we record maximum profit if we
+        // sell on that day.
+        for (int i = 0; i < prices.length; ++i) {
+            minPriceSoFar = Math.min(minPriceSoFar, prices[i]);
+            maxTotalProfit = Math.max(maxTotalProfit, prices[i] - minPriceSoFar);
+            firstBuySellProfits.add(maxTotalProfit);
+        }
+
+        // Backward phase. For each day, find the maximum profit if we make
+        // the second buy on that day.
+        int maxPriceSoFar = Integer.MIN_VALUE;
+        for (int i = prices.length - 1; i > 0; --i) {
+            maxPriceSoFar = Math.max(maxPriceSoFar, prices[i]);
+            maxTotalProfit = Math.max(maxTotalProfit, maxPriceSoFar - prices[i] + firstBuySellProfits.get(i - 1));
+        }
+        return maxTotalProfit;
+    }
+}
