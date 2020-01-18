@@ -2,6 +2,7 @@
 // leetcode 518. Coin Change 2
 public class Solution {
     public int backPackIV(int[] nums, int target) {
+        // dp[j] means filling j size backpack using first i items
         int[] dp = new int[target + 1];
         dp[0] = 1;
         for (int i = 0; i < nums.length; i++) {
@@ -12,4 +13,3 @@ public class Solution {
         return dp[target];
     }
 }
-
