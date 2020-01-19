@@ -53,13 +53,16 @@ class Solution {
         int start = gas.length - 1;
         int end = 0;
         // start from last station to first station (clockwise), adjacent station in the circle !
-        int sum = gas[start] - cost[start];
+        //   .... <= [gas.length - 1], 0, => 1, ....
+        int sum = gas[start] - cost[start]; // start from first station
         while (start > end) {
             if (sum >= 0) {
-                sum += gas[end] - cost[end]; // can reach end
+                // can reach end, continue move
+                sum += gas[end] - cost[end]; 
                 ++end;
             } else {
-                --start; // cannot reach, want more gas from start
+                // cannot reach, want more gas from start
+                --start;
                 sum += gas[start] - cost[start];
             }
         }
