@@ -3,7 +3,7 @@
 // 可以转化为双向链表，然后用前后（快慢）指针找
 // 可以用 max-heap
 class Solution {
-    // 时间复杂度为 O(k)
+    // inorder traverse, 时间复杂度为 O(k)
     public int kthSmallest(TreeNode root, int k) {
         Deque<TreeNode> stack = new ArrayDeque<>();
         TreeNode node = root;
@@ -66,6 +66,7 @@ class Solution {
         return left + right + 1;
     }
 
+    // don't need to call countNodes when we want to know the number of nodes in tree
     private int quickSelectOnTree(TreeNode root, int k, Map<TreeNode, Integer> numOfChildren) {
         if (root == null) {
             return -1;
