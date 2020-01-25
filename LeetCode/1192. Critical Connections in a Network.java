@@ -1,6 +1,9 @@
 // 1192. Critical Connections in a Network
 // https://www.acwing.com/blog/content/376
 // https://www.acwing.com/solution/LeetCode/content/4575
+// https://leetcode.jp/leetcode-1192-critical-connections-in-a-network-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90/
+// Testcases do not include duplicate edges
+// Same code may be AC or TLE at different time on LeetCode server !!!
 
 // tarjan, build graph using arraylist or array not HASHMAP!!!
 class Solution {
@@ -51,7 +54,56 @@ class Solution {
     }
 }
 
-// fastest tarjan using array storing graph
+// similar with tarjan, dfs function return low but not store value into low[] array
+class Solution {
+    List<List<Integer>> res;
+    int[] dnf;  // store dfs timestamp
+    List<Integer>[] graph;
+    int time = 0;  // timestamp
+
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+        dnf = new int[n];
+        Arrays.fill(dnf, -1);
+
+        graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (List<Integer> con : connections) {
+            graph[con.get(0)].add(con.get(1));
+            graph[con.get(1)].add(con.get(0));
+        }
+
+        res = new ArrayList<>();
+        dfs(0, 0);
+        return res;
+    }
+
+    private int dfs(int cur, int parent) {
+        dnf[cur] = ++time;
+        int low = dnf[cur];
+        for (int nb : graph[cur]) {
+            if (nb == parent) { // cannot go back
+                continue;
+            }
+
+            int low_nb; // dfs final depth from this neighbor
+            if (dnf[nb] == -1) { // did not visited
+                low_nb = dfs(nb, cur);
+                // !!! Verify bridge
+                if (low_nb > dnf[cur]) {
+                    res.add(new ArrayList<>(Arrays.asList(cur, nb)));
+                }
+            } else {
+                low_nb = dnf[nb];
+            }
+            low = Math.min(low, low_nb);
+        }
+        return low;
+    }
+}
+
+// faster tarjan implementation, using array storing graph
 class Solution {
     int edgeIndex = 0;
     int[] to;

@@ -29,13 +29,8 @@ class Tarjan {
 
         getCutVerticesAndBridges(edges, numNodes);
 
-        for (int v : cutVertices) {
-            System.out.println(v);
-        }
-
-        for (List<Integer> b : bridges) {
-            System.out.println(b.get(0) + ", " + b.get(1));
-        }
+        System.out.println(cutVertices);
+        System.out.println(bridges);
     }
 
     // initialization
@@ -155,15 +150,105 @@ class Tarjan {
 }
 ```
 
+## Note
+
+Using array or list storing graph is much faster than using `HashMap`! (Test with LeetCode 1192)
+
+```java
+class Tarjan {
+    public static void main(String[] args) {
+        int numNodes = 7;
+        int[][] edges = { { 0, 1 }, { 0, 2 }, { 1, 3 }, { 2, 3 }, { 2, 5 }, { 5, 6 }, { 3, 4 } };
+
+        getCutVerticesAndBridges(edges, numNodes);
+
+        System.out.println(cutVertices);
+        System.out.println(bridges);
+    }
+
+    public static int edgeIndex = 0;
+    public static int[] to;
+    public static int[] next;
+    public static int[] head;
+    public static int[] low;
+    public static int[] dfs;
+    public static int time = -1;
+
+    public static List<List<Integer>> bridges;
+    public static List<Integer> cutVertices;
+
+    private static void addEdge(int u, int v) {
+        to[edgeIndex] = v;
+        next[edgeIndex] = head[u];
+        head[u] = edgeIndex++;
+    }
+
+    public static void getCutVerticesAndBridges(int[][] edges, int n) {
+        bridges = new ArrayList<>();
+        cutVertices = new ArrayList<>();
+
+        low = new int[n];
+        dfs = new int[n];
+        int m = edges.length;
+        to = new int[m * 2];
+        head = new int[n];
+        next = new int[m * 2];
+        Arrays.fill(head, -1);
+        Arrays.fill(next, -1);
+        Arrays.fill(low, -1);
+        Arrays.fill(dfs, -1);
+
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            addEdge(u, v);
+            addEdge(v, u);
+        }
+
+        tarjan(0, 0);
+    }
+
+    private static void tarjan(int node, int parent) {
+        if (dfs[node] != -1) {
+            return;
+        }
+
+        int children = 0;
+        low[node] = dfs[node] = ++time;
+        for (int edge = head[node]; edge != -1; edge = next[edge]) {
+            children++;
+            int next = to[edge];
+            if (dfs[next] == -1) {
+                tarjan(next, node);
+                low[node] = Math.min(low[node], low[next]);
+
+                if (node == parent && children > 1) {
+                    cutVertices.add(node);
+                }
+                if (node != parent && low[next] >= dfs[node]) {
+                    cutVertices.add(node);
+                }
+
+                if (low[next] > dfs[node]) {
+                    bridges.add(Arrays.asList(node, next));
+                }
+            } else if (next != parent) {
+                low[node] = Math.min(low[node], dfs[next]);
+            }
+        }
+    }
+}
+```
+
 ## Explanation
 
 - dnf 数组的下标表示顶点的编号，数组中的值表示该顶点在 DFS 中的遍历顺序（或者说时间戳）。每访问到一个未访问过的顶点，访问顺序的值（时间戳）就增加 1。子顶点的 dfn 值一定比父顶点的 dfn 值大，但不一定恰好大1，比如父顶点有两个及两个以上分支的情况。在访问一个顶点后，它的 dfn 的值就确定下来了，不会再改变。
 - low 数组的下标表示顶点的编号，数组中的值表示 DFS 中该顶点不通过父顶点能访问到的祖先顶点中最小的顺序值（或者说时间戳）。
-- 每个顶点初始的 low 值和 dfn 值应该一样
+- 每个顶点初始的 low 值和 dfn 值应该一样。
 
 割点（非根节点）判断：如果存在至少一个孩子顶点 v 满足`low[v] >= dnf[u]`，就说明顶点 v 访问顶点 u 的祖先顶点，必须通过顶点u，而不存在顶点 v 到顶点 u 祖先顶点的其它路径，所以顶点 u 就是一个割点。
 
-对于没有孩子顶点的顶点，显然不会是割点（判断根节点）。
+对于没有孩子顶点的顶点，显然不会是割点（如单独的根节点）。
 
 1. u is root of DFS tree and it has at least two children.
 
@@ -171,7 +256,7 @@ class Tarjan {
 
 割边：`low[v] > dnf[u]`就说明 v - u 是桥。
 
-时空复杂度都是$O(V + E)$.
+此算法时空复杂度都是$O(V + E)$.
 
 ## Reference
 
