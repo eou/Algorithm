@@ -37,4 +37,24 @@ class Solution {
         }
         return res;
     }
+
+    public static void main(String[] args) {
+        List<int[]> A = new ArrayList<>();
+        A.add(new int[] { 1, 2 });
+        A.add(new int[] { 2, 2 });
+        A.add(new int[] { 3, 8 });
+        // A.add(new int[] { 1, 2 });
+        // A.add(new int[] { 2, 2 });
+        // A.add(new int[] { 3, 2 });
+        List<int[]> B = new ArrayList<>();
+        // B.add(new int[] { 1, 8 });
+        // B.add(new int[] { 2, 8 });
+        // B.add(new int[] { 3, 8 });
+        B.add(new int[] { 1, 4 });
+        B.add(new int[] { 2, 2 });
+        B.add(new int[] { 3, 8 });
+        for (int[] i : getPairs(A, B, 10)) {
+            System.out.println(i[0] + ", " + i[1]);
+        }
+    }
 }
