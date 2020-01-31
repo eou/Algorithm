@@ -1,6 +1,6 @@
 // 45. Jump Game II
+// DFS，时间复杂度为 O(2^n)，会 TLE
 class Solution {
-    // DFS，时间复杂度为 O(2^n)，会 TLE
     int min = Integer.MAX_VALUE;
     public int jump(int[] nums) {
         helper(nums, 0, 0);
@@ -19,6 +19,22 @@ class Solution {
             }
         }
         return false;
+    }
+}
+
+// DP, O(n^2)，会 TLE
+class Solution {
+    public int jump(int[] nums) {
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 1; j <= nums[i] + i && j < nums.length; j++) {
+                dp[j] = Math.min(dp[j], dp[i] + 1);
+            }
+        }
+
+        return dp[nums.length - 1];
     }
 }
 
