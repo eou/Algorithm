@@ -50,9 +50,8 @@ class Solution {
             return results;
         }
 
-        List<Integer> permutation = new ArrayList<Integer>();
-        // 用 visited 判断当前数字是否已经在 permutation 中
-        helper(nums, permutation, new boolean[nums.length], results);
+        // 用 boolean[] 判断当前数字是否已经在 permutation 中
+        helper(nums, new ArrayList<>(), new boolean[nums.length], results);
 
         return results;
     }
@@ -79,5 +78,37 @@ class Solution {
             }
 
         }
+    }
+}
+
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        // dfs
+        // given distinct integers
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            set.add(num);
+        }
+        return dfs(set);
+    }
+
+    public List<List<Integer>> dfs(Set<Integer> nums) {
+        if (nums.size() == 0) {
+            List<List<Integer>> res = new ArrayList<>();
+            res.add(new ArrayList<>());
+            return res;
+        }
+
+        List<List<Integer>> res = new ArrayList<>();
+        for (Integer num : nums) {
+            Set<Integer> nextNums = new HashSet<>(nums);
+            nextNums.remove(num);
+            for (List<Integer> list : dfs(nextNums)) {
+                list.add(num);
+                res.add(list);
+            }
+        }
+
+        return res;
     }
 }

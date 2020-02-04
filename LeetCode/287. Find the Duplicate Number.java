@@ -28,25 +28,61 @@ class Solution {
     }
 }
 
+// O(nlogn)
 class Solution {
-    // 快慢指针，类似 142. Linked List Cycle II    
+    public int findDuplicate(int[] nums) {
+        int left = 1, right = nums.length;
+        // O(logn)
+        while (left < right) {
+            int mid = left + (right - left) / 2, cnt = 0;
+            // O(n)
+            for (int num : nums) {
+                if (num <= mid) {
+                    ++cnt;
+                }
+            }
+            if (cnt <= mid) {
+                // duplicate in the right part
+                left = mid + 1;
+            } else {
+                // duplicate in the left part
+                right = mid;
+            }
+        }
+
+        return right;
+    }
+}
+
+
+// if num represents start, index represents end
+// [4,3,5,1,2] is 1=>4, 2=>3, 3=>5, 4=>1, 5=>2 will be one or more cycles without intersection point, 1 <=> 4, 2 => 3 => 5 => 2
+// if duplicate number exists, there will be a intersection point
+// 快慢指针，类似 142. Linked List Cycle II
+class Solution {
     public int findDuplicate(int[] nums) {
         if(nums.length <= 1) {
             return -1;
         }
         
-        int slow = nums[0];
-        int fast = nums[nums[0]];
+        // chasing and meet
+        int slow = next(nums, 0); // nums[0]
+        int fast = next(nums, next(nums, 0)); // nums[nums[0]]
         while(slow != fast) {
-            slow = nums[slow];
-            fast = nums[nums[fast]];
+            slow = next(nums, slow);    // nums[slow], 1 step
+            fast = next(nums, next(nums, fast));    // 2 steps
         }
 
+        // then same speed
         fast = 0;
         while(slow != fast) {
-            fast = nums[fast];
-            slow = nums[slow];
+            fast = next(nums, fast);
+            slow = next(nums, slow);
         }
         return slow;
+    }
+
+    public int next(int[] nums, int num) {
+        return nums[num];
     }
 }

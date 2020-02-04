@@ -43,3 +43,27 @@ class Solution {
         }
     }
 }
+
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Set<List<Integer>> res = new HashSet<>();
+        dfs(new ArrayList<>(), nums, new boolean[nums.length], res);
+        return new ArrayList<>(res);
+    }
+
+    public void dfs(List<Integer> cur, int[] nums, boolean[] used, Set<List<Integer>> res) {
+        if (cur.size() == nums.length) {
+            res.add(cur);
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if (!used[i]) {
+                used[i] = true;
+                cur.add(nums[i]);
+                dfs(new ArrayList<>(cur), nums, used, res); // if pass 'cur' but not a new list, we need to add a new list into res when exits
+                cur.remove(cur.size() - 1);
+                used[i] = false;
+            }
+        }
+    }
+}
