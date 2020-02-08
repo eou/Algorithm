@@ -1,4 +1,5 @@
 // 741. Cherry Pickup
+// 正向 / 反向 DP 都可以，因为 dp[x1][y1][x2] 不存在与前后计算结果的关系
 // https://blog.csdn.net/luke2834/article/details/79365645
 // https://zxi.mytechroad.com/blog/dynamic-programming/leetcode-741-cherry-pickup
 // assume 2 paths have same direction, from top-left to bottom-right
