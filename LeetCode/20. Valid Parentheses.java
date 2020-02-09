@@ -1,6 +1,25 @@
 // 20. Valid Parentheses
 class Solution {
     public boolean isValid(String s) {
+        char[] validParentheses = new char[256];
+        validParentheses['('] = ')';
+        validParentheses['['] = ']';
+        validParentheses['{'] = '}';
+        Deque<Character> stack = new ArrayDeque<>();
+        for (char c : s.toCharArray()) {
+            if (!stack.isEmpty() && validParentheses[stack.peek()] == c) {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+
+        return stack.isEmpty();
+    }
+}
+
+class Solution {
+    public boolean isValid(String s) {
         Deque<Character> stack = new ArrayDeque<>();
         if (s.length() == 0) {
             return true;

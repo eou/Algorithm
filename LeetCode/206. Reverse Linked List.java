@@ -2,14 +2,20 @@
 class Solution {
     // 最简单的遍历反转，需要三个指针，不需要判空或者其他特殊情况
     public ListNode reverseList(ListNode head) {
-        ListNode cur = head;
-        ListNode pre = null;
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode pre = null, cur = head, nxt = cur.next;
         while (cur != null) {
-            ListNode nextNode = cur.next;
             cur.next = pre;
             pre = cur;
-            cur = nextNode;
+            cur = nxt;
+            if (nxt != null) {
+                nxt = nxt.next;
+            }
         }
+
         return pre;
     }
 }

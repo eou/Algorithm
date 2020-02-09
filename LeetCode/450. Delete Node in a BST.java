@@ -2,89 +2,86 @@
 // 一般是用 Hibbard deletion algorithm
 class Solution {
     // Hibbard deletion algorithm 非递归删除
-    public TreeNode deleteNode(TreeNode root, int key) {
-        if (root == null) {
-            return root;
-        }
-
-        TreeNode node = root;
-        TreeNode pre = new TreeNode(0);
-        // 标记被删节点是前继节点的左节点还是右节点
-        boolean _left = false;
-        // 寻找被删节点
-        while (node != null) {
-            if (node.val == key) {
+    public TreeNode deleteNode(TreeNode root, int value) {
+        TreeNode ptr = root;
+        TreeNode parent = null;
+        boolean leftNode = false;
+        while (ptr != null) {
+            if (ptr.val == value) {
                 break;
-            } else if (node.val > key) {
-                pre = node;
-                node = node.left;
+            } else if (ptr.val < value) {
+                parent = ptr;
+                ptr = ptr.right;
             } else {
-                pre = node;
-                node = node.right;
+                parent = ptr;
+                ptr = ptr.left;
             }
         }
 
-        if (node == null) {
+        if (ptr == null || ptr.val != value) {
             return root;
+        }
+
+        if (parent == null) {
+            // remove root
+            if (ptr.left == null && ptr.right == null) {
+                return null;
+            } else if (ptr.left == null) {
+                return ptr.right;
+            } else if (ptr.right == null) {
+                return ptr.left;
+            } else {
+                TreeNode left = ptr.left;
+                TreeNode right = ptr.right;
+
+                TreeNode leftmost = right;
+                while (leftmost.left != null) {
+                    leftmost = leftmost.left;
+                }
+                leftmost.left = left;
+                return right;
+            }
+        }
+
+        if (parent.left == ptr) {
+            leftNode = true;
+        }
+
+        // remove
+        if (ptr.left == null && ptr.right == null) {
+            if (leftNode) {
+                parent.left = null;
+            } else {
+                parent.right = null;
+            }
+        } else if (ptr.left == null) {
+            if (leftNode) {
+                parent.left = ptr.right;
+            } else {
+                parent.right = ptr.right;
+            }
+        } else if (ptr.right == null) {
+            if (leftNode) {
+                parent.left = ptr.left;
+            } else {
+                parent.right = ptr.left;
+            }
         } else {
-            if (pre.left == node) {
-                _left = true;
+            TreeNode left = ptr.left;
+            TreeNode right = ptr.right;
+            if (leftNode) {
+                parent.left = right;
             } else {
-                _left = false;
+                parent.right = right;
             }
-
-            // 注意基本每种情况都要考虑被删节点是根节点的特殊情况
-            if (node.left == null && node.right == null) {
-                if (node == root) {
-                    return null;
-                } else {
-                    if (_left == true) {
-                        pre.left = null;
-                    } else {
-                        pre.right = null;
-                    }
-                }
-            } else if (node.left == null) {
-                if (_left == true) {
-                    pre.left = node.right;
-                    if (node == root) {
-                        return pre.left;
-                    }
-                } else {
-                    pre.right = node.right;
-                    if (node == root) {
-                        return pre.right;
-                    }
-                }
-            } else if (node.right == null) {
-                if (_left == true) {
-                    pre.left = node.left;
-                    if (node == root) {
-                        return pre.left;
-                    }
-                } else {
-                    pre.right = node.left;
-                    if (node == root) {
-                        return pre.right;
-                    }
-                }
-            } else {
-                // 如果被删节点的左右子树均存在，用后继节点替换被删节点，然后删除后继节点，后继节点肯定是右子树或者左子树叶子
-                TreeNode succ = node.right;
-                TreeNode _succ = node;
-                while (succ.left != null) {
-                    _succ = succ;
-                    succ = succ.left;
-                }
-                node.val = succ.val;
-                if (_succ != node) {
-                    _succ.left = succ.right;
-                } else {
-                    node.right = succ.right;
-                }
+            TreeNode leftmost = right;
+            while (leftmost.left != null) {
+                leftmost = leftmost.left;
             }
-            return root;
+            leftmost.left = left;
         }
+
+        return root;
     }
 }
 
