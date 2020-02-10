@@ -1,6 +1,6 @@
 // 128. Longest Consecutive Sequence
+// brute-force, O(n^3)
 class Solution {
-    // 暴力版本，时间复杂度为 O(n^3)
     public int longestConsecutive(int[] nums) {
         int longest = 0;
         for(int n : nums) {
@@ -28,8 +28,33 @@ class Solution {
     }
 }
 
+// sort, O(nlogn)
 class Solution {
-    // 用 set 改进的暴力版本，时间复杂度为 O(n)
+    public int longestConsecutive(int[] nums) {
+        if (nums.length == 0) {
+            return 0;
+        }
+
+        Arrays.sort(nums);
+        int longest = 1;
+        int len = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[i - 1]) {
+                if (nums[i] == nums[i - 1] + 1) {
+                    len++;
+                } else {
+                    len = 1;
+                }
+                longest = Math.max(longest, len);
+            }
+        }
+
+        return longest;
+    }
+}
+
+// Set, O(n)
+class Solution {
     public int longestConsecutive(int[] nums) {
         Set<Integer> set = new HashSet<>();
         for(int n : nums) {
@@ -55,28 +80,34 @@ class Solution {
     }
 }
 
+// Set
 class Solution {
-    // 时间复杂度为 O(nlogn)
     public int longestConsecutive(int[] nums) {
-        if(nums.length == 0) {
-            return 0;
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            set.add(num);
         }
 
-        Arrays.sort(nums);
-        int longest = 1;
-        int len = 1;
-        for(int i = 1; i < nums.length; i++) {
-            if(nums[i] != nums[i - 1]) {
-                if(nums[i] == nums[i - 1] + 1) {
-                    len++;
-                } else {
-                    len = 1;
+        int res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (set.contains(nums[i])) {
+                int start = nums[i], end = nums[i];
+                // check smaller number
+                while (set.contains(start)) {
+                    set.remove(start);
+                    start--;
                 }
-                longest = Math.max(longest, len);
+                set.add(nums[i]);
+                // check larger number
+                while (set.contains(end)) {
+                    set.remove(end);
+                    end++;
+                }
+                res = Math.max(res, end - start - 1);
             }
         }
 
-        return longest;
+        return res;
     }
 }
 
