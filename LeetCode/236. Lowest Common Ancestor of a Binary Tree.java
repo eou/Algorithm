@@ -37,7 +37,7 @@ class Solution {
     }
 
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        auxiliary aux = helper(root, p, q);
+        auxiliary aux = dfs(root, p, q);
         if (aux.a_exist && aux.b_exist) {
             return aux.lca;
         } else {
@@ -45,14 +45,14 @@ class Solution {
         }
     }
 
-    public auxiliary helper(TreeNode root, TreeNode p, TreeNode q) {
+    public auxiliary dfs(TreeNode root, TreeNode p, TreeNode q) {
         auxiliary aux = new auxiliary(false, false, null);
         if (root == null) {
             return aux;
         }
 
-        auxiliary left = helper(root.left, p, q);
-        auxiliary right = helper(root.right, p, q);
+        auxiliary left = dfs(root.left, p, q);
+        auxiliary right = dfs(root.right, p, q);
 
         // 判断两个节点存在与否
         aux.a_exist = left.a_exist || right.a_exist || root == p;

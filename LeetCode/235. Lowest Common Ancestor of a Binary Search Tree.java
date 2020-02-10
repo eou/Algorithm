@@ -5,6 +5,8 @@ class Solution {
         if(root == null) {
             return null;
         }
+
+        // !! if product < 0 then return
         while((root.val - p.val) * (root.val - q.val) > 0) {
             root = root.val > q.val ? root.left : root.right;
         }
