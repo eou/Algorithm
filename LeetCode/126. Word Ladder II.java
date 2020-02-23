@@ -1,4 +1,5 @@
 // 126. Word Ladder II
+// acwing.com/solution/LeetCode/content/217/
 class Solution {
     public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
         List<List<String>> results = new ArrayList<>();
@@ -11,16 +12,16 @@ class Solution {
         // bfs 也要判断出 beginWord 到 endWord 的最短距离
         dic.add(beginWord);
         Map<String, Integer> map = new HashMap<>();
-        minStepsToEnd(map, endWord, dic);
+        bfs(map, endWord, dic);
 
         List<String> curStep = new ArrayList<>();
         curStep.add(beginWord);
-        helper(beginWord, endWord, dic, curStep, results, map);
+        dfs(beginWord, endWord, dic, curStep, results, map);
 
         return results;
     }
 
-    private void helper(String beginWord, String endWord, Set<String> dic, List<String> curStep,
+    private void dfs(String beginWord, String endWord, Set<String> dic, List<String> curStep,
             List<List<String>> results, Map<String, Integer> map) {
         if (beginWord.equals(endWord)) {
             results.add(new ArrayList<>(curStep));
@@ -30,13 +31,13 @@ class Solution {
         for (String s : nextWord(beginWord, dic)) {
             if (map.get(s) < map.get(beginWord)) {
                 curStep.add(s);
-                helper(s, endWord, dic, curStep, results, map);
+                dfs(s, endWord, dic, curStep, results, map);
                 curStep.remove(curStep.size() - 1);
             }
         }
     }
 
-    private void minStepsToEnd(Map<String, Integer> map, String endWord, Set<String> dic) {
+    private void bfs(Map<String, Integer> map, String endWord, Set<String> dic) {
         Deque<String> queue = new ArrayDeque<>();
         // 从 endWord 倒着 bfs
         queue.offer(endWord);

@@ -1,111 +1,84 @@
 // 138. Copy List with Random Pointer
-/*
-// Definition for a Node.
-class Node {
-    public int val;
-    public Node next;
-    public Node random;
-
-    public Node() {}
-
-    public Node(int _val,Node _next,Node _random) {
-        val = _val;
-        next = _next;
-        random = _random;
-    }
-};
-*/
+// brute force, use map to store the connection between original node and copy node
 class Solution {
-    // brute force, use map to store the connection between original node and copy node
     public Node copyRandomList(Node head) {
+        if (head == null) {
+            return null;
+        }
+        
+        Node dummy = new Node(-1);
+        // cur node => copy node
         Map<Node, Node> map = new HashMap<>();
         
-        Node dummy = new Node();
-        Node ptr2 = dummy;          // dummy.next is the head of clone list
-        Node ptr1 = head;           // original list
+        // 1. only connect next node
+        Node cur = head, ptr = dummy;
+        int index = 0;
+        while (cur != null) {
+            ptr.next = new Node(cur.val);
+            map.put(cur, ptr.next);
+            ptr = ptr.next;
+            cur = cur.next;
+        }
         
-        while (ptr1 != null) {
-            // copy next node
-            Node copyNode = null;
-            if (map.containsKey(ptr1)) {
-                copyNode = map.get(ptr1);
-            } else {
-                copyNode = new Node(ptr1.val);
-                map.put(ptr1, copyNode);
-            }
-            
-            ptr2.next = copyNode;
-            
-            // copy rondom linked node
-            if (ptr1.random != null) {
-                if (map.containsKey(ptr1.random)) {
-                    copyNode.random = map.get(ptr1.random);
-                } else {
-                    Node copyRandom = new Node(ptr1.random.val);
-                    copyNode.random = copyRandom;
-                    map.put(ptr1.random, copyRandom);
-                }
-            }
-            
-            ptr1 = ptr1.next;
-            ptr2 = ptr2.next;
+        // 2. copy random node
+        cur = head;
+        ptr = dummy.next;
+        while (cur != null) {
+            ptr.random = map.get(cur.random);
+            ptr = ptr.next;
+            cur = cur.next;
         }
         
         return dummy.next;
-        
     }
 }
 
+// The idea is to associate the original node with its copy node in a single linked list. In this way, we don't need extra space to keep track of the new nodes
 class Solution {
     public Node copyRandomList(Node head) {
         if (head == null) {
             return head;
         }
         
-        copyNode(head);
-        copyRandom(head);
-        return splitCopyList(head);
-    }
-    
-    // n1 -> c1 -> n2 -> c2 -> n3 -> c3 -> ...
-    public void copyNode(Node head) {
-        Node ptr = head;
-        while (ptr != null) {
-            Node copy = new Node(ptr.val);
-            copy.next = ptr.next;
-            ptr.next = copy;
-            ptr = copy.next;
+        // 1. copy next
+        // n1 -> c1 -> n2 -> c2 -> n3 -> c3 -> ...
+        Node cur = head;
+        while (cur != null) {
+            // insert c1 between n1 -> n2
+            Node copy = new Node(cur.val);
+            copy.next = cur.next;
+            cur.next = copy;
+            cur = copy.next;
         }
-    }
-    
-    public void copyRandom(Node head) {
-        Node ptr = head;
-        while (ptr != null) {
-            Node copy = ptr.next;
-            if (ptr.random != null) {
-                copy.random = ptr.random.next;
+
+        // 2. copy random
+        cur = head;
+        while (cur != null) {
+            Node copy = cur.next;
+            // cur.random.next is the random node of copy node
+            if (cur.random != null) {
+                copy.random = cur.random.next;
             }
-            ptr = ptr.next.next;
+            cur = cur.next.next;
         }
-    }
-    
-    public Node splitCopyList(Node head) {
-        Node dummy = new Node();
+
+        // 3. split
+        Node dummy = new Node(-1);
         dummy.next = head.next;
-        
-        Node ptr = head;
-        // unhitch the links
-        while (ptr != null) {
-            Node copy = ptr.next;
+
+        cur = head;
+        while (cur != null) {
+            // n1 -> c1 -> n2 -> c2
+            Node copy = cur.next;
             Node nxt = copy.next;
             if (nxt != null) {
                 copy.next = nxt.next;
             }
-            
-            ptr.next = nxt;
-            ptr = ptr.next;
+
+            cur.next = nxt;
+            cur = cur.next;
         }
-        
+
         return dummy.next;
     }
 }

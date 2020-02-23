@@ -37,7 +37,8 @@ class Sort {
             arr[mini] = tmp;
         }
     }
-
+    
+    // O(n^2)
     public static void insertionSort(int[] arr) {
         if (arr == null || arr.length == 0) {
             return;
@@ -54,6 +55,7 @@ class Sort {
         }
     }
 
+    
     
 
     public static void main(String[] args) {

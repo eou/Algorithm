@@ -2,13 +2,10 @@
 // 标准版本，HashMap + DoubleLinkedList
 // 为什么使用 Doubly linkd list 而不使用 Linked list的原因是：当访问一个节点后，我们需要将他从原来的list中删除，然后将它插入到头节点处，删除过程中需要将其前后节点连接起来，单链表访问目标节点的前后节点会很慢
 class LRUCache {
-    class DoubleListNode {
-        int key;
-        int value;
-        DoubleListNode pre;
-        DoubleListNode next;
-
-        DoubleListNode(int key, int value) {
+    class Node {
+        int key, value;
+        Node pre, next;
+        Node(int key, int value) {
             this.key = key;
             this.value = value;
             this.pre = null;
@@ -17,7 +14,7 @@ class LRUCache {
     }
 
     // add node to the head: head -> node
-    private void add(DoubleListNode node) {
+    private void add(Node node) {
         node.pre = head;
         node.next = head.next;
 
@@ -26,34 +23,34 @@ class LRUCache {
     }
 
     // 双向链表便于删除元素
-    private void remove(DoubleListNode node) {
+    private void remove(Node node) {
         node.pre.next = node.next;
         node.next.pre = node.pre;
     }
 
-    private void moveToHead(DoubleListNode node) {
+    private void moveToHead(Node node) {
         this.remove(node);
         this.add(node);
     }
 
     // Map m = Collections.synchronizedMap(map);
-    private Map<Integer, DoubleListNode> map = new HashMap<>();
-    private int count = 0;
+    private Map<Integer, Node> map = new HashMap<>();
+    private int size = 0;
     private int capacity = 0;
-    private DoubleListNode head, tail;
+    private Node head, tail;
 
     public LRUCache(int capacity) {
-        count = 0;
+        size = 0;
         this.capacity = capacity;
 
-        head = new DoubleListNode(-1, -1);
-        tail = new DoubleListNode(-1, -1);
+        head = new Node(-1, -1);
+        tail = new Node(-1, -1);
         head.next = tail;
         tail.pre = head;
     }
 
     public int get(int key) {
-        DoubleListNode node = map.get(key);
+        Node node = map.get(key);
         if (node == null) {
             return -1;
         }
@@ -63,21 +60,21 @@ class LRUCache {
     }
 
     public void put(int key, int value) {
-        DoubleListNode node = map.get(key);
+        Node node = map.get(key);
         if (node != null) {
             node.value = value;
             moveToHead(node); // 注意更新某个值也要移动到表头
         } else {
-            node = new DoubleListNode(key, value);
+            node = new Node(key, value);
             map.put(key, node);
             add(node);
-            count++;
+            size++;
 
-            if (count > capacity) {
+            if (size > capacity) {
                 this.map.remove(tail.pre.key);
                 tail.pre.pre.next = tail;
                 tail.pre = tail.pre.pre;
-                count--;
+                size--;
             }
         }
     }
