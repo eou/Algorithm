@@ -114,6 +114,7 @@ class Solution {
         int i = 0, n = height.length, result = 0;
         while (i < n) {
             if (s.isEmpty() || height[i] <= height[s.peek()]) {
+                // build left border
                 s.push(i++);
             } else {
                 int t = s.pop();
@@ -121,6 +122,9 @@ class Solution {
                 if (s.isEmpty()) {
                     continue;
                 }
+                // height[t] is the bottom
+                // Math.min(height[i], height[s.peek()]) is the border
+                // i - s.peek() - 1 is the width
                 result += (Math.min(height[i], height[s.peek()]) - height[t]) * (i - s.peek() - 1);
                 // current bar will be pushed in next few steps
             }

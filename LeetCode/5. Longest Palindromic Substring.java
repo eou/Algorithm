@@ -1,7 +1,7 @@
 // 5. Longest Palindromic Substring
 // hdu 3068: http://acm.hdu.edu.cn/showproblem.php?pid=3068 必须使用 Manacher's algorithm 才能过
+// brute-force, expand from a charater to 2 sides, O(n^2)
 class Solution {
-    // 从某个字符往两边扩展，时间复杂度为 O(n^2)
     int len = 0;
     int start = 0;
     public String longestPalindrome(String s) {
@@ -30,20 +30,33 @@ class Solution {
     }
 }
 
+// dp
 class Solution {
     public String longestPalindrome(String s) {
-        String result = "";
+        String res = "";
+
+        // dp[i][j] means if the substring (j, i) is palindromic
         boolean[][] dp = new boolean[s.length()][s.length()];
-        for(int i = s.length() - 1; i >= 0; i--) {
-            for(int j = i; j < s.length(); j++) {
-                dp[i][j] = (s.charAt(i) == s.charAt(j)) && (j - i < 3 || dp[i + 1][j - 1]);
-                if(dp[i][j] && (result.length() == 0 || j - i + 1 > result.length())) {
-                    result = s.substring(i, j + 1);
+        for (int i = 0; i < s.length(); i++) {
+            // !!! j = 0 ~ i, from short to long
+            for (int j = i; j >= 0; j--) {
+                if (s.charAt(i) == s.charAt(j)) {
+                    // length is 1 or 2 or 3 or expand from shorter palindrome
+                    if ((i - 1 >= 0 && j + 1 < s.length() && dp[i - 1][j + 1]) || (i - j + 1 <= 3)) {
+                        dp[i][j] = true;
+                    }
+                }
+
+                // update result string
+                if (dp[i][j]) {
+                    if (res.length() < i - j + 1) {
+                        res = s.substring(j, i + 1);
+                    }
                 }
             }
         }
-        
-        return result;
+
+        return res;
     }
 }
 
@@ -70,7 +83,7 @@ class Solution {
             // 核心部分
             if (center + longest > i) {
                 int mirrorOfI = center - (i - center);
-                len = Math.min(palindrome[mirrorOfI], center + longest - i);        // auxiliary part
+                len = Math.min(palindrome[mirrorOfI], center + longest - i);        // helper
             }
 
             // 普通匹配回文串

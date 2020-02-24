@@ -1,4 +1,5 @@
 // 142. Linked List Cycle II
+// Floyd's cycle-finding algorithm
 public class Solution {
     // a -> b -> c -> b
     // slow: a -> b -> c

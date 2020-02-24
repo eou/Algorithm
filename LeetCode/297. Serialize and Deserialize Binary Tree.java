@@ -50,6 +50,7 @@ public class Codec {
 
         TreeNode root = new TreeNode(Integer.parseInt(vals[0]));
         queue.add(root);
+        
         int parent = 0;
         boolean isLeftChild = true;
         for (int i = 1; i < vals.length; i++) {

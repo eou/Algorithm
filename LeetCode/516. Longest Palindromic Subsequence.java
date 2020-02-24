@@ -1,6 +1,6 @@
 // 516. Longest Palindromic Subsequence
+// Brute force DFS, 会 TLE
 class Solution {
-    // Brute force DFS, 会 TLE
     public int longestPalindromeSubseq(String s) {
         return helper(0, s.length() - 1, s);
     }
@@ -21,8 +21,8 @@ class Solution {
     }
 }
 
-class Solution {
-    // DFS with memoization
+// DFS with memoization
+class Solution {    
     public int longestPalindromeSubseq(String s) {
         int[][] memo = new int[s.length()][s.length()];
         return helper(0, s.length() - 1, s, memo);
@@ -48,8 +48,8 @@ class Solution {
     }
 }
 
-class Solution {
-    // DP
+// DP
+class Solution {    
     public int longestPalindromeSubseq(String s) {
         int[][] dp = new int[s.length()][s.length()];
 
@@ -67,8 +67,8 @@ class Solution {
     }
 }
 
-class Solution {
-    // 另一种 DP
+// 另一种 DP
+class Solution {    
     public int longestPalindromeSubseq(String s) {
         int[][] dp = new int[s.length() + 1][s.length() + 1];
         // dp[i][j] means a substring of s start from j whose length is i

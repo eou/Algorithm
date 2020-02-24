@@ -29,6 +29,7 @@ class Solution {
         Set<Character> set = new HashSet<>();
         for (char c : s.toCharArray()) {
             if (set.contains(c)) {
+                // find a pair
                 set.remove(c);
             } else {
                 set.add(c);

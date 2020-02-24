@@ -78,6 +78,7 @@ class Solution {
             } else {
                 stack.pop();
                 if (stack.isEmpty()) {
+                    // need a index indicating ending index
                     stack.push(i);
                 } else {
                     res = Math.max(res, i - stack.peek());

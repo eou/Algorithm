@@ -1,4 +1,5 @@
 // 160. Intersection of Two Linked Lists
+// Circle
 public class Solution {
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
         ListNode a = headA, b = headB;

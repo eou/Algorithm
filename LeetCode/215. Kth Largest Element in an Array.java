@@ -58,10 +58,11 @@ class Solution {
         if (k >= left) {
             return quickSelect(nums, left, end, k);
         }
+
         return k;
     }
 
-    void swap(int[] nums, int i, int j) {
+    private void swap(int[] nums, int i, int j) {
         int tmp = nums[i];
         nums[i] = nums[j];
         nums[j] = tmp;
@@ -76,8 +77,8 @@ class Solution {
     }
 }
 
+// quick select 非递归版本
 class Solution {
-    // quick select 非递归版本
     public int findKthLargest(int[] nums, int k) {
         shuffle(nums);
         int start = 0;

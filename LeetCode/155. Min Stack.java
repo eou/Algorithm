@@ -32,9 +32,9 @@ class MinStack {
     }
 }
 
+// store the difference of current value and current min value
+// pay attetion to the difference between Integer.MIN_VALUE and Integer.MAX_VALUE
 class MinStack {
-    // store the difference of current value and current min value
-    // pay attetion to the difference between Integer.MIN_VALUE and Integer.MAX_VALUE
     long min;
     Stack<Long> stack;
 

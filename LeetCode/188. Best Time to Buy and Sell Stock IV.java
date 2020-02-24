@@ -1,7 +1,8 @@
 // 188. Best Time to Buy and Sell Stock IV
+// at most k transactions
+// dp, time O(kn)，space O(kn)
+// 问题的实质是从 prices 数组中挑选出至多 2 * k 个元素，组成一个交易（买卖）序列
 class Solution {
-    // 时间复杂度为 O(kn)，空间复杂度为 O(kn)
-    // 问题的实质是从 prices 数组中挑选出至多 2 * k 个元素，组成一个交易（买卖）序列
     public int maxProfit(int k, int[] prices) {
         if (prices == null || prices.length < 2 || k <= 0) {
             return 0;
@@ -47,8 +48,9 @@ class Solution {
     }
 }
 
+// dp, rolling array
+// time O(kn), space O(k)，但同样在 k = 1000000000 时 Memory Limit Exceed
 class Solution {
-    // 时间复杂度为 O(kn)，空间复杂度为 O(k)，但同样在 k = 1000000000 时 Memory Limit Exceed
     public int maxProfit(int k, int[] prices) {
         if (prices == null || prices.length < 2 || k <= 0) {
             return 0;

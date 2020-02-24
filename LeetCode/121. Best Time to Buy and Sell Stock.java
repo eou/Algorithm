@@ -1,4 +1,5 @@
 // 121. Best Time to Buy and Sell Stock
+// at most 1 transaction
 class Solution {
     public int maxProfit(int[] prices) {
         if (prices == null || prices.length < 2) {

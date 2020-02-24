@@ -25,11 +25,11 @@ class Solution {
 
 class Solution {
     // 更严格的解法，如果需要正确判断节点是否在树中，需要包装一个辅助类返回存在与否的参数
-    private class auxiliary {
+    private class helper {
         public boolean a_exist, b_exist;
         public TreeNode lca;
 
-        public auxiliary(boolean a_exist, boolean b_exist, TreeNode lca) {
+        public helper(boolean a_exist, boolean b_exist, TreeNode lca) {
             this.a_exist = a_exist;
             this.b_exist = b_exist;
             this.lca = lca;
@@ -37,50 +37,50 @@ class Solution {
     }
 
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        auxiliary aux = dfs(root, p, q);
-        if (aux.a_exist && aux.b_exist) {
-            return aux.lca;
+        helper hp = dfs(root, p, q);
+        if (hp.a_exist && hp.b_exist) {
+            return hp.lca;
         } else {
             return null;
         }
     }
 
-    public auxiliary dfs(TreeNode root, TreeNode p, TreeNode q) {
-        auxiliary aux = new auxiliary(false, false, null);
+    public helper dfs(TreeNode root, TreeNode p, TreeNode q) {
+        helper hp = new helper(false, false, null);
         if (root == null) {
-            return aux;
+            return hp;
         }
 
-        auxiliary left = dfs(root.left, p, q);
-        auxiliary right = dfs(root.right, p, q);
+        helper left = dfs(root.left, p, q);
+        helper right = dfs(root.right, p, q);
 
         // 判断两个节点存在与否
-        aux.a_exist = left.a_exist || right.a_exist || root == p;
-        aux.b_exist = left.b_exist || right.b_exist || root == q;
+        hp.a_exist = left.a_exist || right.a_exist || root == p;
+        hp.b_exist = left.b_exist || right.b_exist || root == q;
 
         // 找到两个节点本身
         if (root == p || root == q) {
-            aux.lca = root;
-            return aux;
+            hp.lca = root;
+            return hp;
         }
 
         // 左右两边子树都存在目标节点，说明找到最近祖先
         if (left.lca != null && right.lca != null) {
-            aux.lca = root;
-            return aux;
+            hp.lca = root;
+            return hp;
         }
 
         // 找到一个节点就把其本身逐层上传
         if (left.lca != null) {
-            aux.lca = left.lca;
-            return aux;
+            hp.lca = left.lca;
+            return hp;
         }
 
         if (right.lca != null) {
-            aux.lca = right.lca;
-            return aux;
+            hp.lca = right.lca;
+            return hp;
         }
 
-        return aux;
+        return hp;
     }
 }

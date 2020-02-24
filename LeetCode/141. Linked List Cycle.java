@@ -1,4 +1,5 @@
 // 141. Linked List Cycle
+// Floyd's cycle-finding algorithm
 public class Solution {
     public boolean hasCycle(ListNode head) {
         if (head == null) {
