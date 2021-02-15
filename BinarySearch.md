@@ -54,7 +54,7 @@ while (l < r) {
 return a[l];
 
 while (l < r) {
-  int mid = (l + r + 1) >> 1;		// l = r, mid == (l + r) >> 1 maybe infinite loop if always jump into l = mid; branch
+  int mid = (l + r + 1) >> 1;		// l = r, mid == (l + r) >> 1 will trap in infinite loop if always jump into l = mid; branch
   // find the last one of repeat elements
   // find largest elements which <= x
   if (a[mid] <= x) {

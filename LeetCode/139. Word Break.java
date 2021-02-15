@@ -31,8 +31,8 @@ class Solution {
     }
 }
 
+// dfs with memoization，不需要二维数组，时间复杂度为 O(n^2)
 class Solution {
-    // DFS with memoization，不需要二维数组，时间复杂度为 O(n^2)
     int[] memo;
     public boolean wordBreak(String s, List<String> wordDict) {
         memo = new int[s.length() + 1];
@@ -58,8 +58,8 @@ class Solution {
     }
 }
 
+// dfs with memo
 class Solution {
-    // dfs with memo
     public Boolean[] memo;
     public boolean wordBreak(String s, List<String> wordDict) {
         memo = new Boolean[s.length() + 1];

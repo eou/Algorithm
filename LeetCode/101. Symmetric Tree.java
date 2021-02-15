@@ -2,22 +2,22 @@
 // 时间复杂度为 O(n)，空间复杂度为 O(n)，递归的栈最差情况是 n 个栈
 class Solution {
     public boolean isSymmetric(TreeNode root) {
-        return helper(root, root);
+        return dfs(root, root);
     }
 
-    public boolean helper(TreeNode t1, TreeNode t2) {
-        // root, avoid judge symmetric twice
+    public boolean dfs(TreeNode t1, TreeNode t2) {
+        // !!! this is root, avoid judge symmetric twice
         if (t1 == t2 && t1 != null) {
-            return helper(t1.left, t2.right);
+            return dfs(t1.left, t2.right);
         }
-        if(t1 == null && t2 == null) {
+        if (t1 == null && t2 == null) {
             return true;
         }
-        if(t1 == null || t2 == null) {
+        if (t1 == null || t2 == null) {
             return false;
         }
 
-        return (t1.val == t2.val) && helper(t1.right, t2.left) && helper(t1.left, t2.right);
+        return (t1.val == t2.val) && dfs(t1.right, t2.left) && dfs(t1.left, t2.right);
     }
 }
 
@@ -27,7 +27,10 @@ class Solution {
             return true;
         }
         // do not add root into queue
-        Queue<TreeNode> queue = new LinkedList<>(); // ArrayDeque 不能添加空节点
+        // !!! ArrayDeque 不能添加空节点
+        Queue<TreeNode> queue = new LinkedList<>();
+
+        // start from second level
         queue.offer(root.left);
         queue.offer(root.right);
         while (!queue.isEmpty()) {

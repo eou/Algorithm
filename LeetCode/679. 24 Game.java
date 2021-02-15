@@ -1,6 +1,6 @@
 // 679. 24 Game
 class Solution {
-    // 4个数字所有的计算方法共9216种，所以理论上要遍历所有组合来检查是否合法，必然是DFS
+    // 理论上要遍历所有组合来检查是否合法，必然是DFS
     public boolean judgePoint24(int[] nums) {
         List<Double> list = new ArrayList<>();
         for (int n : nums) {
@@ -11,7 +11,7 @@ class Solution {
     
     private boolean helper(List<Double> nums) {
         if (nums.size() == 1) {
-            return Math.abs(nums.get(0) - 24) < 1e-6; //精确度不一定
+            return Math.abs(nums.get(0) - 24) < 1e-7;
         }
         
         for (int i = 0; i < nums.size(); ++i) {
@@ -105,5 +105,76 @@ class Solution {
         }
         
         return false;
+    }
+}
+
+// 编程之美 1.16
+class Solution {
+    private static Map<Integer, Set<Double>> S;
+    private static int A[];
+    private static double EPS = 1e-7;
+
+    public boolean judgePoint24(int[] nums) {
+        S = new HashMap<Integer, Set<Double>>();
+        A = nums;
+
+        for (int i = 0; i < (1 << 4); i++) {
+            Set<Double> set = new HashSet<>();
+            S.put(i, set);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            Set<Double> set = new HashSet<>();
+            set.add(Double.valueOf(A[i]));
+            S.put(1 << i, set);
+        }
+
+        // for (int i = 1; i < (1<<4); i++) {
+        // fork(i);
+        // }
+        fork((1 << 4) - 1);
+
+        Set<Double> mSet = S.get((1 << 4) - 1);
+        for (Double n : mSet) {
+            if (Math.abs(n - 24) < EPS) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private Set<Double> fork(int m) {
+        Set<Double> mSet = S.get(m);
+        if (mSet.size() > 0) {
+            return mSet;
+        } else {
+            for (int x = 1; x < m; x++) {
+                if ((x & m) == x) {
+                    Set<Double> s1 = fork(x);
+                    Set<Double> s2 = fork(m - x);
+                    for (Double n1 : s1) {
+                        for (Double n2 : s2) {
+                            mSet.add(n1 + n2);
+
+                            mSet.add(n1 - n2);
+
+                            mSet.add(n2 - n1);
+
+                            mSet.add(n1 * n2);
+
+                            if (Math.abs(n1) > EPS) {
+                                mSet.add(n2 / n1);
+                            }
+                            if (Math.abs(n2) > EPS) {
+                                mSet.add(n1 / n2);
+                            }
+                        }
+                    }  
+                }
+            }
+            return mSet;
+        }
+
     }
 }

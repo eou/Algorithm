@@ -44,11 +44,12 @@ class Solution {
     }
 }
 
+// !!! similar with 124. Binary Tree Maximum Path Sum
 class Solution {
-    int max = 0;
+    int res = 0;
     public int diameterOfBinaryTree(TreeNode root) {
         maxDepth(root);
-        return max;
+        return res;
     }
 
     private int maxDepth(TreeNode root) {
@@ -59,7 +60,7 @@ class Solution {
         int right = maxDepth(root.right);
         
         // 在找深度的同时更新一下此刻的最长路径，在以某个结点为根的时候会达到最长
-        max = Math.max(max, left + right);
+        res = Math.max(res, left + right);
 
         return Math.max(left, right) + 1;
     }

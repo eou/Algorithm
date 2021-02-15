@@ -38,8 +38,42 @@ class Solution {
     }
 }
 
+// LintCode 1536. Find First and Last Position of Element in Sorted Array
 class Solution {
-    // 两次二分，O(logn)
+    public List<Integer> searchRange(List<Integer> nums, int target) {
+        int start = -1, end = -1;
+        
+        int l = 0, r = nums.size() - 1;
+        while (l < r) {
+            int m = (l + r) / 2;
+            // first
+            if (nums.get(m) >= target) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        start = nums.get(l) == target ? l : -1;
+        
+        l = 0;
+        r = nums.size() - 1;
+        while (l < r) {
+            int m = (l + r + 1) / 2;
+            // last
+            if (nums.get(m) <= target) {
+                l = m;
+            } else {
+                r = m - 1;
+            }
+        }
+        end = nums.get(l) == target ? l : -1;
+        
+        return Arrays.asList(new Integer[]{start, end});
+    }
+}
+
+// 两次二分，O(logn)
+class Solution {
     private int binarySearch(int[] nums, int target, boolean index) {
         if (nums == null || nums.length == 0) {
             return -1;

@@ -12,20 +12,20 @@ class Solution {
         int cEnd = matrix[0].length - 1;
         // spiral traverse start from matrix[0][0]
         while (rStart <= rEnd && cStart <= cEnd) {
-            // Traverse right cStart => cEnd
+            // Right cStart => cEnd
             for (int i = cStart; i <= cEnd; i++) {
                 res.add(matrix[rStart][i]);
             }
             rStart++;
             
-            // Traverse Down rStart => rEnd
+            // Down rStart => rEnd
             for (int i = rStart; i <= rEnd; i++) {
                 res.add(matrix[i][cEnd]);
             }
             cEnd--;
             
             if (rStart <= rEnd) {
-                // Traverse Left
+                // Left
                 for (int i = cEnd; i >= cStart; i--) {
                     res.add(matrix[rEnd][i]);
                 }
@@ -33,7 +33,7 @@ class Solution {
             rEnd--;
             
             if (cStart <= cEnd) {
-                // Traverse Up
+                // Up
                 for (int i = rEnd; i >= rStart; i--) {
                     res.add(matrix[i][cStart]);
                 }

@@ -105,7 +105,8 @@ class Solution {
 
     private boolean dfs(Set<String> set, String word, int start, int min) {
         for (int i = start + min; i <= word.length() - min; i++) {
-            if (set.contains(word.substring(start, i)) && (set.contains(word.substring(i)) || dfs(set, word, i, min))) {
+            if (set.contains(word.substring(start, i)) && 
+                (set.contains(word.substring(i)) || dfs(set, word, i, min))) {
                 return true;
             }
         }

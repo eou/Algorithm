@@ -1,6 +1,6 @@
 // 11. Container With Most Water
+// brute-force, O(n^2)
 class Solution {
-    // 暴力解法，时间复杂度为 O(n^2)
     public int maxArea(int[] height) {
         int max = 0;
         for(int i = 0; i < height.length; i++) {
@@ -13,9 +13,10 @@ class Solution {
     }
 }
 
+
+// two pointer, O(n)
+// !!! start from the longest width, if we want get bigger container, we should shorten the width and find the next possible longer height
 class Solution {
-    // 时间复杂度为 O(n)
-    // start from the longest width, if we want get bigger container, we should shorten the width and find the next possible longer height
     public int maxArea(int[] height) {
         int left = 0;
         int right = height.length - 1;

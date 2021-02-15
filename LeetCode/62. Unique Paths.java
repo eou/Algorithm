@@ -24,7 +24,7 @@ class Solution {
     }
 }
 
-// C(m + n, m) = (m + n)! / (m! * n!)
+// !!! C(m + n, m) = (m + n)! / (m! * n!)
 // D R R R D R R R
 class Solution {
     public int uniquePaths(int m, int n) {
@@ -49,6 +49,6 @@ class Solution {
             res /= j;
         }
 
-        return (int) res;
+        return (int)res;
     }
 }
