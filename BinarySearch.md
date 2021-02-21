@@ -6,26 +6,24 @@
 
 ```java
 class Solution {
-    // non-recursive
+    // iterative
     public int binarySearch(int[] nums, int target) {
         // preprocess
-        if (nums == null || nums.length == 0) {
+        if (nums == null) {
             return -1;
         }
         
         int start = 0, end = nums.length - 1;
-        // terminate condition
+        // terminate condition: ..., end, start, ...
         while (start <= end) {
             // note that `(start + end) / 2` may overflow
             // or `start + (end - start) >> 1;`
             int mid = start + (end - start) / 2;
             if (nums[mid] == target) {
                 return mid;
-            }
-            else if (nums[mid] < target) {
+            } else if (nums[mid] < target) {
                 start = mid + 1; 
-            }
-            else {
+            } else {
                 end = mid - 1;
             }
         }
@@ -35,9 +33,46 @@ class Solution {
 }
 ```
 
+Good for finding first/last position of target:
+
+```java
+class Solution {
+    public int binarySearch(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        
+        int start = 0, end = nums.length - 1;
+        // terminate condition: ..., start, end, ...
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target) {
+                start = mid;
+            } else if (nums[mid] < target) {
+                start = mid;
+            } else {
+                end = mid;
+            }
+        }
+
+        if (nums[end] == target) {
+            return end;
+        }
+        
+        if (nums[start] == target) {
+            return start;
+        }
+
+        return -1;
+    }
+}
+```
+
+## Right shift / Integer division
+
 ```java
 // reason why we use right shift but not integer division
-// is that right shift is rounded down white integer division is rounded to zero
+// is that right shift is rounded down while integer division is rounded to zero
 // which means integer division might not work for negative numbers in binary search
 // normally the numbers are non-positive in most situations since we usually use array index
 // -3 / 2; (-1) is not the same as -3 >> 1; (-2)
@@ -108,6 +143,6 @@ class Solution {
 ## Termination
 
 - `start <= end`：after breaking the loop, start - 1 = end，no target
-- `start < end`：after breaking the loop, start = end，target only one element
+- `start < end`：after breaking the loop, start = end，target only one element (infinite loop might happen)
 - `start + 1 < end`：after breaking the loop, start + 1= end，need compare last two elements
 
