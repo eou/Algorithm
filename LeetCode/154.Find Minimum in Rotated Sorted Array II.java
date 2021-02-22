@@ -1,33 +1,28 @@
-// 154.Find Minimum in Rotated Sorted Array II
+// 154. Find Minimum in Rotated Sorted Array II
 class Solution {
     public int findMin(int[] nums) {
-        // Step1. empty exception
         if (nums == null || nums.length == 0) {
             return -1;
         }
 
-        // Step2. binary search
-        int start = 0, end = nums.length - 1;
-        while (start + 1 < end) {
-            int mid = start + (end - start) / 2;
-
-            // compared with nums[end] can united operations in both rotated and unrotated sorted array
-            if (nums[mid] == nums[end]) {
-                end--;
-            } else if (nums[mid] > nums[end]) {
-                // mid in the first half of the array: [start, ..., mid]
-                start = mid;
+        int left = 0, right = nums.length - 1;
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] > nums[right]) {
+                // only happens on rotated sorted array but not sorted array
+                left = mid;
+            } else if (nums[mid] < nums[right]) {
+                right = mid;
             } else {
-                // mid in the second half of the array: [mid, ..., end]
-                end = mid;
+                // nums[right] is useless, can move pointer to decrease the range
+                right--;
             }
         }
 
-        // Step3. final process
-        if (nums[start] < nums[end]) {
-            return nums[start];
+        if (nums[left] < nums[right]) {
+            return nums[left];
         } else {
-            return nums[end];
+            return nums[right];
         }
     }
 }
