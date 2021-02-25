@@ -1,52 +1,60 @@
 // 144. Binary Tree Preorder Traversal
-// 根 → 左 → 右
+// root → left → right
+// 2 Recursive + 3 Non-recursive (morris traversal)
+// DAC vs Traverse. Traverse needs a global variable or uses parameter to pass value.
 class Solution {
-    // 递归版本，分治法
+    // Divide and conquer
+    // Return the result by return value
     public List<Integer> preorderTraversal(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<>();
-        if (root != null) {
-            list.add(root.val);
-            list.addAll(preorderTraversal(root.left));
-            list.addAll(preorderTraversal(root.right));
+        List<Integer> res = new ArrayList<>();
+        if (root == null) {
+            return res;
         }
-        return list;
+
+        res.add(root.val);
+        res.addAll(preorderTraversal(root.left));
+        res.addAll(preorderTraversal(root.right));
+        return res;
     }
 }
 
 class Solution {
-    // 递归版本，遍历法
+    // Traverse
+    // Return the result by parameters or global variables
     public List<Integer> preorderTraversal(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        traverse(root, list);
-        return list;
+        List<Integer> res = new ArrayList<>();
+        traverse(root, res);
+        return res;
     }
 
-    private void traverse(TreeNode root, ArrayList<Integer> list) {
+    private void traverse(TreeNode root, List<Integer> res) {
         if (root == null) {
             return;
         }
 
-        list.add(root.val);
-        traverse(root.left, list);
-        traverse(root.right, list);
+        res.add(root.val);
+        traverse(root.left, res);
+        traverse(root.right, res);
     }
 }
 
 class Solution {
-    // 非递归版本，熟读并背诵全文😈
+    // Non-recursive，熟读并背诵全文😈
+    // Using stack. Every loop deals with the top element of stack.
+    // root => push right child into stack => push left child into stack => pop left child
     public List<Integer> preorderTraversal(TreeNode root) {
-        Stack<TreeNode> stack = new Stack<TreeNode>();
-        ArrayList<Integer> list = new ArrayList<Integer>();
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        List<Integer> res = new ArrayList<>();
 
         if (root == null) {
-            return list;
+            return res;
         }
 
         stack.push(root);
-        while (!stack.empty()) {
+        while (!stack.isEmpty()) {
             // 弹出节点并进行相应操作
             TreeNode node = stack.pop();
-            list.add(node.val);
+            res.add(node.val);
 
             // 然后分别打入右节点和左节点
             if (node.right != null) {
@@ -57,55 +65,88 @@ class Solution {
             }
         }
 
-        return list;
+        return res;
     }
 }
 
 class Solution {
-    // 非递归版本另一种形式
+    // Non-recursive Ver.2
+    // Similar with 1 solution of Postorder traversal.
     public List<Integer> preorderTraversal(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
+        List<Integer> res = new ArrayList<>();
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        
+        if (root == null) {
+            return res;
+        }
+
+        TreeNode node = root;
+        while (node != null || !stack.isEmpty()) {
+            if (node != null) {
+                res.add(node.val);
+                stack.push(node);
+                node = node.left;
+            } else {
+                // Condition is !stack.isEmpty() here
+                node = stack.pop();
+                node = node.right;
+            }
+        }
+
+        return res;
+
+    }
+}
+
+class Solution {
+    // Non-recursive Ver.2
+    // Using node pointer. Every loop deals with the node pointed with node pointer.
+    // root => push right child into stack => switch to left child, if not exists, pop right child
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
         // 只有右节点被放入栈中
-        Stack<TreeNode> rights = new Stack<TreeNode>();
+        Deque<TreeNode> stack = new ArrayDeque<>();
 
         TreeNode node = root;
         while (node != null) {
             // 首先对节点进行相应操作
-            list.add(node.val);
+            res.add(node.val);
 
             // 若存在右节点，打入栈中备用
             if (node.right != null) {
-                rights.push(node.right);
+                stack.push(node.right);
             }
 
             node = node.left;
 
             // 若没有左节点，取栈中右节点
-            if (node == null && !rights.isEmpty()) {
-                node = rights.pop();
+            if (node == null && !stack.isEmpty()) {
+                node = stack.pop();
             }
         }
 
-        return list;
+        return res;
     }
 }
 
 class Solution {
-    // 非递归版本，morris traversal, 空间复杂度O(1)，不需要栈，其实是利用线索二叉树thread binary tree的特性
-    // 虽然有两个while循环，但是时间复杂度仍然是O(n)
+    // Non-recursive Ver.3, morris traversal, 空间复杂度O(1)，不需要栈，其实是利用线索二叉树 thread binary tree 的特性
+    // 虽然有两个 while 循环，但是时间复杂度仍然是O(n)
+    // 要使用 O(1) 空间进行遍历，最大的难点在于，遍历到子节点的时候怎样重新返回到父节点（假设节点中没有指向父节点的指针）
+    // morris traversal 利用叶子节点中的左右空指针指向某种顺序遍历下的前驱节点或后继节点
     // morris preorder 和 morris inorder 只有一行代码不同
     public List<Integer> preorderTraversal(TreeNode root) {
-        List<Integer> list = new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
         TreeNode cur = root;
         TreeNode pre = null;
 
         if (root == null) {
-            return list;
+            return res;
         }
 
         while (cur != null) {
             if (cur.left == null) {
-                list.add(cur.val);
+                res.add(cur.val);
                 cur = cur.right;
             } else {
                 pre = cur.left;
@@ -113,7 +154,7 @@ class Solution {
                     pre = pre.right;
                 }
                 if (pre.right == null) {
-                    list.add(cur.val);
+                    res.add(cur.val);
                     pre.right = cur;
                     cur = cur.left;
                 } else {
@@ -123,6 +164,6 @@ class Solution {
             }
         }
 
-        return list;
+        return res;
     }
 }

@@ -1,54 +1,58 @@
 // 145. Binary Tree Postorder Traversal
-// 左 → 右 → 根
+// left → right → root
+// 2 Recursive + 6 Non-recursive (morris traversal)
 class Solution {
-    // 递归版本，分治法
+    // Divide and conquer
+    // return the result by return value
     public List<Integer> postorderTraversal(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<>();
-
-        if (root != null) {
-            list.addAll(postorderTraversal(root.left));
-            list.addAll(postorderTraversal(root.right));
-            list.add(root.val);
+        List<Integer> res = new ArrayList<>();
+        if (root == null) {
+            return res;
         }
 
-        return list;
+        res.addAll(postorderTraversal(root.left));
+        res.addAll(postorderTraversal(root.right));
+        res.add(root.val);
+
+        return res;
     }
 }
 
 class Solution {
-    // 递归版本，遍历法
+    // Traverse
+    // return the result by parameters
     public List<Integer> postorderTraversal(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        traverse(root, list);
-        return list;
+        List<Integer> res = new ArrayList<>();
+        traverse(root, res);
+        return res;
     }
 
-    private void traverse(TreeNode root, List<Integer> list) {
+    private void traverse(TreeNode root, List<Integer> res) {
         if (root == null) {
             return;
         }
 
-        traverse(root.left, list);
-        traverse(root.right, list);
-        list.add(root.val);
+        traverse(root.left, res);
+        traverse(root.right, res);
+        res.add(root.val);
     }
 }
 
 class Solution {
-    // 非递归版本，熟读并背诵全文😈
+    // Non-recursive，熟读并背诵全文😈
     public List<Integer> postorderTraversal(TreeNode root) {
-        // 注意这里是LinkedList，要用到addFirst，或者ArrayList在头部插入，或者最后翻转
-        LinkedList<Integer> list = new LinkedList<>();
-        Stack<TreeNode> stack = new Stack<>();
+        // 注意这里是 LinkedList，要用到 addFirst，或者 ArrayList 在头部插入，或者最后翻转，但性能低
+        LinkedList<Integer> res = new LinkedList<>();
+        Deque<TreeNode> stack = new ArrayDeque<>();
         if (root == null) {
-            return list;
+            return res;
         }
 
         stack.push(root);
         while (!stack.isEmpty()) {
-            // 跟前序遍历类似，不过是先在头部加入根，然后左节点和右节点，即左 → 右 → 根 → 头部
+            // 跟前序遍历类似，不过是反序加入链表头部，根 → 右 → 左
             TreeNode node = stack.pop();
-            list.addFirst(node.val);
+            res.addFirst(node.val);
 
             if (node.left != null) {
                 stack.push(node.left);
@@ -58,25 +62,25 @@ class Solution {
             }
         }
 
-        return list;
+        return res;
     }
 }
 
 class Solution {
-    // 非递归版本另一个形式，不是在数组头部插入元素或者最后翻转数组，但是需要一个prev节点
+    // Non-recursive Ver.2，需要一个prev节点
     public List<Integer> postorderTraversal(TreeNode root) {
-        List<Integer> results = new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
         if (root == null) {
-            return results;
+            return res;
         }
 
         Deque<TreeNode> stack = new ArrayDeque<>();
-        // 一个当前访问的节点，一个刚才访问的节点
+
         TreeNode prev = null;
         TreeNode curr = root;
 
         stack.push(root);
-        while (!stack.empty()) {
+        while (!stack.isEmpty()) {
             curr = stack.peek();
             if (prev == null || prev.left == curr || prev.right == curr) {
                 if (curr.left != null) {
@@ -89,22 +93,22 @@ class Solution {
                     stack.push(curr.right);
                 }
             } else {
-                results.add(curr.val);
+                res.add(curr.val);
                 stack.pop();
             }
             prev = curr;
         }
 
-        return results;
+        return res;
     }
 }
 
 class Solution {
-    // pre 节点与栈的另一个版本，跟中序遍历类似，因为遍历每一棵树都要先找到最左边的结点
+    // Non-recursive Ver.3, pre 节点与栈的另一个版本，跟中序遍历类似，因为遍历每一棵树都要先找到最左边的结点
     public List<Integer> postorderTraversal(TreeNode root) {
-        List<Integer> results = new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
         if (root == null) {
-            return results;
+            return res;
         }
 
         Deque<TreeNode> stack = new ArrayDeque<>();
@@ -123,21 +127,53 @@ class Solution {
             } else {
                 // 右子树已经遍历过或者没有右子树
                 pre = node;
-                results.add(stack.pop().val);
+                res.add(stack.pop().val);
                 node = null;
             }
         }
 
-        return results;
+        return res;
     }
 }
 
 class Solution {
-    // 用 set 保存左右结点是否访问过
+    // Non-recursive Ver.4, double stack
     public List<Integer> postorderTraversal(TreeNode root) {
-        List<Integer> results = new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
+
+        // 倒序的节点栈
+        Deque<TreeNode> nodeStack = new ArrayDeque<>();
+        Deque<Integer> stack = new ArrayDeque<>();
+
+        TreeNode node = root;
+
+        while (node != null || !nodeStack.isEmpty()) {
+            while (node != null) {
+                stack.push(node.val);
+                nodeStack.push(node);
+                node = node.right;
+            }
+
+            if (!nodeStack.isEmpty()) {
+                node = nodeStack.pop();
+                node = node.left;
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            res.add(stack.pop()); // 获取倒序的根右左序列
+        }
+
+        return res;
+    }
+}
+
+class Solution {
+    // Non-recursive Ver.5, 用 set 保存左右结点是否访问过
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
         if (root == null) {
-            return results;
+            return res;
         }
 
         Set<TreeNode> visited = new HashSet<>();
@@ -148,7 +184,7 @@ class Solution {
             TreeNode node = stack.pop();
             if ((node.left == null || (node.left != null && visited.contains(node.left)))
                     && (node.right == null || (node.right != null && visited.contains(node.right)))) {
-                results.add(node.val);
+                res.add(node.val);
                 visited.add(node);
             } else {
                 stack.push(node);
@@ -160,18 +196,18 @@ class Solution {
             }
         }
 
-        return results;
+        return res;
     }
 }
 
 class Solution {
-    // 非递归版本，morris traversal, 空间复杂度O(1)，不需要栈，其实是利用线索二叉树thread binary tree的特性
+    // Non-recursive Ver.6，morris traversal, 空间复杂度O(1)，不需要栈，其实是利用线索二叉树thread binary tree的特性
     // 虽然有两个while循环，但是时间复杂度仍然是O(n)
-    // morris postorder比较复杂
+    // morris postorder 比较复杂
     public List<Integer> postorderTraversal(TreeNode root) {
-        LinkedList<Integer> list = new LinkedList();
+        LinkedList<Integer> res = new LinkedList();
         if (root == null) {
-            return list;
+            return res;
         }
 
         // 需要一个新节点
@@ -191,22 +227,22 @@ class Solution {
                     p.right = node;
                     node = node.left;
                 } else {
-                    addReverse(node.left, p, list);
+                    addReverse(node.left, p, res);
                     p.right = null;
                     node = node.right;
                 }
             }
         }
 
-        return list;
+        return res;
     }
 
     // 访问逆转后的路径上的所有节点
-    private void addReverse(TreeNode from, TreeNode to, List<Integer> list) {
+    private void addReverse(TreeNode from, TreeNode to, List<Integer> res) {
         reverse(from, to);
         TreeNode p = to;
         while (true) {
-            list.add(p.val);
+            res.add(p.val);
             if (p == from) {
                 break;
             }

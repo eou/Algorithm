@@ -1,49 +1,132 @@
 // 33. Search in Rotated Sorted Array
-// 4,5,6,7 first half [start]
-//          0,1,2 [end] second half
+// https://www.cnblogs.com/grandyang/p/4325648.html
+// The goal is to find the sorted subarray!!!
+// If we compare nums[mid] with nums[right]:
+// [7,0,1,2,3,4,5] => nums[mid] < nums[right] means right side [2,3,4,5] is sorted
+// [2,3,4,5,7,0,1] => nums[mid] > nums[right] means left side [2,3,4,5] is sorted
+// If nums[mid] == nums[right] means left == mid == right, which is impossible under `left + 1 < right`
+
+// If we compare nums[mid] with nums[left]:
+// [7,0,1,2,3,4,5] => nums[mid] < nums[left] means right side [2,3,4,5] is sorted
+// [2,3,4,5,7,0,1] => nums[mid] > nums[left] means left side [2,3,4,5] is sorted
+// If nums[mid] == nums[left] means left == mid == right - 1, which is impossible under `left + 1 < right`
 class Solution {
     public int search(int[] nums, int target) {
-        // Step1. empty exception
         if (nums == null || nums.length == 0) {
             return -1;
         }
 
-        // Step2. binary search
-        int start = 0, end = nums.length - 1;
-        while (start + 1 < end) {
-            int mid = start + (end - start) / 2;
-
-            // compared with target
+        int left = 0, right = nums.length - 1;
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+            
+            // Improve performace!
             if (nums[mid] == target) {
                 return mid;
             }
 
-            // compared with nums[end] can united operations in both rotated and unrotated sorted array
-            if (nums[mid] > nums[end]) {
-                // mid in the first half of the array: [start, ..., mid]
-                if (target >= nums[start] && target < nums[mid]) {
-                    end = mid;
+            if (nums[mid] < nums[right]) {
+                if (target >= nums[mid] && target <= nums[right]) {
+                    left = mid;
                 } else {
-                    start = mid;
+                    right = mid;
                 }
             } else {
-                // mid in the second half of the array: [mid, ..., end]
-                if (target > nums[mid] && target <= nums[end]) {
-                    start = mid;
+                if (target >= nums[left] && target <= nums[mid]) {
+                    right = mid;
                 } else {
-                    end = mid;
+                    left = mid;
                 }
             }
         }
 
-        // Step3. final process
-        if (nums[start] == target) {
-            return start;
-        } else if (nums[end] == target) {
-            return end;
-        } else {
-            return -1;
+        if (nums[left] == target) {
+            return left;
         }
+
+        if (nums[right] == target) {
+            return right;
+        }
+
+        return -1;
+    }
+}
+
+class Solution {
+    public int search(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+
+            if (nums[mid] == target) {
+                return mid;
+            }
+
+            if (nums[mid] < nums[left]) {
+                if (target >= nums[mid] && target <= nums[right]) {
+                    left = mid;
+                } else {
+                    right = mid;
+                }
+            } else {
+                if (target >= nums[left] && target <= nums[mid]) {
+                    right = mid;
+                } else {
+                    left = mid;
+                }
+            }
+        }
+
+        if (nums[left] == target) {
+            return left;
+        }
+
+        if (nums[right] == target) {
+            return right;
+        }
+
+        return -1;
+    }
+}
+
+// Interesting. nums[mid] 与 nums[right] / nums[nums.length - 1], nums[left] / nums[0] 比较都是正确的
+// 大致证明即每次我们只筛选出有序的一边，只要二分操作正确，整个过程就正确
+class Solution {
+    public int search(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+
+            if (nums[mid] == target) {
+                return mid;
+            }
+            
+            // 'right' can be replaced with 'nums.length - 1'
+            // 'left' can be replaced with '0'
+            if (nums[mid] < nums[nums.length - 1]) {
+                if (target >= nums[mid] && target <= nums[nums.length - 1]) {
+                    left = mid;
+                } else {
+                    right = mid;
+                }
+            } else {
+                if (target >= nums[0] && target <= nums[mid]) {
+                    right = mid;
+                } else {
+                    left = mid;
+                }
+            }
+        }
+
+        if (nums[left] == target) {
+            return left;
+        }
+
+        if (nums[right] == target) {
+            return right;
+        }
+
+        return -1;
     }
 }
 
@@ -91,36 +174,34 @@ class Solution {
 class Solution {
     // 递归版本
     public int search(int[] nums, int target) {
-        int low = 0;
-        int high = nums.length - 1;
-        return search(nums, target, low, high);
+        return search(nums, target, 0, nums.length - 1);
     }
 
-    private int search(int[] nums, int target, int low, int high) {
-        if (low > high) {
+    private int search(int[] nums, int target, int left, int right) {
+        if (left > right) {
             return -1;
         }
 
-        int mid = (low + high) / 2;
+        int mid = (left + right) / 2;
 
         if (nums[mid] == target) {
             return mid;
         }
 
         // if left half is sorted
-        if (nums[low] <= nums[mid]) {
-            if (nums[low] <= target && nums[mid] >= target) {
-                return search(nums, target, low, mid - 1);
+        if (nums[left] <= nums[mid]) {
+            if (nums[left] <= target && nums[mid] >= target) {
+                return search(nums, target, left, mid - 1);
             } else {
-                return search(nums, target, mid + 1, high);
+                return search(nums, target, mid + 1, right);
             }
         }
         
         else {
-            if (nums[mid] <= target && nums[high] >= target) {
-                return search(nums, target, mid + 1, high);
+            if (nums[mid] <= target && nums[right] >= target) {
+                return search(nums, target, mid + 1, right);
             } else {
-                return search(nums, target, low, mid - 1);
+                return search(nums, target, left, mid - 1);
             }
         }
     }

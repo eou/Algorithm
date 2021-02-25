@@ -2,28 +2,28 @@
 // 时间复杂度为 O(n)
 class Solution {
     public List<String> binaryTreePaths(TreeNode root) {
-        List<String> result = new ArrayList<>();
+        List<String> res = new ArrayList<>();
+
         if (root == null) {
-            return result;
+            return res;
         }
+
         if (root.left == null && root.right == null) {
-            String tmp = new String(root.val + "");
-            result.add(tmp);
-            return result;
+            res.add("" + root.val);
+            return res;
         }
+
         List<String> left = binaryTreePaths(root.left);
+        for (String str : left) {
+            res.add("" + root.val + "->" + str);
+        }
+
         List<String> right = binaryTreePaths(root.right);
-        for (String s : left) {
-            String tmp = new String(s);
-            tmp = root.val + "->" + tmp;
-            result.add(tmp);
+        for (String str : right) {
+            res.add("" + root.val + "->" + str);
         }
-        for (String s : right) {
-            String tmp = new String(s);
-            tmp = root.val + "->" + tmp;
-            result.add(tmp);
-        }
-        return result;
+
+        return res;
     }
 }
 

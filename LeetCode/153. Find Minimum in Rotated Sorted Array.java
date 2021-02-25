@@ -2,6 +2,7 @@
 // 1. 比较数组首尾元素
 // 2. 比较区间首尾元素
 // 推荐比较数组 / 区间尾元素，因为跟数组 / 区间首元素比较都要处理 sorted array 极端情况
+// 比较区间（子数组）尾元素更优，因为每一次二分实际上都抛弃了原数组的一部分，比较数组尾元素不适用于
 class Solution {
     // Solution 1：比较 nums[nums.length - 1]
     public int findMin(int[] nums) {
