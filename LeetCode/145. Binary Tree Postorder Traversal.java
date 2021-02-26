@@ -148,13 +148,11 @@ class Solution {
         TreeNode node = root;
 
         while (node != null || !nodeStack.isEmpty()) {
-            while (node != null) {
+            if (node != null) {
                 stack.push(node.val);
                 nodeStack.push(node);
                 node = node.right;
-            }
-
-            if (!nodeStack.isEmpty()) {
+            } else {
                 node = nodeStack.pop();
                 node = node.left;
             }

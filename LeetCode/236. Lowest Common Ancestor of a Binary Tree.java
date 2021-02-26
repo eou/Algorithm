@@ -1,4 +1,5 @@
 // 236. Lowest Common Ancestor of a Binary Tree
+// 3 values: lca, if p exists in subtree, if q exists in subtree
 class Solution {
     // 此解法虽然满足题意，但不严格，如果一个节点在树中，另一个不在，也会返回其中一个节点而不是null
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
@@ -25,62 +26,39 @@ class Solution {
 
 class Solution {
     // 更严格的解法，如果需要正确判断节点是否在树中，需要包装一个辅助类返回存在与否的参数
-    private class helper {
-        public boolean a_exist, b_exist;
-        public TreeNode lca;
+    class AuxType {
+        boolean pExists, qExists;
+        TreeNode lca;
 
-        public helper(boolean a_exist, boolean b_exist, TreeNode lca) {
-            this.a_exist = a_exist;
-            this.b_exist = b_exist;
+        AuxType(boolean pExists, boolean qExists, TreeNode lca) {
+            this.pExists = pExists;
+            this.qExists = qExists;
             this.lca = lca;
         }
     }
 
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        helper hp = dfs(root, p, q);
-        if (hp.a_exist && hp.b_exist) {
-            return hp.lca;
-        } else {
-            return null;
-        }
+        return dfs(root, p, q).lca;
     }
 
-    public helper dfs(TreeNode root, TreeNode p, TreeNode q) {
-        helper hp = new helper(false, false, null);
+    private AuxType dfs(TreeNode root, TreeNode p, TreeNode q) {
         if (root == null) {
-            return hp;
+            return new AuxType(false, false, null);
         }
 
-        helper left = dfs(root.left, p, q);
-        helper right = dfs(root.right, p, q);
+        AuxType left = dfs(root.left, p, q);
+        AuxType right = dfs(root.right, p, q);
 
-        // 判断两个节点存在与否
-        hp.a_exist = left.a_exist || right.a_exist || root == p;
-        hp.b_exist = left.b_exist || right.b_exist || root == q;
-
-        // 找到两个节点本身
-        if (root == p || root == q) {
-            hp.lca = root;
-            return hp;
-        }
-
-        // 左右两边子树都存在目标节点，说明找到最近祖先
-        if (left.lca != null && right.lca != null) {
-            hp.lca = root;
-            return hp;
-        }
-
-        // 找到一个节点就把其本身逐层上传
+        AuxType aux = new AuxType(left.pExists || right.pExists || root == p,
+                left.qExists || right.qExists || root == q, null);
         if (left.lca != null) {
-            hp.lca = left.lca;
-            return hp;
+            aux.lca = left.lca;
+        } else if (right.lca != null) {
+            aux.lca = right.lca;
+        } else if ((left.pExists || right.pExists || root == p) && (left.qExists || right.qExists || root == q)) {
+            aux.lca = root;
         }
 
-        if (right.lca != null) {
-            hp.lca = right.lca;
-            return hp;
-        }
-
-        return hp;
+        return aux;
     }
 }

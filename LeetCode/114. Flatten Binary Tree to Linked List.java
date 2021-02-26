@@ -1,7 +1,10 @@
 // 114. Flatten Binary Tree to Linked List
-// 其实是一个用树节点伪装的链表
+// 1 value: last node of subtree
+// DAC
 class Solution {
     // 其实不需要这个辅助类，因为first不需要通过类返回
+    // first 可以通过 root 辅助找到, last 不可以
+    // 单独返回一个 last 只需通过单个 TreeNode 即可
     private class auxiliary {
         TreeNode first, last;
 
@@ -42,6 +45,7 @@ class Solution {
     }
 }
 
+// DAC
 class Solution {
     // 上一种方法的简化版本，只需返回last节点
     public void flatten(TreeNode root) {
@@ -74,34 +78,37 @@ class Solution {
     }
 }
 
+// Reverse preorder traversal
 class Solution {
-    // 分治法
     public void flatten(TreeNode root) {
         flatten(root, null);
     }
 
-    private TreeNode flatten(TreeNode root, TreeNode pre) {
+    private TreeNode flatten(TreeNode root, TreeNode head) {
         if (root == null) {
-            return pre;
+            return head;
         }
 
-        pre = flatten(root.right, pre);
-        pre = flatten(root.left, pre);
-        root.right = pre;
+        head = flatten(root.right, head);
+        head = flatten(root.left, head);
 
+        root.right = head;
         root.left = null;
-        pre = root;
-        return pre;
+
+        head = root;
+        return head;
     }
 }
 
+// Reverse preorder traversal
 class Solution {
-    // 遍历法，类似后序遍历
     private TreeNode prev = null;
 
     public void flatten(TreeNode root) {
-        if (root == null)
+        if (root == null) {
             return;
+        }
+            
         flatten(root.right);
         flatten(root.left);
         root.right = prev;
@@ -110,8 +117,38 @@ class Solution {
     }
 }
 
+// Preorder traversal
 class Solution {
-    // 非递归版本
+    public void flatten(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        TreeNode pre = null, cur = root;
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            cur = stack.pop();
+
+            if (pre != null) {
+                pre.right = cur;
+                pre.left = null;
+            }
+
+            pre = cur;
+
+            if (cur.right != null) {
+                stack.push(cur.right);
+            }
+
+            if (cur.left != null) {
+                stack.push(cur.left);
+            }
+        }
+    }
+}
+
+class Solution {
     public void flatten(TreeNode root) {
         if (root == null) {
             return;

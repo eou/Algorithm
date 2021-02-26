@@ -1,89 +1,67 @@
 // 98. Validate Binary Search Tree
+// DAC，O(n)
 class Solution {
-    // 分治法1，O(n)
-    private class auxiliary {
-        public boolean isValidBST;
-        public long minVal, maxVal;
+    private class AuxType {
+        long minVal, maxVal;
+        boolean isValidBST;
 
-        public auxiliary(boolean isValidBST, long minVal, long maxVal) {
-            this.isValidBST = isValidBST;
+        AuxType(long minVal, long maxVal, boolean isValidBST) {
             this.minVal = minVal;
             this.maxVal = maxVal;
+            this.isValidBST = isValidBST;
         }
     }
-
-    // minVal, maxVal 也可以用 minNode, maxNode代替，换汤不换药
-    // private class auxiliary {
-    //     public boolean isValidBST;
-    //     public TreeNode maxNode, minNode;
-    //     public auxiliary(boolean isBisValidBST) {
-    //         this.isValidBST = isValidBST;
-    //         this.maxNode = null;
-    //         this.minNode = null;
-    //     }
-    // }
 
     public boolean isValidBST(TreeNode root) {
-        return helper(root).isValidBST;
+        return dfs(root).isValidBST;
     }
 
-    private auxiliary helper(TreeNode root) {
-        // 初始化 aux 需要把 minVal 和 maxVal 的值反过来设最大最小值，因为需要比较 minVal 的时候肯定是在右边，这时候需要满足 BST
-        // 就必须 minVal > root.val, 反之亦然
-        // 注意 Long 防止 Integer 范围太小
-        auxiliary aux = new auxiliary(true, Long.MAX_VALUE, Long.MIN_VALUE);
+    private AuxType dfs(TreeNode root) {
         if (root == null) {
-            return aux;
+            // 初始化 aux 需要把 minVal 和 maxVal 的值反过来设最大最小值，因为需要比较 minVal 的时候肯定是在右边，这时候需要满足 BST
+            // 就必须 minVal > root.val, 反之亦然
+            // 注意 Long 防止 Integer 范围太小
+            return new AuxType(Long.MAX_VALUE, Long.MIN_VALUE, true);
         }
 
-        auxiliary left = helper(root.left);
-        auxiliary right = helper(root.right);
+        AuxType left = dfs(root.left);
+        AuxType right = dfs(root.right);
 
-        if (left.isValidBST == false || right.isValidBST == false) {
-            aux.isValidBST = false;
-        } else {
-            // 以下这段需要注意非空节点但是有子节点为空的情况，如叶子节点，只有左子节点，只有右子节点
-            if (left.maxVal < root.val && root.val < right.minVal) {
-                aux.maxVal = right.maxVal;
-                aux.minVal = left.minVal;
-                if (root.left == null) {
-                    aux.minVal = root.val;
-                }
-                if (root.right == null) {
-                    aux.maxVal = root.val;
-                }
-                // 也可以写的简短一点
-                // aux.minVal = root.left == null ? root.val : left.minVal;
-                // aux.maxVal = root.right == null ? root.val : right.maxVal;
-            } else {
-                aux.isValidBST = false;
-            }
+        long minVal = root.left == null ? root.val : left.minVal;
+        long maxVal = root.right == null ? root.val : right.maxVal;
+        AuxType aux = new AuxType(minVal, maxVal, false);
+
+        if (root.val > left.maxVal && root.val < right.minVal && left.isValidBST && right.isValidBST) {
+            aux.isValidBST = true;
         }
+
         return aux;
     }
 }
 
+// 严格按照题目写定义：
+// The left subtree of a node contains only nodes with keys less than the node's
+// key.
+// The right subtree of a node contains only nodes with keys greater than the
+// node's key.
+// Both the left and right subtrees must also be binary search trees.
+// 保证对于左子树，节点值必须小于根节点；对于右子树，节点值必须大于根节点
 class Solution {
-    // 分治法2，O(n)
+    // recommend, DAC，O(n)
     public boolean isValidBST(TreeNode root) {
-        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+        return dfs(root, Long.MIN_VALUE, Long.MAX_VALUE);
     }
 
-    public boolean isValidBST(TreeNode root, long minVal, long maxVal) {
-        if (root == null)
+    public boolean dfs(TreeNode root, long minVal, long maxVal) {
+        if (root == null) {
             return true;
-        if (root.val >= maxVal || root.val <= minVal)
+        }
+
+        if (root.val >= maxVal || root.val <= minVal) {
             return false;
-        // 保证对于左子树，节点值必须小于根节点；对于右子树，节点值必须大于根节点
-        // 其实这是严格按照题目写定义：
-        // The left subtree of a node contains only nodes with keys less than the node's
-        // key.
-        // The right subtree of a node contains only nodes with keys greater than the
-        // node's key.
-        // Both the left and right subtrees must also be binary search trees.
-        // 保证对于左子树，节点值必须小于根节点；对于右子树，节点值必须大于根节点
-        // 通过多态传递最大最小值参数
-        return isValidBST(root.left, minVal, root.val) && isValidBST(root.right, root.val, maxVal);
+        }
+            
+        return dfs(root.left, minVal, root.val) && dfs(root.right, root.val, maxVal);
     }
 }
 

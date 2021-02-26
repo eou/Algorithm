@@ -106,6 +106,7 @@ class Solution {
 
 class Solution {
     // 非递归版本，利用后序遍历特性：返回根节点时保证已经遍历完两课子树，所以可以比较子树的高度
+    // 所有按照后序遍历的顺序的遍历都可以用于非递归版本的类似问题
     public boolean isBalanced(TreeNode root) {
         if (root == null) {
             return true;
@@ -119,6 +120,7 @@ class Solution {
             TreeNode node = stack.pop();
             if ((node.left == null || (node.left != null && map.containsKey(node.left)))
                     && (node.right == null || (node.right != null && map.containsKey(node.right)))) {
+                // do sth.
                 int left = map.getOrDefault(node.left, 0);
                 int right = map.getOrDefault(node.right, 0);
                 if (Math.abs(left - right) > 1) {
@@ -133,6 +135,48 @@ class Solution {
                 } else {
                     stack.push(node.right);
                 }
+            }
+        }
+
+        return true;
+    }
+}
+
+class Solution {
+    // 非递归版本，利用后序遍历另一个版本，当然还有别的写法
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+
+        Map<TreeNode, Integer> map = new HashMap<>();
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode pre = null;
+        TreeNode node = root;
+
+        while (node != null || !stack.isEmpty()) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+
+            node = stack.peek();
+            if (node.right != null && pre != node.right) {
+                // pre != node.right 说明右子树尚未访问
+                node = node.right;
+            } else {
+                // 右子树已经遍历过或者没有右子树
+                pre = node;
+                node = stack.pop();
+                // do sth.
+                int left = map.getOrDefault(node.left, 0);
+                int right = map.getOrDefault(node.right, 0);
+                if (Math.abs(left - right) > 1) {
+                    return false;
+                } else {
+                    map.put(node, Math.max(left, right) + 1);
+                }
+                node = null;
             }
         }
 

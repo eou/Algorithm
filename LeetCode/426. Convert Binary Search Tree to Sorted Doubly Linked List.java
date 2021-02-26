@@ -1,6 +1,37 @@
 // 426. Convert Binary Search Tree to Sorted Doubly Linked List
+// Traversal
 class Solution {
-    // 分治法
+    private Node pre;
+
+    public Node treeToDoublyList(Node root) {
+        if (root == null) {
+            return null;
+        }
+
+        Node head = new Node();
+        pre = head;
+        dfs(root);
+        pre.right = head.right;
+        head.right.left = pre;
+        return head.right;
+    }
+
+    private void dfs(Node root) {
+        if (root == null) {
+            return;
+        }
+
+        dfs(root.left);
+        pre.right = root;
+        root.left = pre;
+        pre = root;
+        dfs(root.right);
+
+    }
+}
+
+// DAC
+class Solution {    
     private class auxiliary {
         Node head, tail;
 
@@ -62,76 +93,36 @@ class Solution {
 }
 
 class Solution {
-    // 遍历法
-    Node pre;
-    public Node treeToDoublyList(Node root) {
-        if (root == null) {
-            return null;
-        }
-        // 新建一个独立节点，是在head之前的辅助节点
-        Node dummy = new Node(0, null, null);
-        // pre用dummy初始化，之后连上第一个节点
-        pre = dummy;
-        helper(root);
-        // 此时pre在最后一个节点上，dummy.right指向head节点，dummy.right也就是head指针
-        pre.right = dummy.right;
-        dummy.right.left = pre;
-        return dummy.right;
-    }
-
-    private void helper(Node cur) {
-        if (cur == null) {
-            return;
-        }
-        helper(cur.left);
-        pre.right = cur;
-        cur.left = pre;
-        pre = cur;
-        helper(cur.right);
-    }
-}
-
-class Solution {
-    // 非递归版本，中序遍历的非递归版本改编
+    // 非递归版本，中序遍历的非递归版本
     public Node treeToDoublyList(Node root) {
         if (root == null) {
             return null;
         }
 
-        Node head = null;
-        Node pre = null;
-        Node node = root;
-        // Stack类比较旧，Java推荐用ArrayDeque
-        // 使用栈时，用ArrayDeque的push和pop方法
-        // 使用队列时，使用ArrayDeque的add和remove方法
-        // 同时注意LinkedList类实现了List接口，是一个集合，可以根据索引来随机的访问集合中的元素；还实现了Deque接口，还是一个队列，可以被当成双端队列来使用
+        Node pre = null, cur = root, head = new Node();
+
         Deque<Node> stack = new ArrayDeque<>();
-
-        // 以下就是中序遍历非递归模板
-        while (node != null || !stack.isEmpty()) {
-            while (node != null) {
-                stack.push(node);
-                node = node.left;
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
             }
-            node = stack.pop();
 
-            // 进行相应操作
-            if (head == null) {
-                // 首节点确认
-                head = node;
-            }
+            cur = stack.pop();
             if (pre != null) {
-                pre.right = node;
-                node.left = pre;
+                pre.right = cur;
+                cur.left = pre;
+            } else {
+                head.right = cur;
             }
-            pre = node;
 
-            node = node.right;
+            pre = cur;
+            cur = cur.right;
         }
 
-        // 首尾闭合
-        head.left = pre;
-        pre.right = head;
-        return head;
+        pre.right = head.right;
+        head.right.left = pre;
+
+        return head.right;
     }
 }
