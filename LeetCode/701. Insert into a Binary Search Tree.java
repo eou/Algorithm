@@ -1,5 +1,49 @@
 // 701. Insert into a Binary Search Tree
 class Solution {
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        // Find the first greater node.
+        // The valid insert position could be in the upper tree (parent) or the lower tree (child).
+        // Easiest way is to insert it in the lower tree.
+        TreeNode target = new TreeNode(val);
+        if (root == null) {
+            return target;
+        }
+
+        TreeNode node = root, pre = null;
+        while (node != null) {
+            pre = node;
+            if (node.val < val) {
+                node = node.right;
+            } else {
+                node = node.left;
+            }
+        }
+
+        // Do sth. around this node.
+        node = pre;
+        if (node.val < val) {
+            // Insert the biggest node in the tree.
+            pre = node;
+            node = node.right;
+            if (node == null) {
+                pre.right = target;
+                return root;
+            }
+        }
+
+        // Insert as the most left child.
+        while (node != null) {
+            pre = node;
+            node = node.left;
+        }
+
+        pre.left = target;
+
+        return root;
+    }
+}
+
+class Solution {
     // 非递归插入节点
     public TreeNode insertIntoBST(TreeNode root, int val) {
         if (root == null) {

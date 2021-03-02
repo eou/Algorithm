@@ -5,10 +5,10 @@ class Solution {
     // 其实不需要这个辅助类，因为first不需要通过类返回
     // first 可以通过 root 辅助找到, last 不可以
     // 单独返回一个 last 只需通过单个 TreeNode 即可
-    private class auxiliary {
+    private class AuxType {
         TreeNode first, last;
 
-        public auxiliary(TreeNode first, TreeNode last) {
+        public AuxType(TreeNode first, TreeNode last) {
             this.first = first;
             this.last = last;
         }
@@ -18,29 +18,29 @@ class Solution {
         root = helper(root).first;
     }
 
-    public auxiliary helper(TreeNode root) {
+    public AuxType helper(TreeNode root) {
         if (root == null) {
-            return new auxiliary(null, null);
+            return new AuxType(null, null);
+        }
+        
+        AuxType left = helper(root.left);
+        AuxType right = helper(root.right);
+        TreeNode node = root;
+        if (left.first != null && right.first != null) {
+            left.last.right = right.first;
+            node.right = left.first;
+            node.left = null; // 注意要断开左子树
+            return new AuxType(node, right.last);
+        } else if (left.first != null) {
+            node.right = left.first;
+            node.left = null; // 注意要断开左子树
+            return new AuxType(node, left.last);
+        } else if (right.first != null) {
+            node.right = right.first;
+            // 此处node肯定无left子树
+            return new AuxType(node, right.last);
         } else {
-            auxiliary left = helper(root.left);
-            auxiliary right = helper(root.right);
-            TreeNode node = root;
-            if (left.first != null && right.first != null) {
-                left.last.right = right.first;
-                node.right = left.first;
-                node.left = null; // 注意要断开左子树
-                return new auxiliary(node, right.last);
-            } else if (left.first != null) {
-                node.right = left.first;
-                node.left = null; // 注意要断开左子树
-                return new auxiliary(node, left.last);
-            } else if (right.first != null) {
-                node.right = right.first;
-                // 此处node肯定无left子树
-                return new auxiliary(node, right.last);
-            } else {
-                return new auxiliary(node, node);
-            }
+            return new AuxType(node, node);
         }
     }
 }
@@ -49,36 +49,41 @@ class Solution {
 class Solution {
     // 上一种方法的简化版本，只需返回last节点
     public void flatten(TreeNode root) {
-        helper(root);
+        dfs(root);
     }
 
-    public TreeNode helper(TreeNode root) {
+    public TreeNode dfs(TreeNode root) {
         if (root == null) {
             return null;
-        } else {
-            TreeNode leftLast = helper(root.left);
-            TreeNode rightLast = helper(root.right);
+        }
 
-            if (leftLast != null && rightLast != null) {
-                leftLast.right = root.right;
-                root.right = root.left;
-                root.left = null;
-                return rightLast;
-            }
-            if (leftLast != null) {
-                root.right = root.left;
-                root.left = null;
-                return leftLast;
-            }
-            if (rightLast != null) {
-                return rightLast;
-            }
+        TreeNode leftLast = dfs(root.left);
+        TreeNode rightLast = dfs(root.right);
+
+        if (leftLast != null && rightLast != null) {
+            leftLast.right = root.right; // right head
+            root.right = root.left; // left head
+            root.left = null;
+            return rightLast;
+        } else if (leftLast != null) {
+            root.right = root.left; // left head
+            root.left = null;
+            return leftLast;
+        } else if (rightLast != null) {
+            // Unnecessary!
+            // root.right = root.right;  Duplicate code.
+            // root.left = null;  No left child here.
+            return rightLast;
+        } else {
             return root;
         }
     }
 }
 
-// Reverse preorder traversal
+// DAC vs traversal: 
+// DAC doesn't care the order of processing left or right child. They are independent.
+// Traversal does since it must follow some order to visit the subtree.
+// Reverse preorder traversal, use parameter
 class Solution {
     public void flatten(TreeNode root) {
         flatten(root, null);
@@ -100,7 +105,7 @@ class Solution {
     }
 }
 
-// Reverse preorder traversal
+// Reverse preorder traversal, use global variable
 class Solution {
     private TreeNode prev = null;
 

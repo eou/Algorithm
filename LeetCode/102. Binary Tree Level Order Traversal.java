@@ -2,9 +2,9 @@
 class Solution {
     // 层次遍历模板，也就是BFS
     public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> results = new ArrayList<>();
+        List<List<Integer>> res = new ArrayList<>();
         if (root == null) {
-            return results;
+            return res;
         }
 
         Queue<TreeNode> queue = new ArrayDeque<>();
@@ -24,22 +24,22 @@ class Solution {
                     queue.offer(node.right);
                 }
             }
-            results.add(level);
+            res.add(level);
         }
 
-        return results;
+        return res;
     }
 }
 
 class Solution {
-    // 层次遍历也可以用DFS
+    // DFS
     public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> results = new ArrayList<List<Integer>>();
-        helper(results, root, 0);
-        return results;
+        List<List<Integer>> res = new ArrayList<>();
+        dfs(res, root, 0);
+        return res;
     }
 
-    public void helper(List<List<Integer>> list, TreeNode root, int level) {
+    public void dfs(List<List<Integer>> list, TreeNode root, int level) {
         if (root == null) {
             return;
         }
@@ -48,12 +48,12 @@ class Solution {
             list.add(new ArrayList<Integer>());
         }
 
-        // 放在分治两个helper前面进行操作也行
+        // 放在分治两个dfs前面进行操作也行
         // 取当前属于层次的数组添加元素
         // list.get(level).add(root.val);
 
-        helper(list, root.left, level + 1);
-        helper(list, root.right, level + 1);
+        dfs(list, root.left, level + 1);
+        dfs(list, root.right, level + 1);
 
         // 取当前属于层次的数组添加元素
         list.get(level).add(root.val);

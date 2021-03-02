@@ -1,11 +1,11 @@
 // 450. Delete Node in a BST
 // 一般是用 Hibbard deletion algorithm
+// Hibbard deletion algorithm, Non-recursive
 class Solution {
-    // Hibbard deletion algorithm 非递归删除
     public TreeNode deleteNode(TreeNode root, int value) {
-        TreeNode ptr = root;
-        TreeNode parent = null;
+        TreeNode ptr = root, parent = null;
         boolean leftNode = false;
+        // Find the target
         while (ptr != null) {
             if (ptr.val == value) {
                 break;
@@ -22,8 +22,8 @@ class Solution {
             return root;
         }
 
+        // Remove root
         if (parent == null) {
-            // remove root
             if (ptr.left == null && ptr.right == null) {
                 return null;
             } else if (ptr.left == null) {
@@ -85,36 +85,11 @@ class Solution {
     }
 }
 
+// Hibbard deletion algorithm, recursive
 class Solution {
-    // Hibbard deletion algorithm 递归删除
-    private TreeNode deleteRootNode(TreeNode root) {
-        if (root == null) {
-            return null;
-        }
-        if (root.left == null) {
-            return root.right;
-        }
-        if (root.right == null) {
-            return root.left;
-        }
-        TreeNode next = root.right;
-        TreeNode pre = null;
-        while (next.left != null) {
-            pre = next;
-            next = next.left;
-        }
-        next.left = root.left;
-        if (root.right != next) {
-            pre.left = next.right;
-            next.right = root.right;
-        }
-        return next;
-    }
-
     public TreeNode deleteNode(TreeNode root, int key) {
-        TreeNode cur = root;
-        TreeNode pre = null;
-        // 寻找被删节点
+        TreeNode cur = root, pre = null;
+        // Find target node
         while (cur != null && cur.val != key) {
             pre = cur;
             if (key < cur.val) {
@@ -124,21 +99,54 @@ class Solution {
             }
         }
 
-        // 代表被删节点为根节点
+        // Delete target node
         if (pre == null) {
             return deleteRootNode(cur);
-        }
-        if (pre.left == cur) {
+        } else if (pre.left == cur) {
             pre.left = deleteRootNode(cur);
         } else {
             pre.right = deleteRootNode(cur);
         }
+
         return root;
+    }
+
+    private TreeNode deleteRootNode(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        if (root.left != null && root.right != null) {
+            // Move the left child to the right child's most left position
+            TreeNode ptr = root.right, pre = null;
+            while (ptr.left != null) {
+                pre = ptr;
+                ptr = ptr.left;
+            }
+            ptr.left = root.left;
+
+            // Do some balanced operations.
+            if (pre != null) {
+                pre.left = ptr.right;
+                ptr.right = root.right;
+            }
+            return ptr;
+
+            // We can return root.right; here without any balancing.
+        }
+
+        if (root.right != null) {
+            return root.right;
+        }
+
+        if (root.left != null) {
+            return root.left;
+        }
     }
 }
 
+// Recursion
 class Solution {
-    // 更加简洁的递归版本
     public TreeNode deleteNode(TreeNode root, int key) {
         if (root == null) {
             return null;
@@ -155,6 +163,7 @@ class Solution {
             } else if (root.right == null) {
                 return root.left;
             }
+
             TreeNode minNode = root.right;
             while (minNode.left != null) {
                 minNode = minNode.left;
@@ -164,5 +173,46 @@ class Solution {
             root.right = deleteNode(root.right, root.val);
         }
         return root;
+    }
+}
+
+// Recursion
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return root;
+        }
+
+        if (root.val == key) {
+            if (root.left != null && root.right != null) {
+                // Move the left child to its right child's most left child
+                TreeNode ptr = root.right, pre = null;
+                while (ptr != null) {
+                    pre = ptr;
+                    ptr = ptr.left;
+                }
+
+                pre.left = root.left;
+                return root.right;
+            } else if (root.left != null) {
+                return root.left;
+            } else {
+                return root.right;
+            }
+        } else if (root.left != null && root.left.val == key) {
+            TreeNode left = deleteNode(root.left, key);
+            root.left = left;
+            return root;
+        } else if (root.right != null && root.right.val == key) {
+            TreeNode right = deleteNode(root.right, key);
+            root.right = right;
+            return root;
+        } else if (root.val < key) {
+            deleteNode(root.right, key);
+            return root;
+        } else {
+            deleteNode(root.left, key);
+            return root;
+        }
     }
 }

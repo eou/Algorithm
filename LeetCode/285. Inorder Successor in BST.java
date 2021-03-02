@@ -31,11 +31,14 @@ class Solution {
     }
 }
 
+// BST definition
 class Solution {
-    // 利用BST左小右大的特性更简洁
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
-        TreeNode node = root;
-        TreeNode pre = null;
+        if (root == null || p == null) {
+            return null;
+        }
+
+        TreeNode node = root, pre = null;
         while (node != null) {
             if (node.val <= p.val) {
                 node = node.right;
@@ -44,6 +47,7 @@ class Solution {
                 node = node.left;
             }
         }
+
         return pre;
     }
 }

@@ -1,4 +1,50 @@
 // 1273. Delete Tree Nodes
+// The author have assumed that parent[i] < i holds for all 0 <= i < nodes,
+// but currently this assumption removed thus we have testcases for parent[i] >= i
+// It is a graph problem!!!
+// brute-force, tree DFS
+class Solution {
+    public int deleteTreeNodes(int nodes, int[] parent, int[] value) {
+        // Cant determine node depth based on its index
+        // Only DFS each node for each subtree
+        int[] subtreeSum = value.clone();
+        
+        // DFS each subtree's sum
+        for (int i = 0; i < nodes; i++) {
+            int ptr = parent[i];
+            while (ptr >= 0) {
+                subtreeSum[ptr] += value[i];
+                ptr = parent[ptr];
+            }
+        }
+        
+        boolean[] remove = new boolean[nodes];
+        for (int i = 0; i < nodes; i++) {
+            if (subtreeSum[i] == 0) {
+                remove[i] = true;
+            }
+            
+            // Ancestors
+            int ptr = parent[i];
+            while (ptr >= 0) {
+                if (subtreeSum[ptr] == 0) {
+                    remove[i] = true;
+                    break;
+                }
+                ptr = parent[ptr];
+            }
+        }
+        
+        int res = nodes;
+        for (int i = 0; i < nodes; i++) {
+            if (remove[i]) {
+                res--;
+            }
+        }
+        return res;
+    }
+}
+
 // brute-force
 class Solution {
     public List<Integer>[] graph; // 记录每个节点的子节点
@@ -83,6 +129,7 @@ class Solution {
     }
 }
 
+// These two solutions shall not pass since they assume parent[i] < i which is wrong currently
 class Solution {
     public int deleteTreeNodes(int nodes, int[] parent, int[] value) {
         for (int i = nodes - 1; i > 0; i--) {
