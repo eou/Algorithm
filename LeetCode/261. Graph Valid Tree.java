@@ -7,7 +7,7 @@ class Solution {
         }
         
         // nodes, edges => adjacent list 邻接表
-        Map<Integer, Set<Integer>> graph = initialGraph(n, edges);
+        Map<Integer, Set<Integer>> graph = buildGraph(n, edges);
         
         Deque<Integer> queue = new ArrayDeque<>();
         Set<Integer> visited = new HashSet<>();
@@ -30,7 +30,7 @@ class Solution {
         return visited.size() == n;
     }
     
-    private Map<Integer, Set<Integer>> initialGraph(int n, int[][] edges) {
+    private Map<Integer, Set<Integer>> buildGraph(int n, int[][] edges) {
         Map<Integer, Set<Integer>> graph = new HashMap<>();
         
         for(int i = 0; i < n; i++) {
@@ -43,6 +43,44 @@ class Solution {
         }
         
         return graph;
+    }
+}
+
+// DFS
+class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        // Set<Integer> is better here for graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        buildGraph(graph, edges);
+
+        Set<Integer> set = new HashSet<>();
+        set.add(0);
+        dfs(graph, set, 0);
+
+        // n vertices are connected with exactly n - 1 edges
+        return set.size() == n && edges.length == n - 1;
+    }
+
+    private void buildGraph(Map<Integer, List<Integer>> graph, int[][] edges) {
+        for (int i = 0; i < edges.length; i++) {
+            List<Integer> edge = graph.getOrDefault(edges[i][0], new ArrayList<>());
+            edge.add(edges[i][1]);
+            graph.put(edges[i][0], edge);
+
+            edge = graph.getOrDefault(edges[i][1], new ArrayList<>());
+            edge.add(edges[i][0]);
+            graph.put(edges[i][1], edge);
+        }
+    }
+
+    private void dfs(Map<Integer, List<Integer>> graph, Set<Integer> set, int vertex) {
+        for (Integer neighbor : graph.getOrDefault(vertex, new ArrayList<>())) {
+            if (set.contains(neighbor)) {
+                continue;
+            }
+            set.add(neighbor);
+            dfs(graph, set, neighbor);
+        }
     }
 }
 
@@ -100,7 +138,7 @@ class Solution {
 }
 
 class Solution {
-    // Union Find 版本
+    // Union Find Full Version
     class unionFind {
         private int[] id;
         private int[] size;

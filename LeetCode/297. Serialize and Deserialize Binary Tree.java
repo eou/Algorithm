@@ -1,4 +1,5 @@
 // 297. Serialize and Deserialize Binary Tree
+// BFS and DFS both work.
 public class Codec {
     // BFS版本
     public String serialize(TreeNode root) {
@@ -6,10 +7,11 @@ public class Codec {
             return "[]";
         }
 
-        List<TreeNode> queue = new ArrayList<TreeNode>();
+        // This is a list!!!
+        List<TreeNode> queue = new ArrayList<>();
         queue.add(root);
 
-        // 这就是层次遍历的while循环，写成了for循环
+        // i < queue.size() is correct here
         for (int i = 0; i < queue.size(); i++) {
             TreeNode node = queue.get(i);
             if (node == null) {
@@ -19,13 +21,17 @@ public class Codec {
             queue.add(node.right);
         }
 
-        // 去掉最后一层的空节点
+        // remove empty nodes
         while (queue.get(queue.size() - 1) == null) {
             queue.remove(queue.size() - 1);
         }
 
-        // 在Java中String是一种不可改变的对象，无法进行引用传递
-        // 对String对象的任何改变都不影响到原对象，相关的任何change操作都会生成新的对象；而StringBuilder不会
+        // In Java, String is a final and immutable class, which makes it the most
+        // special. It cannot be inherited, and once created, we can not alter the
+        // object.
+        // We create a new object each time with +=
+        // https://stackoverflow.com/questions/1635659
+        // https://stackoverflow.com/questions/22536411
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         sb.append(queue.get(0).val);
@@ -45,7 +51,10 @@ public class Codec {
         if (data.equals("[]")) {
             return null;
         }
+
         String[] vals = data.substring(1, data.length() - 1).split(",");
+
+        // List!!!  
         List<TreeNode> queue = new ArrayList<>();
 
         TreeNode root = new TreeNode(Integer.parseInt(vals[0]));
@@ -75,6 +84,92 @@ public class Codec {
 }
 
 public class Codec {
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        // BFS, -1000 <= Node.val <= 1000
+        String res = "[";
+        if (root == null) {
+            res += "]";
+            return res;
+        }
+
+        Deque<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size > 0) {
+                TreeNode node = queue.poll();
+                if (node.val <= 1000) {
+                    res += "" + node.val + ",";
+                    if (node.left != null) {
+                        queue.offer(node.left);
+                    } else {
+                        // replacement for null child
+                        queue.offer(new TreeNode(1001));
+                    }
+
+                    if (node.right != null) {
+                        queue.offer(node.right);
+                    } else {
+                        // replacement for null child
+                        queue.offer(new TreeNode(1001));
+                    }
+                } else {
+                    res += "null,";
+                    // this is leaf, not have to push its 'null' child into queue
+                }
+                size--;
+            }
+        }
+
+        return res.substring(0, res.length() - 1) + "]";
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data.equals("[]")) {
+            return null;
+        }
+
+        String[] nodes = data.substring(1, data.length() - 1).split(",");
+
+        Deque<TreeNode> queue = new ArrayDeque<>();
+        TreeNode root = new TreeNode(Integer.valueOf(nodes[0]));
+        queue.offer(root);
+
+        int ptr = 1;
+        while (ptr < nodes.length) {
+            // add left and right child for the nodes in queue
+            int size = queue.size();
+            while (size > 0) {
+                TreeNode node = queue.poll();
+                if (ptr < nodes.length && !nodes[ptr].equals("null")) {
+                    int val = Integer.valueOf(nodes[ptr]);
+                    TreeNode left = new TreeNode(val);
+                    node.left = left;
+                    queue.offer(left);
+                }
+
+                ptr++;
+
+                if (ptr < nodes.length && !nodes[ptr].equals("null")) {
+                    int val = Integer.valueOf(nodes[ptr]);
+                    TreeNode right = new TreeNode(val);
+                    node.right = right;
+                    queue.offer(right);
+                }
+
+                ptr++;
+
+                size--;
+            }
+        }
+
+        return root;
+    }
+}
+
+public class Codec {
     // LeetCode官方给的前序遍历DFS版本，还有详细分析优化
     // 实际上输入输出的字符串是不带 "[]" 的
     public String rserialize(TreeNode root, String str) {
@@ -98,8 +193,8 @@ public class Codec {
             return null;
         }
 
-        // valueOf内部就用了parseInt
-        // 区别在于parseInt直接返回原始int类型数据；而valueOf又包装了下，返回Integer类型
+        // valueOf 内部就用了 parseInt
+        // 区别在于 parseInt 直接返回原始 int 类型数据；而 valueOf 又包装了下，返回 Integer 类型
         TreeNode root = new TreeNode(Integer.valueOf(l.get(0)));
         l.remove(0);
         root.left = rdeserialize(l);

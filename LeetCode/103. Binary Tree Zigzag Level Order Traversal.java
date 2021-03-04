@@ -1,5 +1,44 @@
 // 103. Binary Tree Zigzag Level Order Traversal
-// 此题与102和107把层次遍历的各种顺序全考察了
+// 此题与 102 和 107 把层次遍历的各种顺序全考察了
+class Solution {
+    // BFS
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        
+        if (root == null) {
+            return res;
+        }
+        
+        Deque<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        boolean isReverse = false;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> list = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (isReverse) {
+                    list.add(0, node.val);
+                } else {
+                    list.add(node.val);
+                }
+                
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+            isReverse = !isReverse;
+            res.add(list);
+        }
+        
+        return res;
+    }
+}
+
 class Solution {
     // 用栈解决，一开始以为一个栈就可以，后面就误入歧途，其实还是用队列更简洁
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
@@ -43,43 +82,6 @@ class Solution {
             }
             dir = !dir;
             results.add(level);
-        }
-
-        return results;
-    }
-}
-
-class Solution {
-    // 用队列解决，改一下BFS的层次遍历即可
-    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-        List<List<Integer>> results = new ArrayList<>();
-        if (root == null) {
-            return results;
-        }
-        Deque<TreeNode> queue = new ArrayDeque<>();
-        queue.offer(root);
-        boolean zigzag = false;
-
-        while (!queue.isEmpty()) {
-            List<Integer> level = new ArrayList<>();
-            int size = queue.size();
-            for (int i = 0; i < size; i++) {
-                TreeNode node = queue.poll();
-                // 每一层数组正序添加和反序添加轮流即可
-                if (zigzag) {
-                    level.add(0, node.val);
-                } else {
-                    level.add(node.val);
-                }
-                if (node.left != null) {
-                    queue.add(node.left);
-                }
-                if (node.right != null) {
-                    queue.add(node.right);
-                }
-            }
-            results.add(level);
-            zigzag = !zigzag;
         }
 
         return results;
