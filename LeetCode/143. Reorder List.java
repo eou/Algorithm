@@ -65,3 +65,24 @@ class Solution {
         }
     }
 }
+
+// Recursion
+class Solution {
+    public void reorderList(ListNode head) {
+        if (head == null || head.next == null || head.next.next == null) {
+            return;
+        }
+
+        ListNode tail = head, pre = head;
+        while (tail.next != null) {
+            pre = tail;
+            tail = tail.next;
+        }
+
+        ListNode nextHead = head.next;
+        pre.next = null;
+        head.next = tail;
+        reorderList(nextHead);
+        tail.next = nextHead;
+    }
+}

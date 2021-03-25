@@ -1,84 +1,91 @@
 // 133. Clone Graph
+// BFS, faster than DFS
+// 时间复杂度为 O(V + E)，空间复杂度为 O(V)
 class Solution {
-    // 时间复杂度为 O(V + E)，空间复杂度为 O(V)
-    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
-        if(node == null) {
+    public Node cloneGraph(Node node) {
+        if (node == null) {
             return node;
         }
 
-        // one to one mapping
-        Map<UndirectedGraphNode, UndirectedGraphNode> map = new HashMap<>();
-        List<UndirectedGraphNode> nodes = new ArrayList<>();
-
-        nodes.add(node);
-        map.put(node, new UndirectedGraphNode(node.label));
-
-        // BFS all nodes
-        for(int i = 0; i < nodes.size(); i++) {
-            UndirectedGraphNode head = nodes.get(i);
-            for(int j = 0; j < head.neighbors.size(); j++) {
-                UndirectedGraphNode neighbor = head.neighbors.get(j);
-                if(!map.containsKey(neighbor)) {
-                    map.put(neighbor, new UndirectedGraphNode(neighbor.label));
-                    nodes.add(neighbor);
-                }
-            }
-        }
-
-        for(int i = 0; i < nodes.size(); i++) {
-            UndirectedGraphNode newNode = map.get(nodes.get(i));
-            for(int j = 0; j < nodes.get(i).neighbors.size(); j++) {
-                newNode.neighbors.add(map.get(nodes.get(i).neighbors.get(j)));
-            }
-        }
-
-        return map.get(node);
-    }
-}
-
-class Solution {
-    // BFS简洁版本
-    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
-        if (node == null) {
-            return null;
-        }
-        HashMap<UndirectedGraphNode, UndirectedGraphNode> map = new HashMap<>();
-        Deque<UndirectedGraphNode> queue = new ArrayDeque<>();
-
-        map.put(node, new UndirectedGraphNode(node.label));
+        Map<Node, Node> map = new HashMap<>();
+        Deque<Node> queue = new ArrayDeque<>();
         queue.offer(node);
         while (!queue.isEmpty()) {
-            UndirectedGraphNode head = queue.poll();
-            for (UndirectedGraphNode neighbor : head.neighbors) {
+            Node cur = queue.poll();
+            // copy nodes
+            Node copyNode = map.getOrDefault(cur, new Node(cur.val));
+            if (!map.containsKey(cur)) {
+                map.put(cur, copyNode);
+            }
+            for (Node neighbor : cur.neighbors) {
+                // copy neighbors
+                Node copyNeighbor = map.getOrDefault(neighbor, new Node(neighbor.val));
                 if (!map.containsKey(neighbor)) {
-                    map.put(neighbor, new UndirectedGraphNode(neighbor.label));
+                    // first time met this neighbor
+                    map.put(neighbor, copyNeighbor);
                     queue.offer(neighbor);
                 }
-                // clone edges
-                map.get(head).neighbors.add(map.get(neighbor));
+                // copy edges
+                if (!copyNode.neighbors.contains(copyNeighbor)) {
+                    copyNode.neighbors.add(copyNeighbor);
+                }
             }
         }
+
         return map.get(node);
     }
 }
 
+// DFS
 class Solution {
-    // DFS版本
-    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
-        HashMap<Integer,UndirectedGraphNode> map = new HashMap<Integer,UndirectedGraphNode>();
-        return dfs(node,map);
-    }
-    private UndirectedGraphNode dfs(UndirectedGraphNode node, HashMap<Integer,UndirectedGraphNode> map) {
-        if (node == null) return null;
-        if (map.containsKey(node.label)) {
-            return map.get(node.label);
-        } else {
-            UndirectedGraphNode clone = new UndirectedGraphNode(node.label);
-            map.put(node.label,clone);
-            for (int i = 0; i < node.neighbors.size(); i++) {
-                clone.neighbors.add(dfs(node.neighbors.get(i), map));
-            }
-            return clone;
+    private Map<Node, Node> map = new HashMap<>();
+
+    public Node cloneGraph(Node node) {
+        if (node == null) {
+            return node;
         }
+
+        Node copyNode = map.getOrDefault(node, new Node(node.val));
+        map.put(node, copyNode);
+        
+        for (Node neighbor : node.neighbors) {
+            Node copyNeighbor = map.getOrDefault(neighbor, new Node(neighbor.val));
+            if (copyNode.neighbors.contains(copyNeighbor)) {
+                continue;
+            }
+
+            copyNode.neighbors.add(copyNeighbor);
+            map.put(neighbor, copyNeighbor);
+            cloneGraph(neighbor);
+        }
+        
+        return copyNode;
+    }
+}
+
+// DFS
+class Solution {
+    public Node cloneGraph(Node node) {
+        return dfs(node, new HashMap<>());
+    }
+
+    // Deep copy each node
+    private Node dfs(Node node, Map<Node, Node> map) {
+        if (node == null) {
+            return node;
+        }
+
+        if (map.containsKey(node)) {
+            return map.get(node);
+        }
+
+        Node copyNode = new Node(node.val);
+        map.put(node, copyNode);
+
+        for (Node neighbor : node.neighbors) {
+            copyNode.neighbors.add(dfs(neighbor, map));
+        }
+
+        return copyNode;
     }
 }

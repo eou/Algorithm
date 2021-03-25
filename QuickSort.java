@@ -1,3 +1,7 @@
+// Time complexity: O(nlogn) ~ O(n^2)
+// Worst: T(n) = T(n - 1) + T(0) + O(n) = T(n - 1) + O(n) => O(n^2)
+// Best: T(n) = 2T(n / 2) + O(n) => O(nlogn)
+// Space complexity: O(logn), recursion function call
 class QuickSort {
     public int partition(int arr[], int low, int high) { 
         int pivot = arr[high];  

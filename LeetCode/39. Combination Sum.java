@@ -37,11 +37,12 @@ class Solution {
     // 如果加一个input数组含有重复数字的条件
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>> results = new ArrayList<>();
-        Arrays.sort(candidates);
+        
         if (candidates == null || candidates.length == 0) {
             return results;
         }
 
+        Arrays.sort(candidates);
         List<Integer> subset = new ArrayList<>();
         int sum = 0;
         helper(candidates, target, results, subset, 0, sum);

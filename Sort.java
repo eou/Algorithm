@@ -27,7 +27,7 @@ class Sort {
 
         for (int i = 0; i < arr.length; i++) {
             int mini = i;
-            for (int j = i; j < arr.length; j++) {
+            for (int j = i; j <  rr.length; j++) {
                 if (arr[j] < arr[mini]) {
                     mini = j;
                 }

@@ -1,5 +1,5 @@
 // 302. Smallest Rectangle Enclosing Black Pixels
-// 600. Smallest Rectangle Enclosing Black Pixels
+// Lintcode 600. Smallest Rectangle Enclosing Black Pixels
 // brute-force, O(n^2)
 class Solution {
     public int minArea(char[][] image, int x, int y) {
@@ -31,16 +31,16 @@ class Solution {
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
             // check if column mid has black pixels
-            if (containsBlackPixels(image, mid, false)) {
+            if (columnContainsBlackPixels(image, mid)) {
                 end = mid;
             } else {
                 start = mid;
             }
         }
-        if (containsBlackPixels(image, start, false)) {
-            left = Math.min(left, start);
+        if (columnContainsBlackPixels(image, start)) {
+            left = start;
         } else {
-            left = Math.min(left, end);
+            left = end;
         }
 
         // the right most, O(mlogn)
@@ -49,16 +49,16 @@ class Solution {
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
             // check if column mid has black pixels
-            if (containsBlackPixels(image, mid, false)) {
+            if (columnContainsBlackPixels(image, mid)) {
                 start = mid;
             } else {
                 end = mid;
             }
         }
-        if (containsBlackPixels(image, end, false)) {
-            right = Math.max(right, end);
+        if (columnContainsBlackPixels(image, end)) {
+            right = end;
         } else {
-            right = Math.max(right, start);
+            right = start;
         }
 
         // the top most, O(nlogm)
@@ -67,16 +67,16 @@ class Solution {
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
             // check if row mid has black pixels
-            if (containsBlackPixels(image, mid, true)) {
+            if (rowContainsBlackPixels(image, mid)) {
                 end = mid;
             } else {
                 start = mid;
             }
         }
-        if (containsBlackPixels(image, start, true)) {
-            top = Math.min(top, start);
+        if (rowContainsBlackPixels(image, start)) {
+            top = start;
         } else {
-            top = Math.min(top, end);
+            top = end;
         }
 
         // the bottom most, O(nlogm)
@@ -85,33 +85,35 @@ class Solution {
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
             // check if row mid has black pixels
-            if (containsBlackPixels(image, mid, true)) {
+            if (rowContainsBlackPixels(image, mid)) {
                 start = mid;
             } else {
                 end = mid;
             }
         }
-        if (containsBlackPixels(image, end, true)) {
-            bottom = Math.max(bottom, end);
+        if (rowContainsBlackPixels(image, end)) {
+            bottom = end;
         } else {
-            bottom = Math.max(bottom, start);
+            bottom = start;
         }
 
         return (bottom - top + 1) * (right - left + 1);
     }
 
-    private boolean containsBlackPixels(char[][] image, int index, boolean checkRow) {
-        if (checkRow) {
-            for (int i = 0; i < image[0].length; i++) {
-                if (image[index][i] == '1') {
-                    return true;
-                }
+    private boolean columnContainsBlackPixels(char[][] image, int index) {
+        for (int i = 0; i < image.length; i++) {
+            if (image[i][index] == '1') {
+                return true;
             }
-        } else {
-            for (int i = 0; i < image.length; i++) {
-                if (image[i][index] == '1') {
-                    return true;
-                }
+        }
+
+        return false;
+    }
+
+    private boolean rowContainsBlackPixels(char[][] image, int index) {
+        for (int i = 0; i < image[0].length; i++) {
+            if (image[index][i] == '1') {
+                return true;
             }
         }
 

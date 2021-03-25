@@ -1,5 +1,5 @@
 // 51. N-Queens
-// 典型的DFS回溯
+// DFS backtrack
 class Solution {
     public List<List<String>> solveNQueens(int n) {
         boolean[] row = new boolean[n];
@@ -8,16 +8,16 @@ class Solution {
         boolean[] diag = new boolean[2 * n];
         boolean[] back = new boolean[2 * n];
         
-        List<List<String>> results = new ArrayList<>();
-        List<Integer> result = new ArrayList<>();
-        helper(n, 0, row, col, diag, back, result, results);
-        return results;
+        List<List<String>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        helper(n, 0, row, col, diag, back, list, res);
+        return res;
     }
     
     // 判定位置的四个数组可以省略
-    private void helper(int n, int startRow, boolean[] row, boolean[] col, boolean[] diag, boolean[] back, List<Integer> result, List<List<String>> results) {
+    private void helper(int n, int startRow, boolean[] row, boolean[] col, boolean[] diag, boolean[] back, List<Integer> list, List<List<String>> res) {
         if (startRow == n) {
-            results.add(draw(result));
+            res.add(draw(list));
             return;
         }
         
@@ -27,34 +27,33 @@ class Solution {
                 col[i] = true;
                 diag[startRow - i + n] = true;
                 back[startRow + i] = true;
-                result.add(i);
-                helper(n, startRow + 1, row, col, diag, back, result, results);
+                list.add(i);
+
+                helper(n, startRow + 1, row, col, diag, back, list, res);
+
                 row[startRow] = false;
                 col[i] = false;
                 diag[startRow - i + n] = false;
                 back[startRow + i] = false;
-                result.remove(result.size() - 1);
+                list.remove(list.size() - 1);
             }
         }
     }
     
     private boolean isValidPos(int n, int x, int y, boolean[] row, boolean[] col, boolean[] diag, boolean[] back) {
-        if (!row[x] && !col[y] && !diag[x - y + n] && !back[x + y]) {
-            return true;
-        }
-        return false;
+        return !row[x] && !col[y] && !diag[x - y + n] && !back[x + y];
     }
     
-    private List<String> draw(List<Integer> result) {
+    private List<String> draw(List<Integer> list) {
         List<String> chess = new ArrayList<>();
-        for (Integer n : result) {
+        for (Integer n : list) {
             // 应该要用StringBuilder比较好，然后用append和to.String()
             String s = "";
             for (int i = 0; i < n; ++i) {
                 s += ".";
             }
             s += "Q";
-            for (int i = n + 1; i < result.size(); ++i) {
+            for (int i = n + 1; i < list.size(); ++i) {
                 s += ".";
             }
             chess.add(s);

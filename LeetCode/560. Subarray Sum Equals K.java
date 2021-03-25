@@ -21,6 +21,7 @@ class Solution {
     }
 }
 
+// 类似 Two Sum
 class Solution {
     // 用 HashMap 达到 O(n) 的时间和空间复杂度
     // 根据 prefix sum array 原理，只要找到满足 sum[j] - sum[i] = k 的i和j即可
@@ -40,7 +41,7 @@ class Solution {
             // map.put(sum, map.containsKey(sum) ? map.get(sum) + 1 : 1);
             // Java 8标准新增方法getOrDefault，第一个参数是key, 第二个参数是找不到这个key后返回的默认值
             cnt += map.getOrDefault(sum - k, 0);
-            // 在最后更新 map，否则 [1],0 报错，自己不能减自己
+            // 在最后更新 map，否则 [x,xx,..], 0 报错，sum - k = sum, map 中 sum 的 value 已经变化
             map.put(sum, map.getOrDefault(sum, 0) + 1);
         }
         return cnt;

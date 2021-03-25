@@ -1,36 +1,25 @@
 // 77. Combinations
+// DFS
 class Solution {
     public List<List<Integer>> combine(int n, int k) {
-        List<List<Integer>> results = new ArrayList<>();
-        if (n < k) {
-            return results;
-        }
-        if (n == k) {
-            List<Integer> tmp = new ArrayList<>();
-            for (int i = 1; i <= n; ++i) {
-                tmp.add(i);
-            }
-            results.add(tmp);
-            return results;
+        List<List<Integer>> res = new ArrayList<>();
+        if (n == 0 || k == 0 || n < k) {
+            return res;
         }
 
-        List<Integer> combination = new ArrayList<>();
-        dfs(combination, k, 1, n, results);
-        return results;
+        dfs(res, n, k, 1, new ArrayList<>());
+        return res;
     }
-    
-    // 定义递归，参数有：每个数字组合，组合的大小，起点，结束，结果数组
-    private void dfs(List<Integer> combination, int size, int start, int end, List<List<Integer>> results) {
-        if (combination.size() == size) {
-            // 注意不能直接results.add(combination);
-            results.add(new ArrayList<>(combination));
-            return;
-        }
 
-        for (int i = start; i <= end; ++i) {
-            combination.add(i);
-            dfs(combination, size, i + 1, end, results);
-            combination.remove(combination.size() - 1);
+    private void dfs(List<List<Integer>> res, int n, int k, int start, List<Integer> list) {
+        // NO EXIT since start > n won't jump into the loop
+        for (int i = start; i <= n; i++) {
+            list.add(i);
+            if (list.size() == k) {
+                res.add(new ArrayList<>(list));
+            }
+            dfs(res, n, k, i + 1, list);
+            list.remove(list.size() - 1);
         }
     }
 }
@@ -49,7 +38,7 @@ class Solution {
             return result;
         }
 
-        // C(n, k) = C(n-1, k-1) + C(n-1, k)
+        //!!! C(n, k) = C(n-1, k-1) + C(n-1, k)
         result = combine(n - 1, k - 1);
         for (List<Integer> list : result) {
             list.add(n);

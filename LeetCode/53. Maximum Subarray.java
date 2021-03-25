@@ -46,10 +46,11 @@ class Solution {
 class Solution {
     // Kadane's algorithm
     public int maxSubArray(int[] nums) {
-        int dp[] = new int[nums.length];
+        int[] dp = new int[nums.length];
         dp[0] = nums[0];
         int max = dp[0];
 
+        // dp[i] means max sum of [0..i] with nums[i], not max sum of [0..i]
         for(int i = 1; i < nums.length; i++) {
             dp[i] = dp[i - 1] > 0 ? dp[i - 1] + nums[i] : nums[i];
             max = Math.max(max, dp[i]);
@@ -79,6 +80,8 @@ class Solution {
         int mid = (left + right) / 2;
         int leftSum = helper(nums, left, mid);
         int rightSum = helper(nums, mid + 1, right);
+
+        // calculate the max sum with nums[mid]
         int leftMax = nums[mid];
         int rightMax = nums[mid + 1];
         int tmp = 0;

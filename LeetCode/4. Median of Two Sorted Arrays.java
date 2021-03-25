@@ -92,6 +92,7 @@ class Solution {
         int keyB = start2 + mid >= nums2.length ? Integer.MAX_VALUE : nums2[start2 + mid];
 
         // 因为要丢弃k / 2个元素，注意kNew != k / 2
+        // drop smaller part
         int kNew = k - k / 2;
         if (keyA < keyB) {
             return findKth(nums1, start1 + k / 2, nums2, start2, kNew);
@@ -99,105 +100,16 @@ class Solution {
             return findKth(nums1, start1, nums2, start2 + k / 2, kNew);
         }
         // !!! 这里的 keyA == keyB 时不能直接返回key，因为 keyA 和 keyB 比较的时候并不一定已经排除了前 k - 2 个数字
+        // !!! 因为 mid = k / 2 - 1, 每次筛选的可能没有刚好 k / 2 个数字而只是 k / 2 - 1 等情况！
     }
 }
 
-// https://medium.com/@hazemu/finding-the-median-of-2-sorted-arrays-in-logarithmic-time-1d3f2ecbeb46
-public class Solution {
-    public double findMedianSortedArrays(int[] A, int[] B) {
-        if (A == null || B == null) {
-            throw new NullPointerException();
-        }
-
-        int aLen = A.length;
-        int bLen = B.length;
-
-        // Make sure we always search the shorter array.
-        if (aLen > bLen) {
-            int[] C = A;
-            A = B;
-            B = C;
-            aLen = A.length;
-            bLen = B.length;
-        }
-
-        // The main advantage of this decision is that the median becomes the last
-        // element in this half. Note it is length not index (start from 0).
-        int leftHalfLen = (aLen + bLen + 1) / 2;
-
-        // Since A is guaranteed to be the shorter array,
-        // we know it can contribute 0 or all of its values.
-        int aMinCtbLft = 0;
-        int aMaxCtbLft = aLen;
-
-        while (aMinCtbLft <= aMaxCtbLft) {
-            int aCtbLft = aMinCtbLft + ((aMaxCtbLft - aMinCtbLft) / 2); // avoid overflow
-            int bCtbLft = leftHalfLen - aCtbLft;
-
-            // Make sure aCtbLft is greater than 0 (because A can contribute 0 values;
-            // remember that A is either shorter or of the same length as B). This also
-            // implies bCtbLft will be less than B.Length since it won't be possible
-            // for B to contribute all of its values if A has contributed at least 1
-            // value.
-            // 0 .. <= .. A.length
-            if (aCtbLft > 0 && A[aCtbLft - 1] > B[bCtbLft]) {
-                // Decrease A's contribution size;
-                // A[aCtbLft - 1] lies in the right half.
-                aMaxCtbLft = aCtbLft - 1;
-            }
-
-            // Make sure aCtbLft is less than A.Length since A can actually contribute
-            // all of its values (remember that A is either shorter or of the same
-            // length as B). This also implies bCtbLft > 0 because B has to contribute
-            // at least 1 value if aCtbLft < A.Length.
-            // 0 .. => .. A.length
-            else if (aCtbLft < aLen && B[bCtbLft - 1] > A[aCtbLft]) {
-                // Decrease B's contribution size, i.e. increase A's contribution size;
-                // B[bCtbLft - 1] lies in the right half.
-                aMinCtbLft = aCtbLft + 1;
-            } else {
-                // Neither A[aCtbLft - 1] nor B[bCtbLft - 1] lie beyond the left half. We found
-                // the right aCtbLft.
-                // We don't know how they compare to each other yet though.
-
-                // If aLen + bLen is odd, the median is the greater of them.
-                int leftHalfEnd = (aCtbLft == 0) // A not contributing?
-                        ? B[bCtbLft - 1] // aCtbLft = 0 implies bCtbLft > 0
-                        : (bCtbLft == 0) // B is not contributing?
-                                ? A[aCtbLft - 1] // bCtbLft = 0 implies aCtbLft > 0
-                                : Math.max(A[aCtbLft - 1], B[bCtbLft - 1]);
-
-                if (IsOdd(aLen + bLen)) {
-                    return leftHalfEnd;
-                }
-
-                // aLen + bLen is even. To compute the median, we need to find
-                // the first element in the right half, which will be the smaller
-                // of A[aCtbLft] and B[bCtbLft]. Remember that aCtbLft could be equal
-                // to A.Length, bCtbLft could be equal to B.Length (if all the values
-                // of A or B are in the left half).
-                //
-                int rightHalfStart = (aCtbLft == aLen) // A is all in the left half?
-                        ? B[bCtbLft] // aCtbLft = aLen implies bCtbLft < B.Length
-                        : (bCtbLft == bLen) // B is all in the left half?
-                                ? A[aCtbLft] // bCtbLft = B.Length implies aCtbLft < A.Length
-                                : Math.min(A[aCtbLft], B[bCtbLft]);
-                return (leftHalfEnd + rightHalfStart) / 2.0;
-            }
-        }
-        return -1;
-    }
-
-    // The least significant bit of any odd number is 1.
-    private boolean IsOdd(int x) {
-        return (x & 1) == 1;
-    }
-}
-
+//  Might faster, O(log(min(n, m)))
 class Solution {
     public double findMedianSortedArrays(int[] A, int[] B) {
         int m = A.length;
         int n = B.length;
+        // A.length should be shorter than B.length
         if (m > n) {
             int[] temp = A;
             A = B;
@@ -206,16 +118,25 @@ class Solution {
             m = n;
             n = tmp;
         }
+
         int left = 0, right = m;
         int halfLen = (m + n + 1) / 2;
         while (left <= right) {
             int i = (left + right) / 2;
             int j = halfLen - i;
+            // A [..., i - 1, i, ...]
+            // B [..., j - 1, j, ...]
             if (i < right && B[j - 1] > A[i]) {
-                left = i + 1; // i is too small
+                // drop left side of A array
+                left = i + 1;
             } else if (i > left && A[i - 1] > B[j]) {
-                right = i - 1; // i is too big
-            } else { // i is perfect
+                // drop right side of A array
+                right = i - 1;
+            } else {
+                // we can't reduce the size of array anymore => found the result
+                // B[j - 1] <= A[i] and A[i - 1] <= B[j]
+                // maxLeft should be in A[i - 1] and B[j - 1]
+                // minRight should be in A[i] and B[j]
                 int maxLeft = 0;
                 if (i == 0) {
                     maxLeft = B[j - 1];
@@ -235,7 +156,7 @@ class Solution {
                 } else if (j == n) {
                     minRight = A[i];
                 } else {
-                    minRight = Math.min(B[j], A[i]);
+                    minRight = Math.min(A[i], B[j]);
                 }
 
                 return (maxLeft + minRight) / 2.0;

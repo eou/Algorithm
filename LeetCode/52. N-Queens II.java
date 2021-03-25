@@ -1,39 +1,39 @@
 // 52. N-Queens II
+// time complexity O(N!)
 class Solution {
-    public int res = 0;
+    private int res = 0;
+
     public int totalNQueens(int n) {
+        if (n <= 0) {
+            return res;
+        }
+
         boolean[] row = new boolean[n];
         boolean[] col = new boolean[n];
-        boolean[] diag = new boolean[2 * n];
-        boolean[] antiDiag = new boolean[2 * n];
-        
-        dfs(row, col, diag, antiDiag, 0, n);
+        boolean[] diag = new boolean[n * 2];
+        boolean[] subd = new boolean[n * 2];
+
+        dfs(n, row, col, diag, subd, 0);
         return res;
     }
-    
-    // step means put a queen on row step
-    public void dfs(boolean[] row, boolean[] col, boolean[] diag, boolean[] antiDiag, int step, int size) {
-        if (step == size) {
+
+    private void dfs(int n, boolean[] row, boolean[] col, boolean[] diag, boolean[] subd, int cur) {
+        if (cur == n) {
             res++;
             return;
         }
-        
-        for (int i = 0; i < size; i++) {
-            // test all columns, i is col, step is row
-            if (!col[i] && 
-                !diag[(step - i + diag.length) % diag.length] && 
-                !antiDiag[(step + i) % antiDiag.length]) {
-                // can place a queen
-                row[step] = true;
+
+        for (int i = 0; i < n; i++) {
+            if (!row[cur] && !col[i] && !diag[cur - i + n] && !subd[cur + i]) {
+                row[cur] = true;
                 col[i] = true;
-                diag[(step - i +  diag.length) % diag.length] = true;
-                antiDiag[(step + i) % antiDiag.length] = true;
-                dfs(row, col, diag, antiDiag, step + 1, size);
-                // backtracking
-                row[step] = false;
+                diag[cur - i + n] = true;
+                subd[cur + i] = true;
+                dfs(n, row, col, diag, subd, cur + 1);
+                row[cur] = false;
                 col[i] = false;
-                diag[(step - i +  diag.length) % diag.length] = false;
-                antiDiag[(step + i) % antiDiag.length] = false;
+                diag[cur - i + n] = false;
+                subd[cur + i] = false;
             }
         }
     }

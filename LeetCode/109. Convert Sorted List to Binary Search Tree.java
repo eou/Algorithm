@@ -1,6 +1,6 @@
 // 109. Convert Sorted List to Binary Search Tree
+// 重点是将每段链表分为三部分而不是两部分，根节点和左右子树，注意断链
 class Solution {
-    // 重点是将每段链表分为三部分而不是两部分，根节点和左右子树，注意断链
     public TreeNode sortedListToBST(ListNode head) {
         if (head == null) {
             return null;
@@ -10,31 +10,39 @@ class Solution {
             return new TreeNode(head.val);
         }
 
-        ListNode pre = null, slow = head, fast = head.next;
-        while (fast != null) {
-            pre = slow;
-            slow = slow.next;
-            fast = fast.next;
-            if (fast != null) {
-                fast = fast.next;
-            }
+        ListNode mid = findMid(head);
+        TreeNode root = new TreeNode(mid.val);
+
+        ListNode ptr = head;
+        while (ptr.next != mid) {
+            ptr = ptr.next;
         }
+        // split first half;
+        ptr.next = null;
 
-        pre.next = null; // break the end node's link
-        pre = slow;
-        slow = slow.next;
-        pre.next = null; // isolate the mid node
+        // split second half;
+        ptr = mid.next;
+        mid.next = null;
 
-        TreeNode root = new TreeNode(pre.val), left = null, right = null;
-
-        left = sortedListToBST(head);
-        if (slow != null) {
-            right = sortedListToBST(slow);
-        }
+        TreeNode left = sortedListToBST(head);
+        TreeNode right = sortedListToBST(ptr);
         root.left = left;
         root.right = right;
-
         return root;
+    }
+
+    private ListNode findMid(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+
+        ListNode fast = head, slow = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+
+        return slow;
     }
 }
 

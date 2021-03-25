@@ -3,24 +3,24 @@
 class Solution {
     // 换一个 visited 数组记录是否访问过
     public List<List<Integer>> permuteUnique(int[] nums) {
-        List<List<Integer>> results = new ArrayList<>();
+        List<List<Integer>> res = new ArrayList<>();
         Arrays.sort(nums);
         if (nums == null || nums.length == 0) {
-            return results;
+            return res;
         }
 
         List<Integer> permutation = new ArrayList<Integer>();
         // 用 visited 判断当前数字是否已经在 permutation 中
-        helper(nums, permutation, new boolean[nums.length], results);
+        dfs(nums, permutation, new boolean[nums.length], res);
 
-        return results;
+        return res;
     }
 
     // 1. 递归的定义
-    public void helper(int[] nums, List<Integer> permutation, boolean[] visited, List<List<Integer>> results) {
+    public void dfs(int[] nums, List<Integer> permutation, boolean[] visited, List<List<Integer>> res) {
         // 3. 递归的出口
         if (permutation.size() == nums.length) {
-            results.add(new ArrayList<Integer>(permutation));
+            res.add(new ArrayList<>(permutation));
             return;
         }
 
@@ -34,12 +34,50 @@ class Solution {
                 permutation.add(nums[i]);
                 visited[i] = true;
 
-                helper(nums, permutation, visited, results);
+                dfs(nums, permutation, visited, res);
 
                 visited[i] = false;
                 permutation.remove(permutation.size() - 1);
             }
 
+        }
+    }
+}
+
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        
+        Arrays.sort(nums);
+        dfs(res, nums, new ArrayList<>(), 0, new boolean[nums.length]);
+        return res;
+    }
+
+    private void dfs(List<List<Integer>> res, int[] nums, List<Integer> list, int start, boolean[] visited) {
+        if (list.size() == nums.length) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        
+        // Only used in this level
+        Set<Integer> visitedSet = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            int j = (i + start) % nums.length;
+            // cant add same number
+            if (!visited[j]) {
+                // cant add duplicate number
+                if (!visitedSet.contains(nums[j])) {
+                    list.add(nums[j]);
+                    visited[j] = true;
+                    visitedSet.add(nums[j]);
+                    dfs(res, nums, list, j + 1, visited);
+                    list.remove(list.size() - 1);
+                    visited[j] = false;
+                }
+            }
         }
     }
 }
@@ -53,14 +91,14 @@ class Solution {
 
     public void dfs(List<Integer> cur, int[] nums, boolean[] used, Set<List<Integer>> res) {
         if (cur.size() == nums.length) {
-            res.add(cur);
+            res.add(new ArrayList<>(cur));
         }
 
         for (int i = 0; i < nums.length; i++) {
             if (!used[i]) {
                 used[i] = true;
                 cur.add(nums[i]);
-                dfs(new ArrayList<>(cur), nums, used, res); // if pass 'cur' but not a new list, we need to add a new list into res when exits
+                dfs(cur, nums, used, res);
                 cur.remove(cur.size() - 1);
                 used[i] = false;
             }

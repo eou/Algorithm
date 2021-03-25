@@ -37,8 +37,9 @@ class Solution {
         return 0;
     }
     
-    private ArrayList<String> nextWord(String word, Set<String> dict) {
-        ArrayList<String> nextWords = new ArrayList<String>();
+    // faster transform, using character
+    private List<String> transform(String word, Set<String> dict) {
+        List<String> nextWords = new ArrayList<>();
         for (char c = 'a'; c <= 'z'; c++) {
             for (int i = 0; i < word.length(); i++) {
                 if (c == word.charAt(i)) {
@@ -53,12 +54,48 @@ class Solution {
         }
         return nextWords;
     }
-    
+
     private String replace(String s, int index, char c) {
         // toCharArray()
         char[] word = s.toCharArray();
         word[index] = c;
         return new String(word);
+    }
+
+    // slower
+    private List<String> transform2(String word, Set<String> wordSet) {
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < word.length(); i++) {
+            for (int j = 0; j < 26; j++) {
+                String next = word.substring(0, i) + (char) (j + 'a') + word.substring(i + 1);
+                if (wordSet.contains(next)) {
+                    res.add(next);
+                }
+            }
+        }
+        return res;
+    }
+
+    // fastest, using stringbuilder
+    private List<String> transform(String cur, Set<String> dict) {
+        List<String> res = new ArrayList<>();
+        StringBuilder strBuilder = new StringBuilder(cur);
+
+        for (int i = 0; i < cur.length(); ++i) {
+            char old = strBuilder.charAt(i);
+            for (char c = 'a'; c <= 'z'; ++c) {
+                if (c != old) {
+                    strBuilder.setCharAt(i, c);
+                    if (dict.contains(strBuilder.toString())) {
+                        res.add(strBuilder.toString());
+                    }
+                }
+            }
+
+            strBuilder.setCharAt(i, old);
+        }
+
+        return res;
     }
 }
 
@@ -119,8 +156,11 @@ class Solution {
     }
 }
 
+// Bi-directional BFS, fastest
+// Assume the distance between source and target is k, and the branching factor is B (every vertex has on average B edges)
+// BFS will traverse 1 + B + B^2 + ... + B^k vertices.
+// Bi-directional BFS will traverse 2 + 2*B^2 + ... + 2*B^(k/2) = 2 * (1 + B^2 + ... + B^(k/2)) vertices.
 class Solution {
-    // 最快的版本，双向队列BFS
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         if (beginWord.equals(endWord)) {
             return 1;
@@ -131,21 +171,22 @@ class Solution {
             return 0;
         }
 
-        Queue<String> queA = new LinkedList<>();
+        Deque<String> queA = new ArrayDeque<>();
         Set<String> setA = new HashSet<>();
         queA.offer(beginWord);
         setA.add(beginWord);
 
-        Queue<String> queB = new LinkedList<>();
+        Deque<String> queB = new ArrayDeque<>();
         Set<String> setB = new HashSet<>();
         queB.offer(endWord);
         setB.add(endWord);
 
-        Queue<String> que = null;
+        Deque<String> que = null;
         Set<String> setCur = null, setOp = null;
 
         int len = 1;
         while (!queA.isEmpty() && !queB.isEmpty()) {
+            // firstly bfs shorter queue
             if (queA.size() <= queB.size()) {
                 que = queA;
                 setCur = setA;

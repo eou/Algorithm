@@ -71,7 +71,7 @@ public class Solution {
 public class Solution {
     // I 的HashSet可以原封不动套用
     public ListNode detectCycle(ListNode head) {
-        Set<ListNode> visited = new HashSet<ListNode>();
+        Set<ListNode> visited = new HashSet<>();
 
         ListNode node = head;
         while (node != null) {

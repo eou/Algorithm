@@ -83,10 +83,9 @@ class Solution {
 
 class Solution {
     public int firstMissingPositive(int[] nums) {
-        // 1 should be in nums[0], 2 should be in nums[1], ..., n should be in nums[n -
-        // 1]
+        // 1 should be in nums[0], 2 should be in nums[1], ..., n should be in nums[n - 1]
         for (int i = 0; i < nums.length; i++) {
-            while (nums[i] > 0 && nums[i] <= nums.length && nums[i] != nums[nums[i] - 1]) {
+            if (nums[i] > 0 && nums[i] <= nums.length && nums[i] != nums[nums[i] - 1]) {
                 swap(nums, i, nums[i] - 1);
             }
         }

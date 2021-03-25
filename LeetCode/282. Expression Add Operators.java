@@ -14,8 +14,7 @@ class Solution {
 
     // 难点在于把上一层递归中改变的值在 DFS 中传进去，以便后面乘法使用
     // 用 char[] num 也是因为用 num[i] 比 num.charAt(i) 效率高
-    private void helper(char[] num, int start, StringBuilder current, List<String> results, int target, long result,
-            long lastNum) {
+    private void helper(char[] num, int start, StringBuilder current, List<String> results, int target, long result, long lastNum) {
         if (start == num.length) {
             if (result == target) {
                 results.add(current.toString());
@@ -40,8 +39,7 @@ class Solution {
                 current.setLength(len);
                 helper(num, i + 1, current.append('-').append(n), results, target, result - n, -n);
                 current.setLength(len);
-                helper(num, i + 1, current.append('*').append(n), results, target, result - lastNum + lastNum * n,
-                        lastNum * n);
+                helper(num, i + 1, current.append('*').append(n), results, target, result - lastNum + lastNum * n, lastNum * n);
                 current.setLength(len);
             }
         }

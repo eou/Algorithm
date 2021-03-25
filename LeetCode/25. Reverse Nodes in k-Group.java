@@ -33,12 +33,11 @@ class Solution {
             return null;
         }
         
-        ListNode nextHead = nk.next;
-        ListNode n1 = head.next;
+        ListNode nextHead = nk.next, n1 = head.next;
         
         // 开始反转链表
-        ListNode pre = null;
-        ListNode cur = n1;
+        // head, n1, ..., nk, nextHead, ...
+        ListNode pre = null, cur = n1;
         while (cur != nextHead) {
             ListNode tmp = cur.next;
             cur.next = pre;
@@ -50,31 +49,36 @@ class Solution {
         head.next = nk;
         n1.next = nextHead;
         // n1是下一个要反转的链表头结点的前一个结点
+        // head, nk, ..., n1, nextHead, ...
         return n1;
     }
 }
 
+// Recursion
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
-        ListNode cur = head;
-        int count = 0;
-        while (cur != null && count != k) {
-            cur = cur.next;
-            count++;
-        }
-        if (count == k) {
-            cur = reverseKGroup(cur, k);
-            while (count > 0) {
-                ListNode nxt = head.next;
-                head.next = cur;
-                cur = head;
-                head = nxt;
-                count--;
+        ListNode nextHead = head;
+
+        for (int i = 0; i < k; i++) {
+            if (nextHead == null) {
+                return head;
             }
-            head = cur;
+            nextHead = nextHead.next;
         }
 
-        return head;
+        nextHead = reverseKGroup(nextHead, k);
+
+        ListNode pre = null, cur = head;
+        // pre, cur (head), nxt, ..., nextHead
+        for (int i = 0; i < k; i++) {
+            ListNode nxt = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = nxt;
+        }
+
+        head.next = nextHead;
+        return pre;
     }
 }
 

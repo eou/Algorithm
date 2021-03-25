@@ -1,150 +1,100 @@
 // 200. Number of Islands
-// BFS, DFS, Union Find，时间复杂度都是O(m*n)，其中BFS的空间复杂度较低，为O(min(m, n))
-class Solution {
-    // DFS 版本，目的是从一个点延伸到一个岛，但是要改变原来数组的值
-    // 可以不用Pair类，直接保存 row * len + col，也就是二维数组摊成一维数组后的下标
-    class Pair {
-        int x;
-        int y;
-        public Pair(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-    
-    public int numIslands(char[][] grid) {
-        if(grid.length < 1) {
-            return 0;
-        }
-        
-        int result = 0;
-        Queue<Pair> queue = new ArrayDeque<>();
-        for(int i = 0; i < grid.length; i++) {
-            for(int j = 0; j < grid[i].length; j++) {
-                if(grid[i][j] == '1') {
-                    result++;
-                    queue.offer(new Pair(i, j));
-                    grid[i][j] = 0;
-                    helper(queue, grid);
-                }
-            }
-        }
-        
-        return result;
-    }
-    
-    private void helper(Queue<Pair> queue, char[][] grid) {
-        while(!queue.isEmpty()) {
-            Pair p = queue.poll();
-            
-            if(p.y > 0 && grid[p.x][p.y - 1] == '1') {
-                queue.offer(new Pair(p.x, p.y - 1));
-                grid[p.x][p.y - 1] = 0;
-            }
-            
-            if(p.y < grid[0].length - 1 && grid[p.x][p.y + 1] == '1') {
-                queue.offer(new Pair(p.x, p.y + 1));
-                grid[p.x][p.y + 1] = 0;
-            }
-            
-            if(p.x > 0 && grid[p.x - 1][p.y] == '1') {
-                queue.offer(new Pair(p.x - 1, p.y));
-                grid[p.x - 1][p.y] = 0;
-            }
-            
-            if(p.x < grid.length - 1 && grid[p.x + 1][p.y] == '1') {
-                queue.offer(new Pair(p.x + 1, p.y));
-                grid[p.x + 1][p.y] = 0;
-            }
-        }
-    }
-}
-
+// BFS, DFS, Union Find，时间复杂度都是O(m*n)，
+// 其中 BFS 的空间复杂度较低，为 O(min(m, n)), because number of elements being added to the queue are constrained.
 // BFS
 class Solution {
+    private int[] dx = { -1, 1, 0, 0 };
+    private int[] dy = { 0, 0, 1, -1 };
+
     public int numIslands(char[][] grid) {
-        if (grid == null || grid.length == 0) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
             return 0;
         }
-        
-        int result = 0;
-        for (int i = 0; i < grid.length; ++i) {
-            for (int j = 0; j < grid[0].length; ++j) {
+
+        int res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
                 if (grid[i][j] == '1') {
-                    bfs(i, j, grid);
-                    ++result;
+                    res++;
+                    Deque<int[]> queue = new ArrayDeque<>();
+                    queue.offer(new int[] { i, j });
+                    while (!queue.isEmpty()) {
+                        int[] cur = queue.poll();
+
+                        for (int k = 0; k < 4; k++) {
+                            int x = cur[0] + dx[k];
+                            int y = cur[1] + dy[k];
+                            if (x >= 0 && x < grid.length && y >= 0 && y < grid[0].length) {
+                                if (grid[x][y] == '1') {
+                                    grid[x][y] = '0';
+                                    // This is the space complexity limitation
+                                    queue.offer(new int[] { x, y });
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        
-        return result;
-    }
-    
-    int[] dirx = new int[]{0, 0, 1, -1};
-    int[] diry = new int[]{1, -1, 0, 0};
-    public void bfs(int i, int j, char[][] grid) {
-        Deque<int[]> queue = new ArrayDeque<>();
-        queue.offer(new int[]{i, j});
-        while (!queue.isEmpty()) {
-            int[] pos = queue.poll();
-            for (int k = 0; k < 4; ++k) {
-                int x = pos[0] + dirx[k];
-                int y = pos[1] + diry[k];
-                if (x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] == '1') {
-                    queue.offer(new int[]{x, y});
-                    grid[x][y] = '0';
-                }
-            }
-        }
+
+        return res;
     }
 }
 
+// DFS
 class Solution {
-    // DFS版本，目的是从一个点找到所有到周边的路径，也是要改变原数组的值
+    private int[] dx = { -1, 1, 0, 0 };
+    private int[] dy = { 0, 0, 1, -1 };
+
     public int numIslands(char[][] grid) {
-        if (grid == null || grid.length == 0) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
             return 0;
         }
 
-        int num_islands = 0;
-        for (int r = 0; r < grid.length; ++r) {
-            for (int c = 0; c < grid[0].length; ++c) {
-                if (grid[r][c] == '1') {
-                    ++num_islands;
-                    helper(grid, r, c);
+        int res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == '1') {
+                    res++;
+                    dfs(i, j, grid);
                 }
             }
         }
 
-        return num_islands;
+        return res;
     }
 
-    void helper(char[][] grid, int r, int c) {
-        if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length || grid[r][c] == '0') {
+    private void dfs(int x, int y, char[][] grid) {
+        if (x < 0 || x >= grid.length || y < 0 || y >= grid[0].length) {
             return;
         }
 
-        grid[r][c] = '0';
-        helper(grid, r - 1, c);
-        helper(grid, r + 1, c);
-        helper(grid, r, c - 1);
-        helper(grid, r, c + 1);
+        if (grid[x][y] == '0') {
+            return;
+        }
+
+        grid[x][y] = '0';
+
+        for (int i = 0; i < 4; i++) {
+            dfs(x + dx[i], y + dy[i], grid);
+        }
     }
 }
 
 class Solution {
     // Union Find版本
-    // union操作 时间复杂度为O(α(n))，近似O(1)，总时间复杂度为O(m*n), 空间复杂度为O(m*n)
+    // union 操作 时间复杂度为 O(α(n))，近似 O(1)，总时间复杂度为 O(m*n), 空间复杂度为 O(m*n)
     class UnionFind {
         // # of connected components
         int count;
+        // root of connected component
         int[] parent;
+        // see it as connected component's height/depth
         int[] rank;
 
         public UnionFind(char[][] grid) {
             count = 0;
-            int m = grid.length;
-            int n = grid[0].length;
+            int m = grid.length, n = grid[0].length;
             parent = new int[m * n];
             rank = new int[m * n];
             for (int i = 0; i < m; ++i) {
@@ -178,11 +128,11 @@ class Solution {
             }
         }
 
-        // path compression
-        // 路径压缩
+        // find root, path compression
         public int find(int i) {
-            if(parent[i] != i)
+            if(parent[i] != i) {
                 parent[i] = find(parent[i]);
+            }
             return parent[i];
         }
 
@@ -191,6 +141,9 @@ class Solution {
         }
     }
 
+
+    private int[] dx = { -1, 1, 0, 0 };
+    private int[] dy = { 0, 0, 1, -1 };
     public int numIslands(char[][] grid) {
         if (grid == null || grid.length == 0) {
             return 0;
@@ -198,25 +151,23 @@ class Solution {
 
         int nr = grid.length;
         int nc = grid[0].length;
-        int num_islands = 0;
 
         UnionFind uf = new UnionFind(grid);
+
         for (int r = 0; r < nr; ++r) {
             for (int c = 0; c < nc; ++c) {
                 if (grid[r][c] == '1') {
                     grid[r][c] = '0';
-                    // 实际上只需要判断往右和往下两个方向即可
-                    if (r - 1 >= 0 && grid[r - 1][c] == '1') {
-                        uf.union(r * nc + c, (r - 1) * nc + c);
-                    }
-                    if (r + 1 < nr && grid[r + 1][c] == '1') {
-                        uf.union(r * nc + c, (r + 1) * nc + c);
-                    }
-                    if (c - 1 >= 0 && grid[r][c - 1] == '1') {
-                        uf.union(r * nc + c, r * nc + c - 1);
-                    }
-                    if (c + 1 < nc && grid[r][c + 1] == '1') {
-                        uf.union(r * nc + c, r * nc + c + 1);
+
+                    // 实际上只需要判断往右和往下两个方向即可，因为整体遍历是从左往右，从上往下的
+                    for (int i = 0; i < 4; i++) {
+                        int x = r + dx[i];
+                        int y = c + dy[i];
+                        if (x >= 0 && x < nr && y >= 0 && y < nc) {
+                            if (grid[x][y] == '1') {
+                                uf.union(r * nc + c, x * nc + y);
+                            }
+                        }
                     }
                 }
             }

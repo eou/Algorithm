@@ -1,38 +1,28 @@
 // 216. Combination Sum III
 class Solution {
     public List<List<Integer>> combinationSum3(int k, int n) {
-        List<List<Integer>> results = new ArrayList<>();
-        // 不需要处理边界情况
-        // if (k > n || n < 0) {
-        //     return results;
-        // }
-        
-        // if (k == 0 || n == 0) {
-        //     results.add(new ArrayList<>());
-        //     return results;
-        // }
-        
-        List<Integer> subset = new ArrayList<>();
-        
-        helper(k, n, subset, results, 1, 0);
-        return results;
+        List<List<Integer>> res = new ArrayList<>();
+        if (k == 0 || n == 0 || n < k) {
+            return res;
+        }
+
+        dfs(k, n, 0, 1, res, new ArrayList<>());
+        return res;
     }
-    
-    private void helper(int size, int target, List<Integer> subset, List<List<Integer>> results, int startIndex, int sum) {
-        if (subset.size() == size) {
-            if (sum == target) {
-                results.add(new ArrayList<>(subset));
-            }
+
+    private void dfs(int k, int n, int sum, int start, List<List<Integer>> res, List<Integer> list) {
+        if (sum > n || list.size() > k) {
             return;
         }
-        
-        for (int i = startIndex; i <= 9; ++i) {
-            if (i + sum <= target) {
-                subset.add(i);
-                helper(size, target, subset, results, i + 1, sum + i);
-                subset.remove(subset.size() - 1);
-            }
+
+        if (sum == n && list.size() == k) {
+            res.add(new ArrayList<>(list));
+        }
+
+        for (int i = start; i <= 9; i++) {
+            list.add(i);
+            dfs(k, n, sum + i, i + 1, res, list);
+            list.remove(list.size() - 1);
         }
     }
-    
 }

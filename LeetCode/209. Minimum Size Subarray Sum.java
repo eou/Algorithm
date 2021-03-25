@@ -1,7 +1,7 @@
 // 209. Minimum Size Subarray Sum
-// Two pointer问题，类似sliding window
-// 竟然follow up要求的复杂度更高，O(nlogn)
-// 注意数组中全是正整数，保证了前缀子数组的和是递增的，有序的情况下可以用binary search
+// Two pointer, sliding window
+// 竟然 follow up 要求的复杂度更高，O(nlogn)
+// 注意数组中全是正整数，保证了前缀和数组 prefix 是递增的，数组有序的情况下就可以用binary search
 // 其实也可以用分治，复杂度也是O(nlogn)
 class Solution {
     // sliding window，时间复杂度为 O(n)
