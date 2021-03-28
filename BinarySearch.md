@@ -33,7 +33,7 @@ class Solution {
 }
 ```
 
-Good for finding first/last position of target:
+**Good for finding first/last position of target**:
 
 ```java
 class Solution {

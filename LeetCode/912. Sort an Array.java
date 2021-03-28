@@ -86,7 +86,7 @@ class Solution {
             if(left[l] < right[r]) {
                 arr[i] = left[l];
                 l++;
-            } else{
+            } else {
                 arr[i] = right[r];
                 r++;
             }

@@ -1,5 +1,7 @@
 # Segment Tree
 
+线段树。
+
 [Segment Tree](https://en.wikipedia.org/wiki/Segment_tree)
 
 > This tree is about the data structure used to store segments !
