@@ -1,8 +1,10 @@
 // 327. Count of Range Sum
 // https://leetcode.com/problems/count-of-range-sum/discuss/78006/
+// !!! https://leetcode-cn.com/problems/count-of-range-sum/solution/qu-jian-he-de-ge-shu-by-leetcode-solution/
+// !!! https://leetcode-cn.com/problems/count-of-range-sum/solution/xian-ren-zhi-lu-ru-he-xue-xi-ke-yi-jie-jue-ben-ti-/
 // lower <= sum[i] - sum[j] <= upper
 // lower + sum[j] <= sum[i] <= upper + sum[j]
-// Fenwick Tree
+// Fenwick Tree, O(nlogn)
 class Solution {
     public int countRangeSum(int[] nums, int lower, int upper) {
         // [-2,5,-1], -2, 2
@@ -87,6 +89,75 @@ class Solution {
     }
 }
 
+// Merge sort
+class Solution {
+    public int countRangeSum(int[] nums, int lower, int upper) {
+        long s = 0;
+        long[] prefix = new long[nums.length + 1];
+        for (int i = 1; i < prefix.length; ++i) {
+            prefix[i] = prefix[i - 1] + nums[i - 1];
+        }
+
+        return mergeSort(prefix, lower, upper, 0, prefix.length - 1);
+    }
+
+    public int mergeSort(long[] arr, int lower, int upper, int left, int right) {
+        if (left >= right) {
+            return 0;
+        }
+
+        int mid = (left + right) / 2;
+        int n1 = mergeSort(arr, lower, upper, left, mid);
+        int n2 = mergeSort(arr, lower, upper, mid + 1, right);
+        int res = n1 + n2;
+
+        // Count pairs between left side and right side, prefix[i] - prefix[j] ∈ [lower,upper]
+        // Actually finding a range, in which numbers are in [lower, upper]
+        int cur = left, start = mid + 1, end = mid + 1;
+        while (cur <= mid) {
+            // for arr[cur], find a range (start, end]
+            while (start <= right && arr[start] - arr[cur] < lower) {
+                start++;
+            }
+            while (end <= right && arr[end] - arr[cur] <= upper) {
+                end++;
+            }
+            res += end - start;
+            cur++;
+        }
+
+        // Merge
+        long[] sorted = new long[right - left + 1]; // we only merge [left, right] here
+        int i = 0, l = left, r = mid + 1;
+        while (l <= mid && r <= right) {
+            if (arr[l] < arr[r]) {
+                sorted[i] = arr[l];
+                l++;
+            } else {
+                sorted[i] = arr[r];
+                r++;
+            }
+            i++;
+        }
+
+        while (l <= mid) {
+            sorted[i] = arr[l];
+            l++;
+            i++;
+        }
+
+        while (r <= right) {
+            sorted[i] = arr[r];
+            r++;
+            i++;
+        }
+
+        System.arraycopy(sorted, 0, arr, left, sorted.length);
+
+        return res;
+    }
+}
+
 // Divide and conquer
 class Solution {
     public int countRangeSum(int[] nums, int lower, int upper) {
@@ -135,59 +206,5 @@ class Solution {
         }
 
         return l;
-    }
-}
-
-// merge sort
-class Solution {
-    public int countRangeSum(int[] nums, int lower, int upper) {
-        if (nums == null || nums.length == 0 || lower > upper)
-            return 0;
-
-        long[] prefixSum = new long[nums.length + 1];
-
-        for (int i = 1; i < prefixSum.length; i++) {
-            prefixSum[i] = prefixSum[i - 1] + nums[i - 1];
-        }
-
-        return countRangeSumSub(prefixSum, 0, prefixSum.length - 1, lower, upper);
-    }
-
-    private int countRangeSumSub(long[] prefixSum, int l, int r, int lower, int upper) {
-        if (l >= r)
-            return 0;
-
-        int m = l + (r - l) / 2;
-
-        int count = countRangeSumSub(prefixSum, l, m, lower, upper) + countRangeSumSub(prefixSum, m + 1, r, lower, upper);
-
-        long[] mergedArray = new long[r - l + 1];
-        int i = l, j = m + 1, k = m + 1;
-        int p = 0, q = m + 1;
-        // find lower <= sum[i] - sum[j] <= upper, i < mid and j > mid
-        while (i <= m) {
-            while (j <= r && prefixSum[j] - prefixSum[i] < lower) {
-                j++;
-            }
-            // prefixSum[j] - prefixSum[i] >= lower
-            while (k <= r && prefixSum[k] - prefixSum[i] <= upper) {
-                k++;
-            }
-            // prefixSum[k] - prefixSum[i] <= upper + 1
-            count += k - j;
-
-            // merge
-            while (q <= r && prefixSum[q] < prefixSum[i]) {
-                mergedArray[p++] = prefixSum[q++];
-            }
-            mergedArray[p++] = prefixSum[i++];
-        }
-
-        while (q <= r) {
-            mergedArray[p++] = prefixSum[q++];
-        }
-        System.arraycopy(mergedArray, 0, prefixSum, l, mergedArray.length);
-
-        return count;
     }
 }

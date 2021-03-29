@@ -1,75 +1,120 @@
 // 493. Reverse Pairs
-// Fenwick tree, similar with 315
+// Similar with 315, 327
+// Merge sort
 class Solution {
-    class FenwickTree {
-        private int[] sums;
+    public int reversePairs(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+ 
+        return mergeSort(nums, 0, nums.length - 1);
+    }
 
-        public FenwickTree(int n) {
-            sums = new int[n];
+    public int mergeSort(int[] arr, int left, int right) {
+        if (left >= right) {
+            return 0;
         }
 
-        private int lowbit(int i) {
-            return i & (-i);
-        }
+        int mid = (left + right) / 2;
+        int n1 = mergeSort(arr, left, mid);
+        int n2 = mergeSort(arr, mid + 1, right);
+        int res = n1 + n2;
 
-        public void update(int i, int delta) {
-            while (i < sums.length) {
-                sums[i] += delta;
-                i += lowbit(i);
+        // Count pairs
+        int cur = left, nxt = mid + 1;
+        while (cur <= mid) {
+            while (nxt <= right && (long)arr[cur] > 2 * (long)arr[nxt]) {
+                nxt++;
             }
+            res += nxt - mid - 1; // nxt - mid not nxt - cur
+            cur++;
         }
 
-        public int query(int i) {
+        // Merge
+        int[] sorted = new int[right - left + 1]; // we only merge [left, right] here
+        int i = 0, l = left, r = mid + 1;
+        while (l <= mid && r <= right) {
+            if (arr[l] < arr[r]) {
+                sorted[i] = arr[l];
+                l++;
+            } else {
+                sorted[i] = arr[r];
+                r++;
+            }
+            i++;
+        }
+
+        while (l <= mid) {
+            sorted[i] = arr[l];
+            l++;
+            i++;
+        }
+
+        while (r <= right) {
+            sorted[i] = arr[r];
+            r++;
+            i++;
+        }
+
+        System.arraycopy(sorted, 0, arr, left, sorted.length);
+
+        return res;
+    }
+}
+
+// Fenwick tree
+class Solution {
+    public int reversePairs(int[] nums) {
+        // Discretization
+        Set<Long> set = new TreeSet<>(); // sorted and deduplicate !!!
+        for (int i : nums) {
+            set.add((long) i);
+            set.add((long) i * 2);
+        }
+
+        Map<Long, Integer> map = new HashMap<>();
+        int idx = 1;
+        for (Long i : set) {
+            map.put(i, idx);
+            idx++;
+        }
+
+        int res = 0;
+        BIT bit = new BIT(map.size());
+        for (int i = 0; i < nums.length; i++) {
+            int left = map.get((long) nums[i] * 2), right = map.size();
+            res += bit.query(right) - bit.query(left);
+            bit.update(map.get((long) nums[i]), 1);
+        }
+
+        return res;
+    }
+
+    private class BIT {
+        private int[] nums;
+
+        public BIT(int n) {
+            nums = new int[n + 2];
+        }
+
+        private int lowbit(int x) {
+            return x & (-x);
+        }
+
+        private int query(int i) {
             int sum = 0;
             while (i > 0) {
-                sum += sums[i];
+                sum += nums[i];
                 i -= lowbit(i);
             }
             return sum;
         }
-    }
 
-    public int reversePairs(int[] nums) {
-        int result = 0;
-        long[] nums2 = new long[nums.length];
-        for (int i = 0; i < nums.length; i++) {
-            nums2[i] = (long) nums[i];
-        }
-        Arrays.sort(nums2);
-        Map<Long, Integer> map = new HashMap<>();
-        int pos = 1;
-        for (int i = 0; i < nums.length; i++) {
-            map.put(nums2[i], map.getOrDefault(nums2[i], pos++));
-        }
-
-        FenwickTree tree = new FenwickTree(nums.length + 1); // start from 1
-        for (int i = nums.length - 1; i >= 0; i--) {
-            int bound = lower_bound(nums2, (long) nums[i]);
-            if (bound != -1) {
-                result += tree.query(map.get(nums2[bound]));
-            }
-            tree.update(map.get((long) nums[i]), 1);
-        }
-        return result;
-    }
-
-    public int lower_bound(long[] nums, long num) {
-        int left = 0, right = nums.length - 1;
-        while (left < right - 1) {
-            int mid = left + (right - left) / 2;
-            if (nums[mid] * 2 < num) {
-                left = mid;
-            } else {
-                right = mid - 1;
+        private void update(int i, int diff) {
+            while (i < nums.length) {
+                nums[i] += diff;
+                i += lowbit(i);
             }
         }
-        if (nums[right] * 2 < num) {
-            return right;
-        } else if (nums[left] * 2 < num) {
-            return left;
-        } else {
-            return -1;  // no lower_bound
-        }
-
     }
 }
