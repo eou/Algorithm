@@ -10,32 +10,35 @@ class Solution {
         
         int[] left = new int[prices.length];    // left[i] means max profit before day i
         int[] right = new int[prices.length];   // right[i] means max profit after day i
-        
-        int valley = prices[0];
+
+        // minimum price before day i
+        int min = prices[0];
         for (int i = 0; i < prices.length; ++i) {
-            valley = valley > prices[i] ? prices[i] : valley;
+            min = Math.min(min, prices[i]);
             if (i > 0) {
-                left[i] = Math.max(left[i - 1], prices[i] - valley);
+                left[i] = Math.max(left[i - 1], prices[i] - min);
             }
         }
         
-        int peak = prices[prices.length - 1];
+        // maximum price after day i
+        int max = prices[prices.length - 1];
         for (int i = prices.length - 1; i >= 0; --i) {
-            peak = peak < prices[i] ? prices[i] : peak;
+            max = Math.max(max, prices[i]);
             if (i < prices.length - 1) {
-                right[i] = Math.max(right[i + 1], peak - prices[i]);
+                right[i] = Math.max(right[i + 1], max - prices[i]);
             }
         }
         
-        int profit = 0;
+        int res = 0;
         for (int i = 0; i < prices.length; ++i) {
-            profit = Math.max(profit, left[i] + right[i]);
+            res = Math.max(res, left[i] + right[i]);
         }
         
-        return profit;
+        return res;
     }
 }
 
+// Using only 1 array, calculate result in second for loop
 // get max profit before day i, then get max profit after day i, <= i =>
 class Solution {
     public int maxProfit(int[] prices) {

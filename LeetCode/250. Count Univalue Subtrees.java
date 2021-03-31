@@ -1,110 +1,45 @@
 // 250. Count Univalue Subtrees
 class Solution {
     public int countUnivalSubtrees(TreeNode root) {
-        if(root == null) {
-            return 0;
-        }
-        
-        // 其实没必要对左右子树都讨论一遍
-        if(root.left != null && root.right != null) {
-            if(isUnivalSubtree(root.left) && isUnivalSubtree(root.right) && 
-               root.val == root.left.val && root.val == root.right.val) {
-                return 1 + countUnivalSubtrees(root.left) + countUnivalSubtrees(root.right);
-            } else {
-                return countUnivalSubtrees(root.left) + countUnivalSubtrees(root.right);
-            }
-        } else if(root.left != null) {
-            if(isUnivalSubtree(root.left) && root.val == root.left.val) {
-                return 1 + countUnivalSubtrees(root.left);
-            } else {
-                return countUnivalSubtrees(root.left);
-            }
-        } else if(root.right != null) {
-            if(isUnivalSubtree(root.right) && root.val == root.right.val) {
-                return 1 + countUnivalSubtrees(root.right);
-            } else {
-                return countUnivalSubtrees(root.right);
-            }
-        } else {
-            return 1;  
-        }
-    }
-    
-    private boolean isUnivalSubtree(TreeNode root) {
-        if(root.left != null && root.right != null) {
-            if(isUnivalSubtree(root.left) && isUnivalSubtree(root.right) && 
-               root.val == root.left.val && root.val == root.right.val) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if(root.left != null) {
-            if(isUnivalSubtree(root.left) && root.val == root.left.val) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if(root.right != null) {
-            if(isUnivalSubtree(root.right) && root.val == root.right.val) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;  
-        }
-    }
-}
-
-class Solution {
-    // 简化上个版本
-    public int countUnivalSubtrees(TreeNode root) {
         if (root == null) {
             return 0;
         }
 
-        int count = isUnivalSubtree(root) ? 1 : 0;
-        return count + countUnivalSubtrees(root.left) + countUnivalSubtrees(root.right);
+        // !!! be careful of the priority of ?: operation, it should have parenthesises here
+        // otherwise it will calculate + first
+        return (isUnivalSubtrees(root) ? 1 : 0) + countUnivalSubtrees(root.left) + countUnivalSubtrees(root.right);
     }
 
-    private boolean isUnivalSubtree(TreeNode root) {
+    private boolean isUnivalSubtrees(TreeNode root) {
         if (root.left != null && root.right != null) {
-            if (isUnivalSubtree(root.left) && isUnivalSubtree(root.right) && root.val == root.left.val
-                    && root.val == root.right.val) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (root.left != null) {
-            if (isUnivalSubtree(root.left) && root.val == root.left.val) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (root.right != null) {
-            if (isUnivalSubtree(root.right) && root.val == root.right.val) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;
+            return root.val == root.left.val && root.val == root.right.val && isUnivalSubtrees(root.left)
+                    && isUnivalSubtrees(root.right);
         }
+
+        if (root.left != null) {
+            return root.val == root.left.val && isUnivalSubtrees(root.left);
+        }
+
+        if (root.right != null) {
+            return root.val == root.right.val && isUnivalSubtrees(root.right);
+        }
+
+        // single node or empty node should return true
+        // actually it is impossible to reach null node in our codes here
+        return true;
     }
 }
 
+// 简化上个版本
 class Solution {
-    // 继续简化上个版本
     public int countUnivalSubtrees(TreeNode root) {
         if (root == null) {
             return 0;
         }
 
-        int count = isUnivalSubtree(root) ? 1 : 0;
-        return count + countUnivalSubtrees(root.left) + countUnivalSubtrees(root.right);
+        return (isUnivalSubtree(root) ? 1 : 0) + countUnivalSubtrees(root.left) + countUnivalSubtrees(root.right);
     }
 
-    // 简化
     private boolean isUnivalSubtree(TreeNode root) {
         boolean result = true;
         if (root.left != null) {
@@ -116,5 +51,27 @@ class Solution {
             result &= isUnivalSubtree(root.right);
         }
         return result;
+    }
+}
+
+class Solution {
+    int res = 0;
+    public int countUnivalSubtrees(TreeNode root) {
+        all(res, 0);
+        return res;
+    }
+
+    boolean all(TreeNode root, int val) {
+        if (root == null) {
+            return true;
+        }
+            
+        // "|" ensures the recursion do both sides instead of "||" only dose recursion on left side if it is wrong(it will miss the count from right side)
+        if (!all(root.left, root.val) | !all(root.right, root.val)) {
+            return false;
+        }
+
+        res++;  // we have 1 more unival subtree
+        return root.val == val;
     }
 }
