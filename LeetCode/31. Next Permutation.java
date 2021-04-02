@@ -1,8 +1,9 @@
 // 31. Next Permutation
 // => LintCode 51. Previous Permutation
+// https://leetcode-cn.com/problems/next-permutation/solution/xia-yi-ge-pai-lie-by-leetcode-solution/
 // 纯数学规律，从低位到高位（从后往前 / 从右往左），找第一个出现递减的数字 n
-// 然后在第一列递增数字中找大于 n 的最小数字与 n 交换
-// 然后从 n 之后一位到最低位进行反转
+// 然后在(n, nums.length)这列递增数字中找大于 n 的最小数字与 n 交换，此时排列已经增大
+// 然后从 n 之后一位到最低位进行反转，保证排列增加幅度最小
 
 // [6,8,5,4,7,3,2,1,0] => [6,8,5,7,4,3,2,1,0] => [6,8,5,7,0,1,2,3,4]
 // [6,8,5,6,9,8,7,1,0] => [6,8,5,7,9,8,6,1,0] => [6,8,5,7,0,1,6,8,9]
@@ -16,30 +17,42 @@
 // 最后反转是使得增大的数尽可能小
 class Solution {
     public void nextPermutation(int[] nums) {
-        // start from end
-        int target = nums.length - 2;
-        // non-increasing
-        for (; target >= 0 && nums[target] >= nums[target + 1]; target--) // target >= 0 should be the first check condition !!!
-            ;
-
-        int larger = nums.length - 1;
-        // if exist, otherwise numbers are all decreasing: [5,4,2,1] => [1,2,4,5]
-        if (target >= 0) {
-            // find a number larger than target
-            for (; larger > target && nums[larger] <= nums[target]; larger--)
-                ;
-            swap(nums, target, larger);
+        // 1. search backwards to find first (i, i + 1) which nums[i] < nums[i + 1]. Thus nums[i] could be replaced
+        int s = -1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                s = i;
+                break;
+            }
         }
+        
+        // 2. Find the smallest number which is bigger than nums[s] after s
+        if (s >= 0) {
+            int r = nums.length - 1;
+            for (int i = nums.length - 1; i > s; i--) {
+                if (nums[i] > nums[s]) {
+                    r = i;
+                    break;
+                }
+            }
 
-        // reverse
-        for (int i = target + 1, j = nums.length - 1; i < j; i++, j--) {
-            swap(nums, i, j);
+            // 3. swap the nums[s] and nums[r]
+            swap(nums, s, r);   
         }
+        
+        // 4. reverse the subarray (s, nums.length - 1) to make it smallest
+        reverse(nums, s + 1, nums.length - 1);
     }
-
-    public void swap(int[] nums, int i, int j) {
+    
+    private void swap(int[] nums, int i, int j) {
         int tmp = nums[i];
         nums[i] = nums[j];
         nums[j] = tmp;
+    }
+    
+    private void reverse(int[] nums, int start, int end) {
+        for (int i = start, j = end; i < j; i++, j--) {
+            swap(nums, i, j);
+        }
     }
 }

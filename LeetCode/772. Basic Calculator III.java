@@ -27,26 +27,26 @@ class Solution {
                 optStack.push(c);
             } else if(c == ')') {
                 while(optStack.peek() != '(') {
-                    opdStack.push(helper(optStack.pop(), opdStack.pop(), opdStack.pop()));
+                    opdStack.push(calculate(optStack.pop(), opdStack.pop(), opdStack.pop()));
                 }
                 optStack.pop(); // pop '('
             } else {
                 // operator
                 while (!optStack.isEmpty() && precedence(c, optStack.peek())) {
-                    opdStack.push(helper(optStack.pop(), opdStack.pop(), opdStack.pop()));
+                    opdStack.push(calculate(optStack.pop(), opdStack.pop(), opdStack.pop()));
                 }
                 optStack.push(c);
             }
         }
 
         while(!optStack.isEmpty()) {
-            opdStack.push(helper(optStack.pop(), opdStack.pop(), opdStack.pop()));
+            opdStack.push(calculate(optStack.pop(), opdStack.pop(), opdStack.pop()));
         }
 
         return opdStack.pop();
     }
     
-    private int helper(char opt, int b, int a) {
+    private int calculate(char opt, int b, int a) {
         switch(opt) {
             case '+': return a + b;
             case '-': return a - b;
@@ -56,6 +56,7 @@ class Solution {
         return 0;
     }
 
+    // Operator precedence, * / is higher than + -
     private boolean precedence(char opt1, char opt2) {
         if(opt2 == '(' || opt2 == ')') {
             return false;

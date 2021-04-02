@@ -27,6 +27,26 @@ class Solution {
     }
 }
 
+class Solution {
+    public int maxProfit(int[] prices) {
+        // dp[i][j], i days, j means 3 status
+        // dp[i][0], hold stock
+        // dp[i][1], not hold stock but cannot buy, cooldown
+        // dp[i][2], not hold stock and can buy
+        int[][] dp = new int[prices.length][3];
+
+        dp[0][0] = -prices[0];
+
+        for (int i = 1; i < prices.length; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][2] - prices[i]);
+            dp[i][1] = dp[i - 1][0] + prices[i];
+            dp[i][2] = Math.max(dp[i - 1][2], dp[i - 1][1]);
+        }
+
+        return Math.max(dp[prices.length - 1][1], dp[prices.length - 1][2]);
+    }
+}
+
 // use rest[i] = sell[i-1]:
 // buy[i] = max(sell[i-2] - price, buy[i-1])
 // sell[i] = max(buy[i-1] + price, sell[i-1])

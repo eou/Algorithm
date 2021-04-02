@@ -26,37 +26,34 @@ class Solution {
 }
 
 class Solution {
-    // 将非 0 元素抽出来然后计算，时间复杂度相同
-    public int[][] multiply(int[][] A, int[][] B) {
-        // A(n, t) * B(t, m) = C(n, m)
-        int n = A.length;
-        int t = A[0].length;
-        int m = B[0].length;
-        int[][] C = new int[n][m];
-
-        List<int[]> A_Points = getNonZeroPoints(A);
-        List<int[]> B_Points = getNonZeroPoints(B);
-
-        for (int[] pA : A_Points) {
-            for (int[] pB : B_Points) {
-                if (pA[1] == pB[0]) {
-                    C[pA[0]][pB[1]] += A[pA[0]][pA[1]] * B[pB[0]][pB[1]];
+    public int[][] multiply(int[][] mat1, int[][] mat2) {
+        if (mat1 == null || mat2 == null || mat1.length == 0 || mat2.length == 0 || mat1[0].length == 0 || mat2[0].length == 0) {
+            return new int[0][0];
+        }
+        
+        List<int[]> m1 = extractNonZeroNum(mat1);
+        List<int[]> m2 = extractNonZeroNum(mat2);
+        
+        int[][] res = new int[mat1.length][mat2[0].length];
+        for (int[] a : m1) {
+            for (int[] b : m2) {
+                if (a[1] == b[0]) {
+                    res[a[0]][b[1]] += (mat1[a[0]][a[1]] * mat2[b[0]][b[1]]);
                 }
             }
         }
-
-        return C;
+        return res;
     }
-
-    private List<int[]> getNonZeroPoints(int[][] matrix) {
-        List<int[]> nonZeroPoints = new ArrayList<>();
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[0].length; j++) {
-                if (matrix[i][j] != 0) {
-                    nonZeroPoints.add(new int[] { i, j });
+    
+    private List<int[]> extractNonZeroNum(int[][] mat) {
+        List<int[]> m = new ArrayList<>();
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                if (mat[i][j] != 0) {
+                    m.add(new int[]{i, j});
                 }
             }
         }
-        return nonZeroPoints;
+        return m;
     }
 }

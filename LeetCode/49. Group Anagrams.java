@@ -1,35 +1,72 @@
 // 49. Group Anagrams
+// 时间复杂度为 O(NK)，where N is the length of strs, and K is the maximum length of a string in strs
 class Solution {
-    // 时间复杂度为 O(NK)，where NN is the length of strs, and KK is the maximum length of a string in strs
     public List<List<String>> groupAnagrams(String[] strs) {
-        if (strs.length == 0) {
-            return new ArrayList();
-        }
-
-        Map<String, List> map = new HashMap<String, List>();
-        int[] count = new int[26];
+        Map<String, List> map = new HashMap<>();
         for (String str : strs) {
-            Arrays.fill(count, 0);
-            for (char c : str.toCharArray()) {
-                count[c - 'a']++;
-            }
-
-            StringBuilder stringBuilder = new StringBuilder("");
-            for (int i = 0; i < 26; i++) {
-                stringBuilder.append('#');
-                stringBuilder.append(count[i]);
-            }
-            String key = stringBuilder.toString();
-            if (!map.containsKey(key)) {
-                map.put(key, new ArrayList());
-            }
-            map.get(key).add(str);
+            String feature = extractFeature(str);
+            List<String> list = map.getOrDefault(feature, new ArrayList<>());
+            list.add(str);
+            map.put(feature, list);
         }
 
-        return new ArrayList(map.values());
+        List<List<String>> res = new ArrayList<>();
+        for (List<String> list : map.values()) {
+            res.add(list);
+        }
+        return res;
+    }
+
+    private String extractFeature(String str) {
+        int[] freq = new int[26];
+        for (int i = 0; i < str.length(); i++) {
+            freq[str.charAt(i) - 'a']++;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 26; i++) {
+            sb.append((char) ('a' + i));
+            sb.append(freq[i]);
+        }
+
+        return sb.toString();
     }
 }
 
+// faster using long but not string
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<Long, List> map = new HashMap<>();
+        for (String str : strs) {
+            long feature = extractFeature(str);
+            List<String> list = map.getOrDefault(feature, new ArrayList<>());
+            list.add(str);
+            map.put(feature, list);
+        }
+
+        List<List<String>> res = new ArrayList<>();
+        for (List<String> list : map.values()) {
+            res.add(list);
+        }
+        return res;
+    }
+
+    private long extractFeature(String str) {
+        int[] freq = new int[26];
+        for (int i = 0; i < str.length(); i++) {
+            freq[str.charAt(i) - 'a']++;
+        }
+
+        long res = 0, base = 1;
+        for (int i = 0; i < 26; i++) {
+            res += (base * freq[i]);
+            base *= 10;
+        }
+        return res;
+    }
+}
+
+// O(NKlogK)
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
         Map<String, List<String>> map = new HashMap<>();

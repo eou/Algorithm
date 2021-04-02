@@ -1,5 +1,5 @@
 // 123. Best Time to Buy and Sell Stock III
-// at most 2 transactions
+// At most 2 transactions
 // time O(n), space O(n)
 // find max profit before and after day i,  <= i =>
 class Solution {
@@ -64,5 +64,31 @@ class Solution {
             maxTotalProfit = Math.max(maxTotalProfit, maxPriceSoFar - prices[i] + firstBuySellProfits.get(i - 1));
         }
         return maxTotalProfit;
+    }
+}
+
+// DP
+// 188. Best Time to Buy and Sell Stock IV
+class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length < 2) {
+            return 0;
+        }
+
+        // dp[i][j][k], i days, j transaction times, k hold / not hold
+        int[][][] dp = new int[prices.length][2 + 1][2];
+        for (int i = 0; i < 3; i++) {
+            dp[0][i][1] = -prices[0];
+        }
+
+        for (int i = 1; i < prices.length; i++) {
+            for (int j = 1; j <= 2; j++) {
+                dp[i][j][0] = Math.max(dp[i - 1][j][0], dp[i - 1][j][1] + prices[i]);
+                // jth transaction happens on ith day thus we have j - 1 transaction on i - 1 days
+                dp[i][j][1] = Math.max(dp[i - 1][j][1], dp[i - 1][j - 1][0] - prices[i]);
+            }
+        }
+
+        return dp[prices.length - 1][2][0];
     }
 }

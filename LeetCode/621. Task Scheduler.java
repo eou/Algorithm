@@ -10,17 +10,18 @@ class Solution {
         int step = 0;
         // 若有别的字符，用 HashMap
         int[] count = new int[26];
-        int[] next = new int[26];
-        for(Character c : tasks) {
+        for(char c : tasks) {
             count[c - 'A']++;
         }
         
         int i = 0;
+        int[] next = new int[26];
         while(i < tasks.length) {
             int index = findNextTask(count, next, step);
             // 注意这里与358不同，细节调整一下
             if(index != -1) {
                 count[index]--;
+                // next step
                 next[index] = step + n + 1;
                 i++;
             }
@@ -30,16 +31,16 @@ class Solution {
         return step;
     }
     
-    private int findNextTask(int[] count, int[] next, int index) {
-        int result = -1;
-        int max = Integer.MIN_VALUE;
+    private int findNextTask(int[] count, int[] next, int step) {
+        int res = -1, max = -1;
         for(int i = 0; i < 26; i++) {
-            if(count[i] > 0 && count[i] > max && index >= next[i]) {
+            // 1. task available; 2. more tasks needs to be done; 3. not cooldown
+            if(count[i] > 0 && count[i] > max && step >= next[i]) {
                 max = count[i];
-                result = i;
+                res = i;
             }
         }
-        return result;
+        return res;
     }
 }
 
