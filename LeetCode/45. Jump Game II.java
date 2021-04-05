@@ -22,7 +22,25 @@ class Solution {
     }
 }
 
-// DP, O(n^2)，会 TLE
+// DP, dp[i] means minimum steps to reach i
+class Solution {
+    public int jump(int[] nums) {
+        if (nums == null || nums.length <= 1) {
+            return 0;
+        }
+
+        int[] dp = new int[nums.length];
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = i + 1; j <= nums[i] + i && j < nums.length; j++) {
+                dp[j] = dp[j] == 0 ? dp[i] + 1 : Math.min(dp[j], dp[i] + 1);
+            }
+        }
+        
+        return dp[nums.length - 1];
+    }
+}
+
+// DP, O(n^2)
 class Solution {
     public int jump(int[] nums) {
         int[] dp = new int[nums.length];
@@ -84,28 +102,19 @@ class Solution {
  * Greedy, O(n)
  * similar with BFS, but dont need to check an interval, only check the furthest point
  * since we can make sure the steps we take for reaching all points before furthest point currently
- * [2, 3, 1, 0, 4] => 
- * 0: furthest: 2, jumps: 1
- * 1: furthest: 4,
- * 2: furthest: 3,
- * 3: furthest: 3,
- * 4, furthest: 4, jumps: 2
- */
+ * 
+ **/
 class Solution {
     public int jump(int[] nums) {
-        for (int i = 0, step = 1, right = 0, furthest = 0; i < nums.length - 1; i++) {
-            furthest = Math.max(furthest, nums[i] + i);
-            if (furthest >= nums.length - 1) {
-                return step;
-            }
-
-            // read last furthest, increase step
-            if (i == right) {
+        int curFarthest = 0, nextFarthest = 0;
+        int step = 0;
+        for (int i = 0; i < nums.length - 1; i++) {
+            nextFarthest = Math.max(nums[i] + i, nextFarthest);
+            if (i == curFarthest) {
                 step++;
-                right = furthest;
+                curFarthest = nextFarthest;
             }
         }
-
-        return 0;
+        return step;
     }
 }

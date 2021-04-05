@@ -3,7 +3,7 @@
 // 为什么使用 Doubly linkd list 而不使用 Linked list的原因是：当访问一个节点后，我们需要将他从原来的list中删除，然后将它插入到头节点处，删除过程中需要将其前后节点连接起来，单链表访问目标节点的前后节点会很慢
 class LRUCache {
     class Node {
-        int key, value;
+        int key, value;     // we need key as well for getting the node's key to remove it
         Node pre, next;
         Node(int key, int value) {
             this.key = key;
@@ -71,6 +71,7 @@ class LRUCache {
             size++;
 
             if (size > capacity) {
+                // !!! Firstly remove key in Map then remove node, otherwise the map might remove wrong key
                 this.map.remove(tail.pre.key);
                 tail.pre.pre.next = tail;
                 tail.pre = tail.pre.pre;

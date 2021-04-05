@@ -1,6 +1,35 @@
 // 75. Sort Colors
 class Solution {
     public void sortColors(int[] nums) {
+        int start = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                swap(nums, i, start++);
+            }
+        }
+        
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 1) {
+                swap(nums, i, start++);
+            }
+        }
+        
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 2) {
+                swap(nums, i, start++);
+            }
+        }
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+}
+
+class Solution {
+    public void sortColors(int[] nums) {
         int last = moveNumber(nums, 0, nums.length - 1, 0);
         moveNumber(nums, last, nums.length - 1, 1);
     }
@@ -35,29 +64,23 @@ class Solution {
 // Dutch National Flag problem solution
 class Solution {
     public void sortColors(int[] nums) {
-        // for all idx < i : nums[idx < i] = 0
-        // j is an index of element under consideration
-        int p0 = 0, curr = 0;
-        // for all idx > k : nums[idx > k] = 2
-        int p2 = nums.length - 1;
-
-        int tmp;
-        while (curr <= p2) {
-            if (nums[curr] == 0) {
-                // swap p0-th and curr-th elements
-                // i++ and j++
-                tmp = nums[p0];
-                nums[p0++] = nums[curr];
-                nums[curr++] = tmp;
-            } else if (nums[curr] == 2) {
-                // swap k-th and curr-th elements
-                // p2--
-                tmp = nums[curr];
-                nums[curr] = nums[p2];
-                nums[p2--] = tmp;
+        // red: 0; white: 1; blue: 2;
+        int i = 0, red = 0, blue = nums.length - 1;
+        while (i <= blue) {
+            if (nums[i] == 0) {
+                swap(nums, i, red++);
+                i++;
+            } else if (nums[i] == 2) {
+                swap(nums, i, blue--);
             } else {
-                curr++;
+                i++;
             }
         }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
     }
 }
