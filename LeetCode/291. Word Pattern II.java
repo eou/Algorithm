@@ -1,4 +1,5 @@
 // 291. Word Pattern II
+// DFS, O(N * C(M, N)), O(N) time to validate each possiblity
 class Solution {
     public boolean wordPatternMatch(String pattern, String str) {
         Map<Character, String> map = new HashMap<>();

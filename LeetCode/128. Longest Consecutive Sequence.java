@@ -111,6 +111,7 @@ class Solution {
     }
 }
 
+// O(n)
 class Solution {
     public int longestConsecutive(int[] nums) {
         if (nums.length == 0) {

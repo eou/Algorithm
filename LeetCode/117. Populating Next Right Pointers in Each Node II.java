@@ -1,6 +1,6 @@
 // 117. Populating Next Right Pointers in Each Node II
 /*
-// Definition for a Node.
+Definition for a Node.
 class Node {
     public int val;
     public Node left;
@@ -21,6 +21,7 @@ class Node {
     }
 };
 */
+// BFS
 class Solution {
     public Node connect(Node root) {
         if (root == null) {
@@ -61,7 +62,8 @@ class Solution {
     }
 }
 
-// follow up: no next pointer, use right pointer as next pointer
+// Follow up: no next pointer, use right pointer as next pointer
+// BFS
 class Solution {
     public void treeToLinkedList(TreeNode root) {
         if (root == null) {
