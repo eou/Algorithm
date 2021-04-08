@@ -46,7 +46,7 @@ class Solution {
     }
 }
 
-// Deque, O(n), keep order inside
+// Monotonic Deque, O(n), keep element increasing
 // 每个元素最多进入弹出一次队列
 class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
@@ -55,11 +55,10 @@ class Solution {
             return new int[0];
         }
 
-        // store index
-        // keep index increasing ordered, value increasing ordered
+        // Store index, keep index increasing ordered, value increasing ordered
         Deque<Integer> queue = new ArrayDeque<>();
         for (int i = 0; i < nums.length; i++) {
-            // remove i - kth element
+            // remove i - kth element, extra
             if (!queue.isEmpty() && queue.peek() == i - k) {
                 queue.poll();
             }

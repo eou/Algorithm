@@ -40,59 +40,7 @@ class Solution {
     }
 }
 
-// stack
-class Solution {
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        Deque<Integer> stack1 = new ArrayDeque<>();
-        Deque<Integer> stack2 = new ArrayDeque<>();
-        ListNode cur = l1;
-        while (cur != null) {
-            stack1.push(cur.val);
-            cur = cur.next;
-        }
-        cur = l2;
-        while (cur != null) {
-            stack2.push(cur.val);
-            cur = cur.next;
-        }
-        
-        int carry = 0, num = 0;
-        Deque<Integer> stack = new ArrayDeque<>();  // need reverse again
-        while (!stack1.isEmpty() && !stack2.isEmpty()) {
-            num = stack1.pop() + stack2.pop() + carry;
-            carry = num / 10;
-            num = num % 10;
-            stack.push(num);
-        }
-        // below 2 while loops can be merged
-        while (!stack1.isEmpty()) {
-            num = stack1.pop() + carry;
-            carry = num / 10;
-            num = num % 10;
-            stack.push(num);
-        }
-        while (!stack2.isEmpty()) {
-            num = stack2.pop() + carry;
-            carry = num / 10;
-            num = num % 10;
-            stack.push(num);
-        }
-        if (carry != 0) {
-            stack.push(carry);
-        }
-        
-        ListNode res = new ListNode(-1), pre;    // dummy head
-        cur = res;
-        pre = cur;
-        while (!stack.isEmpty()) {
-            cur.next = new ListNode(stack.pop());
-            pre = cur;
-            cur = cur.next;
-        }
-        return res.next;
-    }
-}
-
+// Stack
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         Deque<Integer> stack1 = new ArrayDeque<>();
