@@ -1,4 +1,32 @@
 // 128. Longest Consecutive Sequence
+// O(n)
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        if (nums.length == 0) {
+            return 0;
+        }
+
+        int longest = 1;
+        // n => the length of sequence start or end with the n
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n : nums) {
+            if (!map.containsKey(n)) {
+                int leftSequenceLen = map.getOrDefault(n - 1, 0);
+                int rightSequenceLen = map.getOrDefault(n + 1, 0);
+                int len = leftSequenceLen + 1 + rightSequenceLen;
+                map.put(n, len);
+
+                longest = Math.max(longest, len);
+
+                map.put(n - leftSequenceLen, len);
+                map.put(n + rightSequenceLen, len);
+            }
+        }
+
+        return longest;
+    }
+}
+
 // brute-force, O(n^3)
 class Solution {
     public int longestConsecutive(int[] nums) {
@@ -108,33 +136,5 @@ class Solution {
         }
 
         return res;
-    }
-}
-
-// O(n)
-class Solution {
-    public int longestConsecutive(int[] nums) {
-        if (nums.length == 0) {
-            return 0;
-        }
-
-        int longest = 1;
-        // n => the length of sequence start or end with the n
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int n : nums) {
-            if (!map.containsKey(n)) {
-                int leftSequenceLen = map.getOrDefault(n - 1, 0);
-                int rightSequenceLen = map.getOrDefault(n + 1, 0);
-                int len = leftSequenceLen + 1 + rightSequenceLen;
-                map.put(n, len);
-
-                longest = Math.max(longest, len);
-
-                map.put(n - leftSequenceLen, len);
-                map.put(n + rightSequenceLen, len);
-            }
-        }
-
-        return longest;
     }
 }

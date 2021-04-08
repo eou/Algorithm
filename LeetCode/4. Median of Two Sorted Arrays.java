@@ -1,4 +1,5 @@
 // 4. Median of Two Sorted Arrays
+// brute-force 即合并数组，直接二分
 // 本质是寻找两个数组中第 k 个元素，不同的代码基本都是二分查找思路，时间复杂度log(m+n)，不同之处在于找第 k 个元素的方式
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -104,64 +105,42 @@ class Solution {
     }
 }
 
-//  Might faster, O(log(min(n, m)))
+//  Faster, O(log(min(n, m)))
 class Solution {
-    public double findMedianSortedArrays(int[] A, int[] B) {
-        int m = A.length;
-        int n = B.length;
-        // A.length should be shorter than B.length
-        if (m > n) {
-            int[] temp = A;
-            A = B;
-            B = temp;
-            int tmp = m;
-            m = n;
-            n = tmp;
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if (nums1.length > nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
         }
 
+        int m = nums1.length;
+        int n = nums2.length;
         int left = 0, right = m;
-        int halfLen = (m + n + 1) / 2;
+        // median1：前一部分的最大值
+        // median2：后一部分的最小值
+        int median1 = 0, median2 = 0;
+
         while (left <= right) {
+            // 前一部分包含 nums1[0 .. i-1] 和 nums2[0 .. j-1]
+            // 后一部分包含 nums1[i .. m-1] 和 nums2[j .. n-1]
             int i = (left + right) / 2;
-            int j = halfLen - i;
-            // A [..., i - 1, i, ...]
-            // B [..., j - 1, j, ...]
-            if (i < right && B[j - 1] > A[i]) {
-                // drop left side of A array
+            int j = (m + n + 1) / 2 - i;
+
+            // nums_im1, nums_i, nums_jm1, nums_j 分别表示 nums1[i-1], nums1[i], nums2[j-1],
+            // nums2[j]
+            int nums_im1 = (i == 0 ? Integer.MIN_VALUE : nums1[i - 1]);
+            int nums_i = (i == m ? Integer.MAX_VALUE : nums1[i]);
+            int nums_jm1 = (j == 0 ? Integer.MIN_VALUE : nums2[j - 1]);
+            int nums_j = (j == n ? Integer.MAX_VALUE : nums2[j]);
+
+            if (nums_im1 <= nums_j) {
+                median1 = Math.max(nums_im1, nums_jm1);
+                median2 = Math.min(nums_i, nums_j);
                 left = i + 1;
-            } else if (i > left && A[i - 1] > B[j]) {
-                // drop right side of A array
-                right = i - 1;
             } else {
-                // we can't reduce the size of array anymore => found the result
-                // B[j - 1] <= A[i] and A[i - 1] <= B[j]
-                // maxLeft should be in A[i - 1] and B[j - 1]
-                // minRight should be in A[i] and B[j]
-                int maxLeft = 0;
-                if (i == 0) {
-                    maxLeft = B[j - 1];
-                } else if (j == 0) {
-                    maxLeft = A[i - 1];
-                } else {
-                    maxLeft = Math.max(A[i - 1], B[j - 1]);
-                }
-
-                if ((m + n) % 2 == 1) {
-                    return maxLeft;
-                }
-
-                int minRight = 0;
-                if (i == m) {
-                    minRight = B[j];
-                } else if (j == n) {
-                    minRight = A[i];
-                } else {
-                    minRight = Math.min(A[i], B[j]);
-                }
-
-                return (maxLeft + minRight) / 2.0;
+                right = i - 1;
             }
         }
-        return 0.0;
+
+        return (m + n) % 2 == 0 ? (median1 + median2) / 2.0 : median1;
     }
 }
