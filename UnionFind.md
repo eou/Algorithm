@@ -7,8 +7,8 @@
 class unionFind {
         private int[] id;
         private int unions;
-    	private int[] size;
-    	private int[] rank;
+    	  private int[] size;
+    	  private int[] rank;
 
         public unionFind(int n) {
             unions = n;
