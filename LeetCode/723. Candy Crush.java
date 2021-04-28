@@ -1,4 +1,5 @@
 // 723. Candy Crush
+// Basic simulation algorithm
 class Solution {
     public int[][] candyCrush(int[][] board) {
         int row = board.length, col = board[0].length;
@@ -17,6 +18,7 @@ class Solution {
                         found = true;
                         int k = j;
                         while (k < col && Math.abs(board[i][k]) == val) {
+                            // The number is positive, and after one change, we might need to compare this number twice thus we can use abs to get its original value
                             board[i][k++] = -val;
                         }
                     }
