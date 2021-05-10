@@ -146,3 +146,18 @@ class Solution {
         return minx <= p3[0] && p3[0] <= maxx && miny <= p3[1] && p3[1] <= maxy;
     }
 }
+
+/**
+ * Calculate intersection points.
+ * 
+ * 1. a1x + b1y + c1 = 0 
+ * 2. a2x + b2y + c2 = 0
+ * 
+ * a2 * a1x + a2 * b1y + a2 * c1 = 0 
+ * a1 * a2x + a1 * b2y + a1 * c2 = 0
+ * 
+ * x = (c2 * b1 - c1 * b2) / (a1 * b2 - a2 * b1)
+ * y = (c1 * a2 - c2 * a1) / (a1 * b2 - a2 * b1)
+ * 
+ * If (x, y) satisfies 1 and 2 equations, then (x, y) should be intersection points.
+ */
