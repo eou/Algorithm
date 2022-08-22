@@ -1,23 +1,38 @@
 // 283. Move Zeroes
 class Solution {
-    // 次优解，把非0的数字复制到前面去，然后最后补0
+    // 最优解，只有前面有0的情况下非0元素才会被交换
     public void moveZeroes(int[] nums) {
-        int nonZeroPos = 0;
-        for(int i = 0; i < nums.length; i++) {
-            if(nums[i] != 0) {
-                nums[nonZeroPos] = nums[i];
-                nonZeroPos++;
+        int zero = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                zero++;
+            } else if (zero > 0) {
+                // Have 0 before, we can swap
+                int tmp = nums[i];
+                nums[i] = 0;
+                nums[i - zero] = tmp;
             }
-        }
-        
-        for(int i = nonZeroPos; i < nums.length; i++) {
-            nums[i] = 0;
         }
     }
 }
 
 class Solution {
-    // 次优解，把非0的数字交换到前面去，但操作次数不是最优，因为不是所有前面有 0 的非0元素都需要交换位置
+    // 次优解，把非0的数字复制到前面去，最后补0，但操作次数不是最优，因为最开始的连续非0元素不需要自我复制
+    public void moveZeroes(int[] nums) {
+        int newPos = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
+                nums[newPos++] = nums[i];
+            }
+        }
+        for (int j = nums.length - 1; j >= newPos; j--) {
+            nums[j] = 0;
+        }
+    }
+}
+
+class Solution {
+    // 次优解，把非0的数字交换到前面去，但操作次数不是最优
     public void moveZeroes(int[] nums) {
         int nonZeroPos = 0;
         for(int i = 0; i < nums.length; i++) {

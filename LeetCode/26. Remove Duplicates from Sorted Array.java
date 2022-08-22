@@ -1,4 +1,18 @@
 // 26. Remove Duplicates from Sorted Array
+// Similar with 27. Remove Element
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        int newPos = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[i - 1]) {
+                nums[newPos++] = nums[i];
+            }
+        }
+        
+        return newPos;
+    }
+}
+
 class Solution {
     public int removeDuplicates(int[] nums) {
         int duplicate = 0;

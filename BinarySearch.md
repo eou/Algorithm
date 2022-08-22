@@ -28,12 +28,44 @@ class Solution {
             }
         }
         
+        // 35. Search Insert Position: left will be the first larger element index
+        // from 0 to nums.length
         return -1;
     }
 }
 ```
 
-**Good for finding first/last position of target**:
+```java
+class Solution {
+    // recursive
+    private int binarySearch(int[] nums, int start, int end, int target) {
+        int mid = start + (end - start) / 2;
+        
+        if (nums[mid] == target) {
+            return mid;
+        }
+        // note that `nums[mid] == target` has been checked. Thus if start == end, need to return
+        // similer with non-recursion version: while (start < end) {... start = mid + 1; ... end = mid - 1; ...}
+        if (start > end) {
+            return -1;
+        } else if (nums[mid] < target) {
+            return binarySearch(nums, mid + 1, end, target);
+        }
+        else {
+            return binarySearch(nums, start, end - 1, target);
+        }
+    }
+    
+    public int search(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        return binarySearch(nums, 0, nums.length - 1, target);
+    }
+}
+```
+
+**Good for finding first/last position of duplicate targets**:
 
 ```java
 class Solution {
@@ -109,40 +141,22 @@ return a[l];
 // but will avoid overflow
 ```
 
-```java
-class Solution {
-    // recursive
-    private int binarySearch(int[] nums, int start, int end, int target) {
-        int mid = start + (end - start) / 2;
-        
-        if (nums[mid] == target) {
-            return mid;
-        }
-        // note that `nums[mid] == target` has been checked. Thus if start == end, need to return
-        // similer with non-recursion version: while (start < end) {... start = mid + 1; ... end = mid - 1; ...}
-        if (start >= end) {
-            return -1;
-        }
-        else if (nums[mid] < target) {
-            return binarySearch(nums, mid + 1, end, target);
-        }
-        else {
-            return binarySearch(nums, start, end - 1, target);
-        }
-    }
-    
-    public int search(int[] nums, int target) {
-        if (nums == null || nums.length == 0) {
-            return -1;
-        }
-        return binarySearch(nums, 0, nums.length - 1, target);
-    }
-}
-```
-
 ## Termination
 
 - `start <= end`：after breaking the loop, start - 1 = end，no target
 - `start < end`：after breaking the loop, start = end，target only one element (infinite loop might happen)
+```java
+while (left < right) {
+    int mid = left + (right - left) / 2;
+    if (nums[mid] == target) {
+        // infinite loop since when left + 1 = right, left is always equal with mid
+        left = mid;
+    } else if (nums[mid] < target) {
+        left = mid + 1;
+    } else {
+        right = mid - 1;
+    }
+}
+```
 - `start + 1 < end`：after breaking the loop, start + 1= end，need compare last two elements
 

@@ -1,6 +1,6 @@
 // 34. Find First and Last Position of Element in Sorted Array
 class Solution {
-    // 二分与遍历，O(k+logn)
+    // brutal force binary search，O(k+logn)
     public int[] searchRange(int[] nums, int target) {
         int[] results = { -1, -1 };
         if (nums == null || nums.length == 0) {
@@ -35,6 +35,56 @@ class Solution {
         }
 
         return results;
+    }
+}
+
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        if (nums.length == 0) {
+            return new int[]{-1, -1};
+        }
+        return new int[]{findFirst(nums, target), findLast(nums, target)};
+    }
+    
+    private int findFirst(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                // right will not be equal with mid before left == right
+                right = mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        return nums[left] == target ? left : -1;
+    }
+    
+    private int findLast(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                // Break condition must be left + 1 < right otherwise infinite loop here
+                // since left will be always equal with mid
+                left = mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        if (nums[right] == target) {
+            return right;
+        } else if (nums[left] == target) {
+            return left;
+        } else {
+            return -1;
+        }
     }
 }
 
